@@ -3,6 +3,7 @@ defmodule TqmWeb.HomeLive do
 
   def render(assigns) do
     ~L"""
+    <%= live_component @socket, TqmWeb.NavbarComponent %>
     <h1>This is my website<h1>
     """
   end

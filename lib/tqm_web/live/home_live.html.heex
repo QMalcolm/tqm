@@ -1,0 +1,23 @@
+<div class="flex flex-col h-screen max-h-screen">
+    <%= live_component @socket, TqmWeb.NavbarComponent %>
+    <div id="left-short-about" class="flex flex-col flex-grow w-1/5 border-r-2 border-gray-400">
+        <div id="photo-and-blurb" class="flex flex-col w-full pt-3">
+            <img src="images/me.jpg" alt="Me at a laptop, in a comfy chair" class="flex w-3/4 self-center rounded-3xl">
+            <span class="px-3 text-center">
+                Hi, welcome to my website! I'm (Thomas) Quigley Malcolm. 
+                I'm a lot of things, but mostly I'm just trying to be a good person. 
+                If you want to learn more about me head on over to my 
+                <%= live_patch "about", 
+                    to: Routes.live_path(@socket, TqmWeb.HomeLive),
+                    class: "text-blue-500" %>
+                page.
+            </span>
+        </div>
+        <div id="spacer" class="h-full"></div>
+        <div id="bottom links" class="pb-4 px-3 flex justify-around">
+            <a href="https://github.com/QMalcolm"><img src="images/GitHub-Mark-32px.png" altcp ="Github" title="Github"></a>
+            <a href="https://www.linkedin.com/in/quigley-malcolm/"><img src="images/linkedin.png" alt="Linkedin" title="Linkedin"></a>
+            <a href="https://www.librarything.com/profile/Literary_Libations"><img src="images/librarything.png" alt="Library Thing" title="Library Thing"></a>
+        </div>
+    </div>
+</div>

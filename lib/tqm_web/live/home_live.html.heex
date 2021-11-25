@@ -1,6 +1,6 @@
 <div class="flex flex-col h-screen max-h-screen">
     <%= live_component @socket, TqmWeb.NavbarComponent %>
-    <div id="left-short-about" class="flex flex-col flex-grow w-1/5 border-r-2 border-gray-400">
+    <div id="left-short-about" class="sm:flex flex-col flex-grow w-1/5 max-w-xs border-r-2 border-gray-400  hidden">
         <div id="photo-and-blurb" class="flex flex-col w-full pt-3">
             <img src="images/me.jpg" alt="Me at a laptop, in a comfy chair" class="flex w-3/4 self-center rounded-3xl">
             <span class="px-3 text-center">

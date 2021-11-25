@@ -19,6 +19,7 @@ defmodule TqmWeb.Router do
 
     # get "/", PageController, :index
     live "/", HomeLive
+    live "/about", AboutLive
   end
 
   # Other scopes may use custom stacks.

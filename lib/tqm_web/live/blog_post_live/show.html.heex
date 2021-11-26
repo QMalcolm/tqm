@@ -1,0 +1,32 @@
+<h1>Show Blog post</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal TqmWeb.BlogPostLive.FormComponent,
+    id: @blog_post.id,
+    title: @page_title,
+    action: @live_action,
+    blog_post: @blog_post,
+    return_to: Routes.blog_post_show_path(@socket, :show, @blog_post) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Title:</strong>
+    <%= @blog_post.title %>
+  </li>
+
+  <li>
+    <strong>Content:</strong>
+    <%= @blog_post.content %>
+  </li>
+
+  <li>
+    <strong>Published at:</strong>
+    <%= @blog_post.published_at %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.blog_post_show_path(@socket, :edit, @blog_post), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.blog_post_index_path(@socket, :index) %></span>

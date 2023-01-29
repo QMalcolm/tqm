@@ -545,6 +545,39 @@ defmodule Tqm2Web.CoreComponents do
     """
   end
 
+  @doc """
+  Renders a page navbar
+
+  ## Examples
+  <.navbar toplevel = {:home} />
+  """
+  attr :toplevel, :atom, required: true
+
+  def navbar(assigns) do
+    ~H"""
+    <header class="bg-pink-900 text-white pt-3 py-3 px-3">
+      <nav class="space-x-3">
+        <.link navigate = "/" class = {"text-3xl font-semibold #{if @toplevel == :home, do: 'underline'}"}>
+            Home
+        </.link>
+        <%# TODO: Uncomment these as the pages get build out %>
+        <%!-- <.link navigate = "/blog" class = {"text-xl #{if @toplevel == :blog, do: 'underline'}"}>
+            Blog
+        </.link> --%>
+        <%!-- <.link navigate = "/recipes" class = {"text-xl #{if @toplevel == :recipes, do: 'underline'}"}>
+            Recipies
+        </.link> --%>
+        <%!-- <.link navigate = "/projects" class = {"text-xl #{if @toplevel == :projects, do: 'underline'}"}>
+            Projects
+        </.link> --%>
+        <%!-- <.link navigate = "/about" class = {"text-xl #{if @toplevel == :about, do: 'underline'}"}>
+            About
+        </.link> --%>
+      </nav>
+    </header>
+    """
+  end
+
   ## JS Commands
 
   def show(js \\ %JS{}, selector) do

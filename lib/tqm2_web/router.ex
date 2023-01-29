@@ -18,6 +18,7 @@ defmodule Tqm2Web.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    resources "/blog", BlogPostController
   end
 
   # Other scopes may use custom stacks.

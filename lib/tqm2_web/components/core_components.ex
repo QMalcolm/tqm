@@ -561,9 +561,9 @@ defmodule Tqm2Web.CoreComponents do
             Home
         </.link>
         <%# TODO: Uncomment these as the pages get build out %>
-        <%!-- <.link navigate = "/blog" class = {"text-xl #{if @toplevel == :blog, do: 'underline'}"}>
+        <.link navigate = "/blog" class = {"text-xl #{if @toplevel == :blog, do: 'underline'}"}>
             Blog
-        </.link> --%>
+        </.link>
         <%!-- <.link navigate = "/recipes" class = {"text-xl #{if @toplevel == :recipes, do: 'underline'}"}>
             Recipies
         </.link> --%>

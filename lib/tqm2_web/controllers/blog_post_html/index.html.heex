@@ -1,0 +1,25 @@
+<.header>
+  Listing Blog posts
+  <:actions>
+    <.link href={~p"/blog/new"}>
+      <.button>New Blog post</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="blog_posts" rows={@blog_posts} row_click={&JS.navigate(~p"/blog/#{&1}")}>
+  <:col :let={blog_post} label="Title"><%= blog_post.title %></:col>
+  <:col :let={blog_post} label="Content"><%= blog_post.content %></:col>
+  <:col :let={blog_post} label="Published at"><%= blog_post.published_at %></:col>
+  <:action :let={blog_post}>
+    <div class="sr-only">
+      <.link navigate={~p"/blog/#{blog_post}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/blog/#{blog_post}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={blog_post}>
+    <.link href={~p"/blog/#{blog_post}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

@@ -19,21 +19,20 @@ defmodule TqmWeb.ConnCase do
 
   using do
     quote do
+      # The default endpoint for testing
+      @endpoint TqmWeb.Endpoint
+
+      use TqmWeb, :verified_routes
+
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
       import TqmWeb.ConnCase
-
-      alias TqmWeb.Router.Helpers, as: Routes
-
-      # The default endpoint for testing
-      @endpoint TqmWeb.Endpoint
     end
   end
 
   setup tags do
-    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(Tqm.Repo, shared: not tags[:async])
-    on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
+    Tqm.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end

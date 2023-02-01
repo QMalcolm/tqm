@@ -8,12 +8,14 @@ defmodule Tqm.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
-      Tqm.Repo,
       # Start the Telemetry supervisor
       TqmWeb.Telemetry,
+      # Start the Ecto repository
+      Tqm.Repo,
       # Start the PubSub system
       {Phoenix.PubSub, name: Tqm.PubSub},
+      # Start Finch
+      {Finch, name: Tqm.Finch},
       # Start the Endpoint (http/https)
       TqmWeb.Endpoint
       # Start a worker by calling: Tqm.Worker.start_link(arg)

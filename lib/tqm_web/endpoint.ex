@@ -7,7 +7,8 @@ defmodule TqmWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_tqm_key",
-    signing_salt: "MJCCH/Zc"
+    signing_salt: "x7ZKlwZA",
+    same_site: "Lax"
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
@@ -20,7 +21,7 @@ defmodule TqmWeb.Endpoint do
     at: "/",
     from: :tqm,
     gzip: false,
-    only: ~w(assets fonts images favicon.ico robots.txt)
+    only: TqmWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

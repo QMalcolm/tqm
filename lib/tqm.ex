@@ -1,6 +1,6 @@
-defmodule Tqm2 do
+defmodule Tqm do
   @moduledoc """
-  Tqm2 keeps the contexts that define your domain
+  Tqm keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless

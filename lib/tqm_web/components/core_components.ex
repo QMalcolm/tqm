@@ -1,4 +1,4 @@
-defmodule Tqm2Web.CoreComponents do
+defmodule TqmWeb.CoreComponents do
   @moduledoc """
   Provides core UI components.
 
@@ -12,7 +12,7 @@ defmodule Tqm2Web.CoreComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import Tqm2Web.Gettext
+  import TqmWeb.Gettext
 
   @doc """
   Renders a modal.
@@ -647,9 +647,9 @@ defmodule Tqm2Web.CoreComponents do
     # should be written to the errors.po file. The :count option is
     # set by Ecto and indicates we should also apply plural rules.
     if count = opts[:count] do
-      Gettext.dngettext(Tqm2Web.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(TqmWeb.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(Tqm2Web.Gettext, "errors", msg, opts)
+      Gettext.dgettext(TqmWeb.Gettext, "errors", msg, opts)
     end
   end
 

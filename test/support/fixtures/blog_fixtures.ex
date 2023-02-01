@@ -1,7 +1,7 @@
-defmodule Tqm2.BlogFixtures do
+defmodule Tqm.BlogFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `Tqm2.Blog` context.
+  entities via the `Tqm.Blog` context.
   """
 
   @doc """
@@ -15,7 +15,7 @@ defmodule Tqm2.BlogFixtures do
         published_at: ~U[2023-01-28 02:26:00Z],
         title: "some title"
       })
-      |> Tqm2.Blog.create_blog_post()
+      |> Tqm.Blog.create_blog_post()
 
     blog_post
   end

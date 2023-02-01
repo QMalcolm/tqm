@@ -1,12 +1,12 @@
-defmodule Tqm2.Blog do
+defmodule Tqm.Blog do
   @moduledoc """
   The Blog context.
   """
 
   import Ecto.Query, warn: false
-  alias Tqm2.Repo
+  alias Tqm.Repo
 
-  alias Tqm2.Blog.BlogPost
+  alias Tqm.Blog.BlogPost
 
   @doc """
   Returns the list of blog_posts.

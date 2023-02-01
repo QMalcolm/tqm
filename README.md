@@ -1,4 +1,4 @@
-# Tqm2
+# Tqm
 
 To start your Phoenix server:
 

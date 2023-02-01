@@ -1,12 +1,12 @@
-defmodule Tqm2Web do
+defmodule TqmWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, components, channels, and so on.
 
   This can be used in your application as:
 
-      use Tqm2Web, :controller
-      use Tqm2Web, :html
+      use TqmWeb, :controller
+      use TqmWeb, :html
 
   The definitions below will be executed for every controller,
   component, etc, so keep them short and clean, focused
@@ -40,10 +40,10 @@ defmodule Tqm2Web do
     quote do
       use Phoenix.Controller,
         formats: [:html, :json],
-        layouts: [html: Tqm2Web.Layouts]
+        layouts: [html: TqmWeb.Layouts]
 
       import Plug.Conn
-      import Tqm2Web.Gettext
+      import TqmWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -52,7 +52,7 @@ defmodule Tqm2Web do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {Tqm2Web.Layouts, :app}
+        layout: {TqmWeb.Layouts, :app}
 
       unquote(html_helpers())
     end
@@ -84,8 +84,8 @@ defmodule Tqm2Web do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
-      import Tqm2Web.CoreComponents
-      import Tqm2Web.Gettext
+      import TqmWeb.CoreComponents
+      import TqmWeb.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
@@ -98,9 +98,9 @@ defmodule Tqm2Web do
   def verified_routes do
     quote do
       use Phoenix.VerifiedRoutes,
-        endpoint: Tqm2Web.Endpoint,
-        router: Tqm2Web.Router,
-        statics: Tqm2Web.static_paths()
+        endpoint: TqmWeb.Endpoint,
+        router: TqmWeb.Router,
+        statics: TqmWeb.static_paths()
     end
   end
 

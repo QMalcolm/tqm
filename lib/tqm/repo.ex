@@ -1,5 +1,5 @@
-defmodule Tqm2.Repo do
+defmodule Tqm.Repo do
   use Ecto.Repo,
-    otp_app: :tqm2,
+    otp_app: :tqm,
     adapter: Ecto.Adapters.Postgres
 end

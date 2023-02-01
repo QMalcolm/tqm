@@ -1,5 +1,5 @@
-defmodule Tqm2Web.PageControllerTest do
-  use Tqm2Web.ConnCase
+defmodule TqmWeb.PageControllerTest do
+  use TqmWeb.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")

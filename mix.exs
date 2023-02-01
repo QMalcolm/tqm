@@ -1,9 +1,9 @@
-defmodule Tqm2.MixProject do
+defmodule Tqm.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :tqm2,
+      app: :tqm,
       version: "0.1.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -18,7 +18,7 @@ defmodule Tqm2.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Tqm2.Application, []},
+      mod: {Tqm.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

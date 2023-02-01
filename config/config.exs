@@ -7,17 +7,17 @@
 # General application configuration
 import Config
 
-config :tqm2,
-  ecto_repos: [Tqm2.Repo]
+config :tqm,
+  ecto_repos: [Tqm.Repo]
 
 # Configures the endpoint
-config :tqm2, Tqm2Web.Endpoint,
+config :tqm, TqmWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [
-    formats: [html: Tqm2Web.ErrorHTML, json: Tqm2Web.ErrorJSON],
+    formats: [html: TqmWeb.ErrorHTML, json: TqmWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: Tqm2.PubSub,
+  pubsub_server: Tqm.PubSub,
   live_view: [signing_salt: "N2146nlE"]
 
 # Configures the mailer
@@ -27,7 +27,7 @@ config :tqm2, Tqm2Web.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :tqm2, Tqm2.Mailer, adapter: Swoosh.Adapters.Local
+config :tqm, Tqm.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,

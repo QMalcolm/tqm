@@ -1,11 +1,11 @@
 import Config
 
 # Configure your database
-config :tqm2, Tqm2.Repo,
+config :tqm, Tqm.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  database: "tqm2_dev",
+  database: "tqm_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -16,7 +16,7 @@ config :tqm2, Tqm2.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with esbuild to bundle .js and .css sources.
-config :tqm2, Tqm2Web.Endpoint,
+config :tqm, TqmWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4000],
@@ -53,17 +53,17 @@ config :tqm2, Tqm2Web.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :tqm2, Tqm2Web.Endpoint,
+config :tqm, TqmWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/tqm2_web/(controllers|live|components)/.*(ex|heex)$"
+      ~r"lib/tqm_web/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
 
 # Enable dev routes for dashboard and mailbox
-config :tqm2, dev_routes: true
+config :tqm, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"

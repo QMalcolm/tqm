@@ -1,8 +1,8 @@
-defmodule Tqm2Web.BlogPostController do
-  use Tqm2Web, :controller
+defmodule TqmWeb.BlogPostController do
+  use TqmWeb, :controller
 
-  alias Tqm2.Blog
-  alias Tqm2.Blog.BlogPost
+  alias Tqm.Blog
+  alias Tqm.Blog.BlogPost
 
   def index(conn, _params) do
     blog_posts = Blog.list_blog_posts()

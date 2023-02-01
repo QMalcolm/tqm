@@ -1,4 +1,4 @@
-defmodule Tqm2.Blog.BlogPost do
+defmodule Tqm.Blog.BlogPost do
   use Ecto.Schema
   import Ecto.Changeset
 

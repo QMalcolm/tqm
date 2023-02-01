@@ -1,11 +1,11 @@
-defmodule Tqm2Web.Router do
-  use Tqm2Web, :router
+defmodule TqmWeb.Router do
+  use TqmWeb, :router
 
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug :put_root_layout, {Tqm2Web.Layouts, :root}
+    plug :put_root_layout, {TqmWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
@@ -14,7 +14,7 @@ defmodule Tqm2Web.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", Tqm2Web do
+  scope "/", TqmWeb do
     pipe_through :browser
 
     get "/", PageController, :home
@@ -22,12 +22,12 @@ defmodule Tqm2Web.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", Tqm2Web do
+  # scope "/api", TqmWeb do
   #   pipe_through :api
   # end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
-  if Application.compile_env(:tqm2, :dev_routes) do
+  if Application.compile_env(:tqm, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
     # it behind authentication and allow only admins to access it.
     # If your application does not have an admins-only section yet,
@@ -38,7 +38,7 @@ defmodule Tqm2Web.Router do
     scope "/dev" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: Tqm2Web.Telemetry
+      live_dashboard "/dashboard", metrics: TqmWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end

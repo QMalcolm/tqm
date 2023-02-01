@@ -1,4 +1,4 @@
-defmodule Tqm2.Application do
+defmodule Tqm.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -9,22 +9,22 @@ defmodule Tqm2.Application do
   def start(_type, _args) do
     children = [
       # Start the Telemetry supervisor
-      Tqm2Web.Telemetry,
+      TqmWeb.Telemetry,
       # Start the Ecto repository
-      Tqm2.Repo,
+      Tqm.Repo,
       # Start the PubSub system
-      {Phoenix.PubSub, name: Tqm2.PubSub},
+      {Phoenix.PubSub, name: Tqm.PubSub},
       # Start Finch
-      {Finch, name: Tqm2.Finch},
+      {Finch, name: Tqm.Finch},
       # Start the Endpoint (http/https)
-      Tqm2Web.Endpoint
-      # Start a worker by calling: Tqm2.Worker.start_link(arg)
-      # {Tqm2.Worker, arg}
+      TqmWeb.Endpoint
+      # Start a worker by calling: Tqm.Worker.start_link(arg)
+      # {Tqm.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Tqm2.Supervisor]
+    opts = [strategy: :one_for_one, name: Tqm.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
@@ -32,7 +32,7 @@ defmodule Tqm2.Application do
   # whenever the application is updated.
   @impl true
   def config_change(changed, _new, removed) do
-    Tqm2Web.Endpoint.config_change(changed, removed)
+    TqmWeb.Endpoint.config_change(changed, removed)
     :ok
   end
 end

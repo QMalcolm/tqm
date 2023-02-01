@@ -1,12 +1,12 @@
-defmodule Tqm2.BlogTest do
-  use Tqm2.DataCase
+defmodule Tqm.BlogTest do
+  use Tqm.DataCase
 
-  alias Tqm2.Blog
+  alias Tqm.Blog
 
   describe "blog_posts" do
-    alias Tqm2.Blog.BlogPost
+    alias Tqm.Blog.BlogPost
 
-    import Tqm2.BlogFixtures
+    import Tqm.BlogFixtures
 
     @invalid_attrs %{content: nil, published_at: nil, title: nil}
 

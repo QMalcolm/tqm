@@ -546,12 +546,12 @@ defmodule Tqm2Web.CoreComponents do
   end
 
   @doc """
-  Renders a page navbar
+  Renders a page navbar. tlp stands for Top Level Page
 
   ## Examples
-  <.navbar toplevel = {:home} />
+  <.navbar tlp = {:home} />
   """
-  attr :toplevel, :atom, required: true
+  attr :tlp, :atom, required: true
 
   def navbar(assigns) do
     ~H"""

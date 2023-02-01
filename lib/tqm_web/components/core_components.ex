@@ -554,6 +554,9 @@ defmodule TqmWeb.CoreComponents do
   attr :tlp, :atom, required: true
 
   def navbar(assigns) do
+
+      # bbg loves bbq 11/26/2021 <3 <3 <3
+
     ~H"""
     <header class="bg-pink-900 text-white pt-3 py-3 px-3">
       <nav class="space-x-3">

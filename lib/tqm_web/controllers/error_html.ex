@@ -1,4 +1,5 @@
 defmodule TqmWeb.ErrorHTML do
+  @moduledoc false
   use TqmWeb, :html
 
   # If you want to customize your error pages,

@@ -21,7 +21,11 @@ defmodule Tqm.BlogTest do
     end
 
     test "create_blog_post/1 with valid data creates a blog_post" do
-      valid_attrs = %{content: "some content", published_at: ~U[2023-01-28 02:26:00Z], title: "some title"}
+      valid_attrs = %{
+        content: "some content",
+        published_at: ~U[2023-01-28 02:26:00Z],
+        title: "some title"
+      }
 
       assert {:ok, %BlogPost{} = blog_post} = Blog.create_blog_post(valid_attrs)
       assert blog_post.content == "some content"
@@ -35,7 +39,12 @@ defmodule Tqm.BlogTest do
 
     test "update_blog_post/2 with valid data updates the blog_post" do
       blog_post = blog_post_fixture()
-      update_attrs = %{content: "some updated content", published_at: ~U[2023-01-29 02:26:00Z], title: "some updated title"}
+
+      update_attrs = %{
+        content: "some updated content",
+        published_at: ~U[2023-01-29 02:26:00Z],
+        title: "some updated title"
+      }
 
       assert {:ok, %BlogPost{} = blog_post} = Blog.update_blog_post(blog_post, update_attrs)
       assert blog_post.content == "some updated content"

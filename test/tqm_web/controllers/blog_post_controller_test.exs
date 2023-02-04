@@ -3,8 +3,16 @@ defmodule TqmWeb.BlogPostControllerTest do
 
   import Tqm.BlogFixtures
 
-  @create_attrs %{content: "some content", published_at: ~U[2023-01-28 02:26:00Z], title: "some title"}
-  @update_attrs %{content: "some updated content", published_at: ~U[2023-01-29 02:26:00Z], title: "some updated title"}
+  @create_attrs %{
+    content: "some content",
+    published_at: ~U[2023-01-28 02:26:00Z],
+    title: "some title"
+  }
+  @update_attrs %{
+    content: "some updated content",
+    published_at: ~U[2023-01-29 02:26:00Z],
+    title: "some updated title"
+  }
   @invalid_attrs %{content: nil, published_at: nil, title: nil}
 
   describe "index" do

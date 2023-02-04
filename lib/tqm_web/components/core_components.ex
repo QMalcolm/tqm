@@ -554,18 +554,16 @@ defmodule TqmWeb.CoreComponents do
   attr :tlp, :atom, required: true
 
   def navbar(assigns) do
-
-      # bbg loves bbq 11/26/2021 <3 <3 <3
+    # bbg loves bbq 11/26/2021 <3 <3 <3
 
     ~H"""
     <header class="bg-pink-900 text-white pt-3 py-3 px-3">
       <nav class="space-x-3">
-        <.link navigate = "/" class = {"text-3xl font-semibold #{if @toplevel == :home, do: 'underline'}"}>
-            Home
+        <.link navigate="/" class={"text-3xl font-semibold #{if @toplevel == :home, do: 'underline'}"}>
+          Home
         </.link>
-        <%# TODO: Uncomment these as the pages get build out %>
-        <.link navigate = "/blog" class = {"text-xl #{if @toplevel == :blog, do: 'underline'}"}>
-            Blog
+        <.link navigate="/blog" class={"text-xl #{if @toplevel == :blog, do: 'underline'}"}>
+          Blog
         </.link>
         <%!-- <.link navigate = "/recipes" class = {"text-xl #{if @toplevel == :recipes, do: 'underline'}"}>
             Recipies

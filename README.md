@@ -12,10 +12,16 @@ I use [asdf][asdf] for managing my language dependencies for projects. If you wa
 * Run `mix setup` to install and setup project dependencies
 * Install `pre-commit` to so that pre-commit runs when you make git commits `$ pip install pre-commit`
 
+## Generate a localhost cert for ssl
+
+Run `$ mix phx.gen.cert` to generate a cert. This will create a key file and a cert in `/priv/cert`, and this
+will be ignored by git.
+
 ## Running locally
 * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Now you can visit [`http://localhost:4000`](http://localhost:4000) or [`https://localhost:4001`](https://localhost:4001) in your browser.
+
 
 [asdf]: https://asdf-vm.com/
 [asdf-setup]: https://asdf-vm.com/guide/getting-started.html

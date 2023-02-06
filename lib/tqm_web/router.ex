@@ -1,6 +1,8 @@
 defmodule TqmWeb.Router do
   use TqmWeb, :router
 
+  import TqmWeb.PersonAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,6 +10,7 @@ defmodule TqmWeb.Router do
     plug :put_root_layout, {TqmWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_person
   end
 
   pipeline :api do
@@ -40,6 +43,44 @@ defmodule TqmWeb.Router do
 
       live_dashboard "/dashboard", metrics: TqmWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
+  end
+
+  ## Authentication routes
+
+  scope "/", TqmWeb do
+    pipe_through [:browser, :redirect_if_person_is_authenticated]
+
+    live_session :redirect_if_person_is_authenticated,
+      on_mount: [{TqmWeb.PersonAuth, :redirect_if_person_is_authenticated}] do
+      live "/people/register", PersonRegistrationLive, :new
+      live "/people/log_in", PersonLoginLive, :new
+      live "/people/reset_password", PersonForgotPasswordLive, :new
+      live "/people/reset_password/:token", PersonResetPasswordLive, :edit
+    end
+
+    post "/people/log_in", PersonSessionController, :create
+  end
+
+  scope "/", TqmWeb do
+    pipe_through [:browser, :require_authenticated_person]
+
+    live_session :require_authenticated_person,
+      on_mount: [{TqmWeb.PersonAuth, :ensure_authenticated}] do
+      live "/people/settings", PersonSettingsLive, :edit
+      live "/people/settings/confirm_email/:token", PersonSettingsLive, :confirm_email
+    end
+  end
+
+  scope "/", TqmWeb do
+    pipe_through [:browser]
+
+    delete "/people/log_out", PersonSessionController, :delete
+
+    live_session :current_person,
+      on_mount: [{TqmWeb.PersonAuth, :mount_current_person}] do
+      live "/people/confirm/:token", PersonConfirmationLive, :edit
+      live "/people/confirm", PersonConfirmationInstructionsLive, :new
     end
   end
 end

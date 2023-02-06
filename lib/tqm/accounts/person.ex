@@ -157,4 +157,15 @@ defmodule Tqm.Accounts.Person do
       add_error(changeset, :current_password, "is not valid")
     end
   end
+
+  @doc """
+  Checks if the current user is an :owner
+  """
+  def is_owner?(nil) do
+    false
+  end
+
+  def is_owner?(%Tqm.Accounts.Person{role: role}) do
+    role == :owner
+  end
 end

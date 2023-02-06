@@ -10,6 +10,8 @@ defmodule Tqm.Accounts.Person do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+    field :role, Ecto.Enum, values: [:owner, :non_stranger, :stranger]
+    field :approved, :boolean
 
     timestamps()
   end

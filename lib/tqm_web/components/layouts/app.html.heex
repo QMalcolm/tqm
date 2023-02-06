@@ -1,5 +1,5 @@
 <.navbar tlp={assigns[:tlp]} />
-<main class="px-4 py-20 sm:px-6 lg:px-8">
+<main class={if assigns[:page_padding] == nil or assigns[:page_padding], do: "px-4 py-4"} >
   <div class="mx-auto">
     <.flash kind={:info} title="Success!" flash={@flash} />
     <.flash kind={:error} title="Error!" flash={@flash} />

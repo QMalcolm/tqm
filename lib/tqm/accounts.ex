@@ -220,6 +220,38 @@ defmodule Tqm.Accounts do
     end
   end
 
+  @doc """
+  Returns an `%Ecto.Changeset{}` for changing the person email.
+
+  ## Examples
+
+      iex> change_person_role(person)
+      %Ecto.Changeset{data: %Person{}}
+
+  """
+  def change_person_role(person, attrs \\ %{}) do
+    Person.role_changeset(person, attrs)
+  end
+
+  @doc """
+  Emulates that the email will change without actually changing
+  it in the database.
+
+  ## Examples
+
+      iex> apply_person_role(person, %{role: ...})
+      {:ok, %Person{}}
+
+      iex> apply_person_email(person, %{role: ...})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def apply_person_role(person, attrs) do
+    person
+    |> Person.role_changeset(attrs)
+    |> Ecto.Changeset.apply_action(:update)
+  end
+
   ## Session
 
   @doc """

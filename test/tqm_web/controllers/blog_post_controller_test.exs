@@ -1,6 +1,7 @@
 defmodule TqmWeb.BlogPostControllerTest do
   use TqmWeb.ConnCase
 
+  import Tqm.AccountsFixtures
   import Tqm.BlogFixtures
 
   @create_attrs %{
@@ -24,14 +25,43 @@ defmodule TqmWeb.BlogPostControllerTest do
 
   describe "new blog_post" do
     test "renders form", %{conn: conn} do
-      conn = get(conn, ~p"/blog/new")
+      conn =
+        conn
+        |> log_in_person(owner_person_fixture())
+        |> get(~p"/blog/new")
+
       assert html_response(conn, 200) =~ "New Blog post"
+    end
+
+    test "redirects to homepage for non owners", %{conn: conn} do
+      un_authed_conn =
+        conn
+        |> get(~p"/blog/new")
+
+      assert redirected_to(un_authed_conn) =~ ~p"/"
+
+      stranger_conn =
+        conn
+        |> log_in_person(stranger_person_fixture())
+        |> get(~p"/blog/new")
+
+      assert redirected_to(stranger_conn) =~ ~p"/"
+
+      non_stranger_conn =
+        conn
+        |> log_in_person(non_stranger_person_fixture())
+        |> get(~p"/blog/new")
+
+      assert redirected_to(non_stranger_conn) =~ ~p"/"
     end
   end
 
   describe "create blog_post" do
     test "redirects to show when data is valid", %{conn: conn} do
-      conn = post(conn, ~p"/blog", blog_post: @create_attrs)
+      conn =
+        conn
+        |> log_in_person(owner_person_fixture())
+        |> post(~p"/blog", blog_post: @create_attrs)
 
       assert %{id: id} = redirected_params(conn)
       assert redirected_to(conn) == ~p"/blog/#{id}"
@@ -41,8 +71,34 @@ defmodule TqmWeb.BlogPostControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, ~p"/blog", blog_post: @invalid_attrs)
+      conn =
+        conn
+        |> log_in_person(owner_person_fixture())
+        |> post(~p"/blog", blog_post: @invalid_attrs)
+
       assert html_response(conn, 200) =~ "New Blog post"
+    end
+
+    test "redirects to homepage for non owners", %{conn: conn} do
+      un_authed_conn =
+        conn
+        |> post(~p"/blog", blog_post: @create_attrs)
+
+      assert redirected_to(un_authed_conn) =~ ~p"/"
+
+      stranger_conn =
+        conn
+        |> log_in_person(stranger_person_fixture())
+        |> post(~p"/blog", blog_post: @create_attrs)
+
+      assert redirected_to(stranger_conn) =~ ~p"/"
+
+      non_stranger_conn =
+        conn
+        |> log_in_person(non_stranger_person_fixture())
+        |> post(~p"/blog", blog_post: @create_attrs)
+
+      assert redirected_to(non_stranger_conn) =~ ~p"/"
     end
   end
 
@@ -50,8 +106,34 @@ defmodule TqmWeb.BlogPostControllerTest do
     setup [:create_blog_post]
 
     test "renders form for editing chosen blog_post", %{conn: conn, blog_post: blog_post} do
-      conn = get(conn, ~p"/blog/#{blog_post}/edit")
+      conn =
+        conn
+        |> log_in_person(owner_person_fixture())
+        |> get(~p"/blog/#{blog_post}/edit")
+
       assert html_response(conn, 200) =~ "Edit Blog post"
+    end
+
+    test "redirects to homepage for non owners", %{conn: conn, blog_post: blog_post} do
+      un_authed_conn =
+        conn
+        |> get(~p"/blog/#{blog_post}/edit")
+
+      assert redirected_to(un_authed_conn) =~ ~p"/"
+
+      stranger_conn =
+        conn
+        |> log_in_person(stranger_person_fixture())
+        |> get(~p"/blog/#{blog_post}/edit")
+
+      assert redirected_to(stranger_conn) =~ ~p"/"
+
+      non_stranger_conn =
+        conn
+        |> log_in_person(non_stranger_person_fixture())
+        |> get(~p"/blog/#{blog_post}/edit")
+
+      assert redirected_to(non_stranger_conn) =~ ~p"/"
     end
   end
 
@@ -59,7 +141,11 @@ defmodule TqmWeb.BlogPostControllerTest do
     setup [:create_blog_post]
 
     test "redirects when data is valid", %{conn: conn, blog_post: blog_post} do
-      conn = put(conn, ~p"/blog/#{blog_post}", blog_post: @update_attrs)
+      conn =
+        conn
+        |> log_in_person(owner_person_fixture())
+        |> put(~p"/blog/#{blog_post}", blog_post: @update_attrs)
+
       assert redirected_to(conn) == ~p"/blog/#{blog_post}"
 
       conn = get(conn, ~p"/blog/#{blog_post}")
@@ -67,8 +153,34 @@ defmodule TqmWeb.BlogPostControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, blog_post: blog_post} do
-      conn = put(conn, ~p"/blog/#{blog_post}", blog_post: @invalid_attrs)
+      conn =
+        conn
+        |> log_in_person(owner_person_fixture())
+        |> put(~p"/blog/#{blog_post}", blog_post: @invalid_attrs)
+
       assert html_response(conn, 200) =~ "Edit Blog post"
+    end
+
+    test "redirects to homepage for non owners", %{conn: conn, blog_post: blog_post} do
+      un_authed_conn =
+        conn
+        |> put(~p"/blog/#{blog_post}", blog_post: @update_attrs)
+
+      assert redirected_to(un_authed_conn) =~ ~p"/"
+
+      stranger_conn =
+        conn
+        |> log_in_person(stranger_person_fixture())
+        |> put(~p"/blog/#{blog_post}", blog_post: @update_attrs)
+
+      assert redirected_to(stranger_conn) =~ ~p"/"
+
+      non_stranger_conn =
+        conn
+        |> log_in_person(non_stranger_person_fixture())
+        |> put(~p"/blog/#{blog_post}", blog_post: @update_attrs)
+
+      assert redirected_to(non_stranger_conn) =~ ~p"/"
     end
   end
 
@@ -76,12 +188,38 @@ defmodule TqmWeb.BlogPostControllerTest do
     setup [:create_blog_post]
 
     test "deletes chosen blog_post", %{conn: conn, blog_post: blog_post} do
-      conn = delete(conn, ~p"/blog/#{blog_post}")
+      conn =
+        conn
+        |> log_in_person(owner_person_fixture())
+        |> delete(~p"/blog/#{blog_post}")
+
       assert redirected_to(conn) == ~p"/blog"
 
       assert_error_sent 404, fn ->
         get(conn, ~p"/blog/#{blog_post}")
       end
+    end
+
+    test "redirects to homepage for non owners", %{conn: conn, blog_post: blog_post} do
+      un_authed_conn =
+        conn
+        |> delete(~p"/blog/#{blog_post}")
+
+      assert redirected_to(un_authed_conn) =~ ~p"/"
+
+      stranger_conn =
+        conn
+        |> log_in_person(stranger_person_fixture())
+        |> delete(~p"/blog/#{blog_post}")
+
+      assert redirected_to(stranger_conn) =~ ~p"/"
+
+      non_stranger_conn =
+        conn
+        |> log_in_person(non_stranger_person_fixture())
+        |> delete(~p"/blog/#{blog_post}")
+
+      assert redirected_to(non_stranger_conn) =~ ~p"/"
     end
   end
 

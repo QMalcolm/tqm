@@ -17,11 +17,18 @@ defmodule TqmWeb.Router do
     plug :accepts, ["json"]
   end
 
+  ## Routes requiring :owner person role
+  scope "/", TqmWeb do
+    pipe_through [:browser, :require_owner_person]
+    resources "/blog", BlogPostController, except: [:show, :index]
+  end
+
+  ## Unauthed routes
   scope "/", TqmWeb do
     pipe_through :browser
 
     get "/", PageController, :home
-    resources "/blog", BlogPostController
+    resources "/blog", BlogPostController, only: [:index, :show]
   end
 
   # Other scopes may use custom stacks.

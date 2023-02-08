@@ -219,6 +219,23 @@ defmodule TqmWeb.PersonAuth do
     end
   end
 
+  @doc """
+  Used for routes that require the person to be authenticated and an owner.
+  """
+  def require_owner_person(conn, _opts) do
+    current_person = conn.assigns[:current_person]
+
+    if current_person != nil and Tqm.Accounts.Person.is_owner?(current_person) do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be an owner to access this page")
+      |> maybe_store_return_to()
+      |> redirect(to: ~p"/")
+      |> halt()
+    end
+  end
+
   defp put_token_in_session(conn, token) do
     conn
     |> put_session(:person_token, token)

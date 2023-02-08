@@ -131,6 +131,10 @@ defmodule Tqm.Accounts.Person do
     change(person, confirmed_at: now)
   end
 
+  def role_changeset(person, attrs) do
+    person |> cast(attrs, [:role])
+  end
+
   @doc """
   Verifies the password.
 

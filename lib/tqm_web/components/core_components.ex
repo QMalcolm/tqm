@@ -552,6 +552,7 @@ defmodule TqmWeb.CoreComponents do
   <.navbar tlp = {:home} />
   """
   attr :tlp, :atom, required: true
+  attr :current_person, :map, required: true
 
   def navbar(assigns) do
     # bbg loves bbq 11/26/2021 <3 <3 <3
@@ -574,6 +575,9 @@ defmodule TqmWeb.CoreComponents do
         <%!-- <.link navigate = "/about" class = {"text-xl #{if @tlp == :about, do: 'underline'}"}>
             About
         </.link> --%>
+        <%= if @current_person do %>
+          <.link href="/people/log_out" method="delete" class="float-right text-xl">Logout</.link>
+        <% end %>
       </nav>
     </header>
     """

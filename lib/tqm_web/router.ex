@@ -28,7 +28,6 @@ defmodule TqmWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    get "/about", PageController, :about
     resources "/blog", BlogPostController, only: [:index, :show]
   end
 
@@ -89,6 +88,7 @@ defmodule TqmWeb.Router do
       on_mount: [{TqmWeb.PersonAuth, :mount_current_person}] do
       live "/people/confirm/:token", PersonConfirmationLive, :edit
       live "/people/confirm", PersonConfirmationInstructionsLive, :new
+      live "/about", AboutLive.Index, :index
     end
   end
 end

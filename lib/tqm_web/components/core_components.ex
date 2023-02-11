@@ -573,7 +573,7 @@ defmodule TqmWeb.CoreComponents do
             Projects
         </.link> --%>
         <.link navigate="/about" class={"text-xl #{if @tlp == :about, do: 'underline'}"}>
-            About
+          About
         </.link>
         <%= if @current_person do %>
           <.link href="/people/log_out" method="delete" class="float-right text-xl">Logout</.link>

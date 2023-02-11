@@ -10,6 +10,7 @@ defmodule Tqm.Jobs.Job do
     field :logo, :string
     field :url, :string
     field :work_description, :string
+    has_many :roles, Tqm.Jobs.Role
 
     timestamps()
   end

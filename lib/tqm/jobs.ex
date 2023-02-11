@@ -17,8 +17,10 @@ defmodule Tqm.Jobs do
       [%Job{}, ...]
 
   """
-  def list_jobs do
-    Repo.all(Job)
+  def list_jobs(preloads \\ []) do
+    Job
+    |> Repo.all()
+    |> Repo.preload(preloads)
   end
 
   @doc """

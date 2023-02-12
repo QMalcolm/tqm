@@ -104,6 +104,46 @@ defmodule Tqm.Jobs do
     Job.changeset(job, attrs)
   end
 
+  defp find_start_date(roles), do: find_start_date(roles, Date.add(Date.utc_today(), 365))
+  defp find_start_date([], current_start_date), do: current_start_date
+
+  defp find_start_date([head | tail], current_start_date) do
+    if Date.compare(head.start_date, current_start_date) == :lt do
+      find_start_date(tail, head.start_date)
+    else
+      find_start_date(tail, current_start_date)
+    end
+  end
+
+  @doc """
+  Returns the start date for the job
+  """
+  def job_start_date(%Job{} = job) do
+    find_start_date(job.roles)
+  end
+
+  defp find_end_date(roles), do: find_end_date(roles, ~D"1900-01-01")
+  defp find_end_date([], current_end_date), do: current_end_date
+
+  defp find_end_date([head | tail], current_end_date) do
+    if head.end_date == nil do
+      nil
+    else
+      if Date.compare(head.end_date, current_end_date) == :gt do
+        find_end_date(tail, head.end_date)
+      else
+        find_end_date(tail, current_end_date)
+      end
+    end
+  end
+
+  @doc """
+  Returns the end date for the job, nil indicates a job that is ongoing
+  """
+  def job_end_date(%Job{} = job) do
+    find_end_date(job.roles)
+  end
+
   alias Tqm.Jobs.Role
 
   @doc """

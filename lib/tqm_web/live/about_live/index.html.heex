@@ -36,7 +36,30 @@
     </p>
   </div>
   <div id="detailed-about">
-    <div id="professional">TODO: Professional</div>
+    <div id="professional-history">
+      <div>Professional History</div>
+      <div id="jobs">
+        <%= for job <- @jobs do %>
+          <div>
+            <a href={job.url} target="_blank">
+              <img
+                src={job.logo}
+                alt={"Logo of #{job.company_name}"}
+                link={job.url}
+                class="w-10 mb-5 mr-5"
+              />
+            </a>
+            <div>Name: <%= job.company_name %></div>
+            <div>Start_date: <%= job.start_date %></div>
+            <div>End_date: <%= job.end_date %></div>
+            <p style="white-space: pre">Description:</p>
+            <div class="markdown_render">
+              <%= raw(job.rendered_work_description) %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
     <div id="personal-projects">TODO: Personal Projects</div>
   </div>
 </div>

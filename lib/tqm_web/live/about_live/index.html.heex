@@ -52,8 +52,11 @@
             <div>Name: <%= job.company_name %></div>
             <div>Start_date: <%= job.start_date %></div>
             <div>End_date: <%= job.end_date %></div>
-            <p style="white-space: pre">Description:</p>
-            <div class="markdown_render">
+            <button phx-click="toggle-job-details" phx-value-job-id={job.id}>Expand</button>
+            <div
+              class="markdown_render"
+              style={"#{if not Enum.member?(@expanded_job_ids, to_string(job.id)) , do: 'display: none;'}"}
+            >
               <%= raw(job.rendered_work_description) %>
             </div>
           </div>

@@ -32,19 +32,7 @@ defmodule TqmWeb.AboutLive.Index do
       socket
       |> assign(:tlp, :about)
       |> assign(:jobs, jobs)
-      |> assign(:expanded_job_ids, [])
 
     {:ok, socket}
-  end
-
-  @impl true
-  def handle_event("toggle-job-details", %{"job-id" => job_id}, socket) do
-    expanded_job_ids = socket.assigns[:expanded_job_ids]
-
-    if Enum.member?(expanded_job_ids, job_id) do
-      {:noreply, assign(socket, :expanded_job_ids, List.delete(expanded_job_ids, job_id))}
-    else
-      {:noreply, assign(socket, :expanded_job_ids, [job_id | expanded_job_ids])}
-    end
   end
 end

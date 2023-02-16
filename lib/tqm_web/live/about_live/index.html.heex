@@ -40,39 +40,11 @@
       <div>Professional History</div>
       <div id="jobs">
         <%= for job <- @jobs do %>
-          <div>
-            <div
-              id={"summary-#{job.id}"}
-              phx-click="toggle-job-details"
-              phx-value-job-id={job.id}
-              class="bg-gray-200 flex mt-2"
-              style="cursor: pointer;"
-            >
-              <span class="px-3 text-xl" style="line-height: 3.5rem;">
-                <%= if Enum.member?(@expanded_job_ids, to_string(job.id)), do: "-", else: "+" %>
-              </span>
-              <img
-                src={job.logo}
-                alt={"Logo of #{job.company_name}"}
-                link={job.url}
-                class="h-10 my-2 mr-2"
-              />
-              <span class="pr-2 text-xl" style="line-height: 3.5rem;">
-                <%= job.company_name %>
-              </span>
-              <span class="pr-3" style="line-height: 3.5rem; margin-left: auto; order: 2;">
-                <%= Calendar.strftime(job.start_date, "%b %Y") %> - <%= if job.end_date == nil,
-                  do: "Present",
-                  else: Calendar.strftime(job.end_date, "%b %Y") %>
-              </span>
-            </div>
-            <div
-              class="markdown_render"
-              style={"#{if not Enum.member?(@expanded_job_ids, to_string(job.id)) , do: 'display: none;'}"}
-            >
-              <%= raw(job.rendered_work_description) %>
-            </div>
-          </div>
+          <.live_component
+            module={TqmWeb.LiveComponents.JobWithTogglableDetails}
+            id={"job-#{job.id}"}
+            job={job}
+          />
         <% end %>
       </div>
     </div>

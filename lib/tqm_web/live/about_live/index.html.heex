@@ -41,18 +41,31 @@
       <div id="jobs">
         <%= for job <- @jobs do %>
           <div>
-            <a href={job.url} target="_blank">
+            <div
+              id={"summary-#{job.id}"}
+              phx-click="toggle-job-details"
+              phx-value-job-id={job.id}
+              class="bg-gray-200 flex mt-2"
+              style="cursor: pointer;"
+            >
+              <span class="px-3 text-xl" style="line-height: 3.5rem;">
+                <%= if Enum.member?(@expanded_job_ids, to_string(job.id)), do: "-", else: "+" %>
+              </span>
               <img
                 src={job.logo}
                 alt={"Logo of #{job.company_name}"}
                 link={job.url}
-                class="w-10 mb-5 mr-5"
+                class="h-10 my-2 mr-2"
               />
-            </a>
-            <div>Name: <%= job.company_name %></div>
-            <div>Start_date: <%= job.start_date %></div>
-            <div>End_date: <%= job.end_date %></div>
-            <button phx-click="toggle-job-details" phx-value-job-id={job.id}>Expand</button>
+              <span class="pr-2 text-xl" style="line-height: 3.5rem;">
+                <%= job.company_name %>
+              </span>
+              <span class="pr-3" style="line-height: 3.5rem; margin-left: auto; order: 2;">
+                <%= Calendar.strftime(job.start_date, "%b %Y") %> - <%= if job.end_date == nil,
+                  do: "Present",
+                  else: Calendar.strftime(job.end_date, "%b %Y") %>
+              </span>
+            </div>
             <div
               class="markdown_render"
               style={"#{if not Enum.member?(@expanded_job_ids, to_string(job.id)) , do: 'display: none;'}"}

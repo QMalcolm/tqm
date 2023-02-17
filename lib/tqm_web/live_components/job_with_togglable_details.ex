@@ -57,7 +57,7 @@ defmodule TqmWeb.LiveComponents.JobWithTogglableDetails do
         </span>
       </div>
       <div style={"#{if not @show_details, do: 'display: none;'}"}>
-        <.markdown_content markdown={@job.description} />
+        <TqmWeb.JobComponents.job_description_and_roles job={@job} />
       </div>
     </div>
     """

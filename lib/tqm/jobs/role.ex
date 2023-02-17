@@ -11,6 +11,7 @@ defmodule Tqm.Jobs.Role do
     field :start_date, :date
     field :title, :string
     field :job_id, :id
+    field :details, :string
 
     timestamps()
   end
@@ -18,7 +19,7 @@ defmodule Tqm.Jobs.Role do
   @doc false
   def changeset(role, attrs) do
     role
-    |> cast(attrs, [:title, :start_date, :end_date])
-    |> validate_required([:title, :start_date, :end_date])
+    |> cast(attrs, [:title, :start_date, :end_date, :details])
+    |> validate_required([:title, :start_date, :end_date, :details])
   end
 end

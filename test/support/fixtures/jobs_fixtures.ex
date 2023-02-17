@@ -14,7 +14,7 @@ defmodule Tqm.JobsFixtures do
         url: "some url",
         company_name: "some company_name",
         logo: "some logo",
-        work_description: "some work_description"
+        description: "some description"
       })
       |> Tqm.Jobs.create_job()
 
@@ -30,7 +30,8 @@ defmodule Tqm.JobsFixtures do
       |> Enum.into(%{
         end_date: ~D[2023-02-09],
         start_date: ~D[2023-02-09],
-        title: "some title"
+        title: "some title",
+        details: "some details"
       })
       |> Tqm.Jobs.create_role()
 

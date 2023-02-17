@@ -8,7 +8,7 @@ defmodule Tqm.JobsTest do
 
     import Tqm.JobsFixtures
 
-    @invalid_attrs %{url: nil, company_name: nil, logo: nil, work_description: nil}
+    @invalid_attrs %{url: nil, company_name: nil, logo: nil, description: nil}
 
     test "list_jobs/0 returns all jobs" do
       job = job_fixture()
@@ -25,14 +25,14 @@ defmodule Tqm.JobsTest do
         url: "some url",
         company_name: "some company_name",
         logo: "some logo",
-        work_description: "some work_description"
+        description: "some description"
       }
 
       assert {:ok, %Job{} = job} = Jobs.create_job(valid_attrs)
       assert job.url == "some url"
       assert job.company_name == "some company_name"
       assert job.logo == "some logo"
-      assert job.work_description == "some work_description"
+      assert job.description == "some description"
     end
 
     test "create_job/1 with invalid data returns error changeset" do
@@ -46,14 +46,14 @@ defmodule Tqm.JobsTest do
         url: "some updated url",
         company_name: "some updated company_name",
         logo: "some updated logo",
-        work_description: "some updated work_description"
+        description: "some updated description"
       }
 
       assert {:ok, %Job{} = job} = Jobs.update_job(job, update_attrs)
       assert job.url == "some updated url"
       assert job.company_name == "some updated company_name"
       assert job.logo == "some updated logo"
-      assert job.work_description == "some updated work_description"
+      assert job.description == "some updated description"
     end
 
     test "update_job/2 with invalid data returns error changeset" do
@@ -79,7 +79,7 @@ defmodule Tqm.JobsTest do
 
     import Tqm.JobsFixtures
 
-    @invalid_attrs %{end_date: nil, start_date: nil, title: nil}
+    @invalid_attrs %{end_date: nil, start_date: nil, title: nil, details: nil}
 
     test "list_roles/0 returns all roles" do
       role = role_fixture()
@@ -92,12 +92,18 @@ defmodule Tqm.JobsTest do
     end
 
     test "create_role/1 with valid data creates a role" do
-      valid_attrs = %{end_date: ~D[2023-02-09], start_date: ~D[2023-02-09], title: "some title"}
+      valid_attrs = %{
+        end_date: ~D[2023-02-09],
+        start_date: ~D[2023-02-09],
+        title: "some title",
+        details: "some details"
+      }
 
       assert {:ok, %Role{} = role} = Jobs.create_role(valid_attrs)
       assert role.end_date == ~D[2023-02-09]
       assert role.start_date == ~D[2023-02-09]
       assert role.title == "some title"
+      assert role.details == "some details"
     end
 
     test "create_role/1 with invalid data returns error changeset" do
@@ -110,13 +116,15 @@ defmodule Tqm.JobsTest do
       update_attrs = %{
         end_date: ~D[2023-02-10],
         start_date: ~D[2023-02-10],
-        title: "some updated title"
+        title: "some updated title",
+        details: "some updated details"
       }
 
       assert {:ok, %Role{} = role} = Jobs.update_role(role, update_attrs)
       assert role.end_date == ~D[2023-02-10]
       assert role.start_date == ~D[2023-02-10]
       assert role.title == "some updated title"
+      assert role.details == "some updated details"
     end
 
     test "update_role/2 with invalid data returns error changeset" do

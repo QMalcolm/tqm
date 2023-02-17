@@ -57,7 +57,7 @@ defmodule TqmWeb.LiveComponents.JobWithTogglableDetails do
         </span>
       </div>
       <div class="markdown_render" style={"#{if not @show_details, do: 'display: none;'}"}>
-        <%= Phoenix.HTML.raw(@job.rendered_work_description) %>
+        <%= Phoenix.HTML.raw(@job.rendered_description) %>
       </div>
     </div>
     """

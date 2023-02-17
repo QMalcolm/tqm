@@ -9,7 +9,7 @@ defmodule Tqm.Jobs.Job do
     field :company_name, :string
     field :logo, :string
     field :url, :string
-    field :work_description, :string
+    field :description, :string
     has_many :roles, Tqm.Jobs.Role
 
     timestamps()
@@ -18,7 +18,7 @@ defmodule Tqm.Jobs.Job do
   @doc false
   def changeset(job, attrs) do
     job
-    |> cast(attrs, [:company_name, :logo, :url, :work_description])
-    |> validate_required([:company_name, :logo, :url, :work_description])
+    |> cast(attrs, [:company_name, :logo, :url, :description])
+    |> validate_required([:company_name, :logo, :url, :description])
   end
 end

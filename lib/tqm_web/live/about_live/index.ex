@@ -8,7 +8,6 @@ defmodule TqmWeb.AboutLive.Index do
       job
       |> Map.put(:start_date, Jobs.job_start_date(job))
       |> Map.put(:end_date, Jobs.job_end_date(job))
-      |> Map.put(:rendered_description, Earmark.as_html!(job.description))
     end)
   end
 

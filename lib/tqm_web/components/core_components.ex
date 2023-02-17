@@ -583,6 +583,22 @@ defmodule TqmWeb.CoreComponents do
     """
   end
 
+  @doc """
+  Renders markdown
+
+  ## Examples
+  <.markdown_content markdown = {"..."} />
+  """
+  attr :markdown, :string, required: true
+
+  def markdown_content(assigns) do
+    ~H"""
+    <div class="markdown_render">
+      <%= @markdown |> Earmark.as_html!() |> Phoenix.HTML.raw() %>
+    </div>
+    """
+  end
+
   ## JS Commands
 
   def show(js \\ %JS{}, selector) do

@@ -56,8 +56,8 @@ defmodule TqmWeb.LiveComponents.JobWithTogglableDetails do
             else: Calendar.strftime(@job.end_date, "%b %Y") %>
         </span>
       </div>
-      <div class="markdown_render" style={"#{if not @show_details, do: 'display: none;'}"}>
-        <%= Phoenix.HTML.raw(@job.rendered_description) %>
+      <div style={"#{if not @show_details, do: 'display: none;'}"}>
+        <.markdown_content markdown={@job.description} />
       </div>
     </div>
     """

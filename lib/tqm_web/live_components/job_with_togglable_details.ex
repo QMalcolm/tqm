@@ -35,7 +35,7 @@ defmodule TqmWeb.LiveComponents.JobWithTogglableDetails do
         id={"summary-#{@job.id}"}
         phx-click="toggle-job-details"
         phx-target={@myself}
-        class="bg-gray-200 flex mt-2"
+        class="bg-gray-200 flex mb-2"
         style="cursor: pointer;"
       >
         <span class="px-3 text-xl" style="line-height: 3.5rem;">

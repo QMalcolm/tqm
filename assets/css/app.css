@@ -2,4 +2,18 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+div.markdown_render ul > li {
+    margin-left: 15px;
+    list-style-type: initial;
+
+}
+
+div.markdown_render a {
+    color: #0000EE;
+    text-decoration: underline;
+}
+
+div.markdown_render a:visited {
+    color: #551A8B;
+}
 /* This file is for your main application CSS */

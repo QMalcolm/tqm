@@ -572,14 +572,30 @@ defmodule TqmWeb.CoreComponents do
         <%!-- <.link navigate = "/projects" class = {"text-xl #{if @tlp == :projects, do: 'underline'}"}>
             Projects
         </.link> --%>
-        <%!-- <.link navigate = "/about" class = {"text-xl #{if @tlp == :about, do: 'underline'}"}>
-            About
-        </.link> --%>
+        <.link navigate="/about" class={"text-xl #{if @tlp == :about, do: 'underline'}"}>
+          About
+        </.link>
         <%= if @current_person do %>
           <.link href="/people/log_out" method="delete" class="float-right text-xl">Logout</.link>
         <% end %>
       </nav>
     </header>
+    """
+  end
+
+  @doc """
+  Renders markdown
+
+  ## Examples
+  <.markdown_content markdown = {"..."} />
+  """
+  attr :markdown, :string, required: true
+
+  def markdown_content(assigns) do
+    ~H"""
+    <div class="markdown_render">
+      <%= @markdown |> Earmark.as_html!() |> Phoenix.HTML.raw() %>
+    </div>
     """
   end
 

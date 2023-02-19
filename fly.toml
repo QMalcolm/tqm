@@ -9,7 +9,7 @@ processes = []
   release_command = "/app/bin/migrate"
 
 [env]
-  PHX_HOST = "tqm-website.fly.dev"
+  PHX_HOST = "quigleymalcolm.com"
   PORT = "8080"
 
 [experimental]

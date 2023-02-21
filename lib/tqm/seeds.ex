@@ -62,7 +62,7 @@ defmodule Tqm.Seeds do
       %Job{
         company_name: "Tyler Technologies D&I",
         url: "https://www.tylertech.com/solutions/transformative-technology/data-insights",
-        logo: "images/tyler-technologies-logo.jpg",
+        logo: "images/tyler-technologies-logo.png",
         description: """
         [Tyler Technologies (Data & Insights Division)](https://www.tylertech.com/solutions/transformative-technology/data-insights) makes government data more accessible to the public and makes it easier for government agencies to share information with one another.
         """
@@ -111,7 +111,7 @@ defmodule Tqm.Seeds do
       %Job{
         company_name: "Roll For Guild",
         url: "https://web.archive.org/web/20180817113913/https://rollforguild.com/",
-        logo: "images/roll-for-guild-logo.jpg",
+        logo: "images/roll-for-guild-logo.png",
         description: """
         [Roll For Guild](https://web.archive.org/web/20180817113913/https://rollforguild.com/) built tools for organizing and running Tabletop Role-Playing Games
         """

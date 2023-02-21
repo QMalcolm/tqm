@@ -35,26 +35,29 @@ defmodule TqmWeb.LiveComponents.JobWithTogglableDetails do
         id={"summary-#{@job.id}"}
         phx-click="toggle-job-details"
         phx-target={@myself}
-        class="bg-gray-200 flex mb-2"
+        class="bg-gray-200 flex flex-wrap space-x-3 mb-2 px-3"
         style="cursor: pointer;"
       >
-        <span class="px-3 text-xl" style="line-height: 3.5rem;">
-          <%= if @show_details, do: "-", else: "+" %>
-        </span>
-        <img
-          src={@job.logo}
-          alt={"Logo of #{@job.company_name}"}
-          link={@job.url}
-          class="h-10 my-2 mr-2"
-        />
-        <span class="pr-2 text-xl" style="line-height: 3.5rem;">
-          <%= @job.company_name %>
-        </span>
-        <span class="pr-3" style="line-height: 3.5rem; margin-left: auto; order: 2;">
-          <%= Calendar.strftime(@job.start_date, "%b %Y") %> - <%= if @job.end_date == nil,
-            do: "Present",
-            else: Calendar.strftime(@job.end_date, "%b %Y") %>
-        </span>
+        <div>
+          <span class="text-xl" style="line-height: 3.5rem;">
+            <%= if @show_details, do: "-", else: "+" %>
+          </span>
+        </div>
+        <div>
+          <img src={@job.logo} alt={"Logo of #{@job.company_name}"} link={@job.url} class="h-10 my-2" />
+        </div>
+        <div>
+          <span class="text-xl" style="line-height: 3.5rem;">
+            <%= @job.company_name %>
+          </span>
+        </div>
+        <div>
+          <span style="line-height: 3.5rem; margin-left: auto; order: 2;">
+            <%= Calendar.strftime(@job.start_date, "%b %Y") %> - <%= if @job.end_date == nil,
+              do: "Present",
+              else: Calendar.strftime(@job.end_date, "%b %Y") %>
+          </span>
+        </div>
       </div>
       <div style={"#{if not @show_details, do: 'display: none;'}"}>
         <TqmWeb.JobComponents.job_description_and_roles job={@job} />

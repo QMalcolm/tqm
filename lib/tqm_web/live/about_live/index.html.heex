@@ -1,4 +1,4 @@
-<div id="about-page-content" class="grid grid-cols-2 gap-4">
+<div id="about-page-content" class="md:grid md:grid-cols-2 md:gap-4 flex flex-wrap">
   <div id="personal">
     <h1 class="text-xl font-semibold text-center pb-2">About Me</h1>
     <img
@@ -36,7 +36,7 @@
       in Central District.
     </p>
   </div>
-  <div id="professional-history">
+  <div id="professional-history" class="w-full">
     <h2 class="text-xl font-semibold text-center pb-2">Professional History</h2>
     <div id="jobs">
       <%= for job <- @jobs do %>

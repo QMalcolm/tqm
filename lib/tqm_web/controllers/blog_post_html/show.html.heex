@@ -2,7 +2,7 @@
   Blog post <%= @blog_post.id %>
   <:subtitle>This is a blog_post record from your database.</:subtitle>
   <:actions>
-    <%= if Tqm.Accounts.Person.is_owner?(assigns[:current_person]) do %>
+    <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
       <.link href={~p"/blog/#{@blog_post}/edit"}>
         <.button>Edit blog_post</.button>
       </.link>

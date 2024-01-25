@@ -165,11 +165,11 @@ defmodule Tqm.Accounts.Person do
   @doc """
   Checks if the current user is an :owner
   """
-  def is_owner?(nil) do
+  def owner?(nil) do
     false
   end
 
-  def is_owner?(%Tqm.Accounts.Person{role: role}) do
+  def owner?(%Tqm.Accounts.Person{role: role}) do
     role == :owner
   end
 end

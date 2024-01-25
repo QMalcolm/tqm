@@ -33,8 +33,7 @@ defmodule TqmWeb.PersonResetPasswordLive do
 
       <p class="text-center mt-4">
         <.link href={~p"/people/register"}>Register</.link>
-        |
-        <.link href={~p"/people/log_in"}>Log in</.link>
+        | <.link href={~p"/people/log_in"}>Log in</.link>
       </p>
     </div>
     """

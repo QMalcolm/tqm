@@ -43,17 +43,17 @@ defmodule Tqm.MixProject do
       {:heroicons, "~> 0.5.3"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.8.2"},
-      {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
+      {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.2.0", runtime: Mix.env() == :dev},
       {:swoosh, "~> 1.3"},
-      {:finch, "~> 0.13"},
+      {:finch, "~> 0.17"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.20"},
+      {:gettext, "~> 0.24"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:earmark, "~> 1.4"},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.7.3", only: [:dev, :test], runtime: false}
     ]
   end
 

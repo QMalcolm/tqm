@@ -225,7 +225,7 @@ defmodule TqmWeb.PersonAuth do
   def require_owner_person(conn, _opts) do
     current_person = conn.assigns[:current_person]
 
-    if current_person != nil and Tqm.Accounts.Person.is_owner?(current_person) do
+    if current_person != nil and Tqm.Accounts.Person.owner?(current_person) do
       conn
     else
       conn

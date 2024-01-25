@@ -1,7 +1,7 @@
 <.header>
   Listing Blog posts
   <:actions>
-    <%= if Tqm.Accounts.Person.is_owner?(assigns[:current_person]) do %>
+    <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
       <.link href={~p"/blog/new"}>
         <.button>New Blog post</.button>
       </.link>
@@ -17,12 +17,12 @@
     <div class="sr-only">
       <.link navigate={~p"/blog/#{blog_post}"}>Show</.link>
     </div>
-    <%= if Tqm.Accounts.Person.is_owner?(assigns[:current_person]) do %>
+    <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
       <.link navigate={~p"/blog/#{blog_post}/edit"}>Edit</.link>
     <% end %>
   </:action>
   <:action :let={blog_post}>
-    <%= if Tqm.Accounts.Person.is_owner?(assigns[:current_person]) do %>
+    <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
       <.link href={~p"/blog/#{blog_post}"} method="delete" data-confirm="Are you sure?">
         Delete
       </.link>

@@ -8,6 +8,16 @@ defmodule Tqm.BlogTest do
 
     import Tqm.BlogFixtures
 
+    @published_valid_attrs %{
+      content: "some content",
+      published_at: ~U[2023-01-28 02:26:00Z],
+      title: "some title"
+    }
+    @unpublished_valid_attrs %{
+      content: "in progress",
+      published_at: nil,
+      title: "post I want to do"
+    }
     @invalid_attrs %{content: nil, published_at: nil, title: nil}
 
     test "list_blog_posts/0 returns all blog_posts" do
@@ -21,16 +31,15 @@ defmodule Tqm.BlogTest do
     end
 
     test "create_blog_post/1 with valid data creates a blog_post" do
-      valid_attrs = %{
-        content: "some content",
-        published_at: ~U[2023-01-28 02:26:00Z],
-        title: "some title"
-      }
+      assert {:ok, %BlogPost{} = blog_post} = Blog.create_blog_post(@published_valid_attrs)
+      assert blog_post.content == @published_valid_attrs.content
+      assert blog_post.published_at == @published_valid_attrs.published_at
+      assert blog_post.title == @published_valid_attrs.title
 
-      assert {:ok, %BlogPost{} = blog_post} = Blog.create_blog_post(valid_attrs)
-      assert blog_post.content == "some content"
-      assert blog_post.published_at == ~U[2023-01-28 02:26:00Z]
-      assert blog_post.title == "some title"
+      assert {:ok, %BlogPost{} = blog_post} = Blog.create_blog_post(@unpublished_valid_attrs)
+      assert blog_post.content == @unpublished_valid_attrs.content
+      assert blog_post.published_at == @unpublished_valid_attrs.published_at
+      assert blog_post.title == @unpublished_valid_attrs.title
     end
 
     test "create_blog_post/1 with invalid data returns error changeset" do

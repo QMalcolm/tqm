@@ -6,14 +6,32 @@ defmodule Tqm.Blog do
   import Ecto.Query, warn: false
   alias Tqm.Repo
 
-  alias Tqm.Accounts.Person
   alias Tqm.Blog.BlogPost
 
-  #  Returns an unpaginated list of published blog_posts
-  #
-  # A blog post is "published" if its `published_at` value is not `nil`
-  # and is in the past.
-  defp list_published_blog_posts() do
+  @doc """
+  Returns an unpaginated list of blog_posts.
+
+  Optionally an atom: `:published` and `:all`. The default value is
+  `:published`, which will only return blog_posts that have a `published_at`
+  value that is in the past. Passing `:all` will return all blog_posts which
+  includes published blog_posts as well as blog_posts with a `published_at`
+  of `nil` or a future date.
+
+  ## Examples
+
+      iex> list_blog_posts()
+      [%BlogPost{}, ...]
+
+      iex> list_blog_posts(:published)
+      [%BlogPost{}, ...]
+
+      iex> list_blog_posts(:all)
+      [%BlogPost{}, %BlogPost{published_at: nil}, ...]
+
+  """
+  def list_blog_posts(), do: list_blog_posts(:published)
+
+  def list_blog_posts(:published) do
     time_now = NaiveDateTime.utc_now()
 
     Repo.all(
@@ -21,35 +39,7 @@ defmodule Tqm.Blog do
     )
   end
 
-  @doc """
-  Returns an unpaginated list of blog_posts.
-
-  Optionally takes a `%Person{}` as a parameter. If the person is not an
-  owner, only "published" blog posts will be returned. If the person is an
-  owner, all blog posts will be returned.
-
-  ## Examples
-
-      iex> list_blog_posts()
-      [%BlogPost{}, ...]
-
-      iex> list_blog_posts(%Person{role: })
-      [%BlogPost{}, ...]
-
-      iex> list_blog_posts(%Person{role: owner})
-      [%BlogPost{}, ...]
-
-  """
-  def list_blog_posts(), do: list_published_blog_posts()
-  def list_blog_posts(nil), do: list_published_blog_posts()
-
-  def list_blog_posts(%Person{} = person) do
-    if Person.owner?(person) do
-      Repo.all(BlogPost)
-    else
-      list_published_blog_posts()
-    end
-  end
+  def list_blog_posts(:all), do: Repo.all(BlogPost)
 
   @doc """
   Gets a single blog_post.

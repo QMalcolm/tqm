@@ -28,19 +28,13 @@ defmodule Tqm.BlogTest do
       assert Blog.list_blog_posts() == [blog_post]
     end
 
-    test "list_blog_posts/1 returns blog posts respective to person role" do
+    test "list_blog_posts/1 returns blog posts dependent on passed atom" do
       blog_post = blog_post_fixture()
       unpublished_blog_post = unpublished_blog_post_fixture()
       future_blog_post = future_blog_post_fixture()
 
-      owner = owner_person_fixture()
-      non_stranger = non_stranger_person_fixture()
-      stranger = stranger_person_fixture()
-
-      assert Blog.list_blog_posts(owner) == [blog_post, unpublished_blog_post, future_blog_post]
-      assert Blog.list_blog_posts(non_stranger) == [blog_post]
-      assert Blog.list_blog_posts(stranger) == [blog_post]
-      assert Blog.list_blog_posts(nil) == [blog_post]
+      assert Blog.list_blog_posts(:all) == [blog_post, unpublished_blog_post, future_blog_post]
+      assert Blog.list_blog_posts(:published) == [blog_post]
     end
 
     test "get_blog_post!/1 returns the blog_post with given id" do

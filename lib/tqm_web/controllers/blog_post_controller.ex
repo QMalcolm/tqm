@@ -1,13 +1,19 @@
 defmodule TqmWeb.BlogPostController do
   use TqmWeb, :controller
 
+  alias Tqm.Accounts.Person
   alias Tqm.Blog
   alias Tqm.Blog.BlogPost
 
   def index(conn, _params) do
+    current_person = conn.assigns[:current_person]
+
     blog_posts =
-      conn.assigns[:current_person]
-      |> Blog.list_blog_posts()
+      if Person.owner?(current_person) do
+        Blog.list_blog_posts(:all)
+      else
+        Blog.list_blog_posts(:published)
+      end
 
     render(conn, :index, tlp: :blog, blog_posts: blog_posts)
   end

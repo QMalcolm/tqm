@@ -5,7 +5,10 @@ defmodule TqmWeb.BlogPostController do
   alias Tqm.Blog.BlogPost
 
   def index(conn, _params) do
-    blog_posts = Blog.list_blog_posts()
+    blog_posts =
+      conn.assigns[:current_person]
+      |> Blog.list_blog_posts()
+
     render(conn, :index, tlp: :blog, blog_posts: blog_posts)
   end
 

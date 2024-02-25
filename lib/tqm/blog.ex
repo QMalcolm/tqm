@@ -6,19 +6,49 @@ defmodule Tqm.Blog do
   import Ecto.Query, warn: false
   alias Tqm.Repo
 
+  alias Tqm.Accounts.Person
   alias Tqm.Blog.BlogPost
 
+  #  Returns an unpaginated list of published blog_posts
+  #
+  # A blog post is "published" if its `published_at` value is not `nil`
+  # and is in the past.
+  defp list_published_blog_posts() do
+    time_now = NaiveDateTime.utc_now()
+
+    Repo.all(
+      from bp in BlogPost, where: bp.published_at <= ^time_now and not is_nil(bp.published_at)
+    )
+  end
+
   @doc """
-  Returns the list of blog_posts.
+  Returns an unpaginated list of blog_posts.
+
+  Optionally takes a `%Person{}` as a parameter. If the person is not an
+  owner, only "published" blog posts will be returned. If the person is an
+  owner, all blog posts will be returned.
 
   ## Examples
 
       iex> list_blog_posts()
       [%BlogPost{}, ...]
 
+      iex> list_blog_posts(%Person{role: })
+      [%BlogPost{}, ...]
+
+      iex> list_blog_posts(%Person{role: owner})
+      [%BlogPost{}, ...]
+
   """
-  def list_blog_posts do
-    Repo.all(BlogPost)
+  def list_blog_posts(), do: list_published_blog_posts()
+  def list_blog_posts(nil), do: list_published_blog_posts()
+
+  def list_blog_posts(%Person{} = person) do
+    if Person.owner?(person) do
+      Repo.all(BlogPost)
+    else
+      list_published_blog_posts()
+    end
   end
 
   @doc """

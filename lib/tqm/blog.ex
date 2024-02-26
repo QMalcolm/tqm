@@ -6,7 +6,37 @@ defmodule Tqm.Blog do
   import Ecto.Query, warn: false
   alias Tqm.Repo
 
+  alias Tqm.Accounts.Person
   alias Tqm.Blog.BlogPost
+
+  @doc """
+  Returns an atom denoting blog_post viewing permissions a person has.
+
+  Possible return values: `:published`, `:all`
+
+  ## Examples
+    iex> viewing_permissions_for_person()
+    :published
+
+    iex> viewing_permissions_for_person(nil)
+    :published
+
+    iex> viewing_permissions_for_person(%Person{role: :stranger})
+    :published
+
+    iex> viewing_permissions_for_person(%Person{role: :owner})
+    :all
+  """
+  def viewing_permissions_for_person(), do: :published
+  def viewing_permissions_for_person(nil), do: :published
+
+  def viewing_permissions_for_person(%Person{} = person) do
+    if Person.owner?(person) do
+      :all
+    else
+      :published
+    end
+  end
 
   @doc """
   Returns an unpaginated list of blog_posts.

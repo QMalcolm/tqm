@@ -21,6 +21,17 @@ defmodule Tqm.BlogTest do
     }
     @invalid_attrs %{content: nil, published_at: nil, title: nil}
 
+    test "viewing_permissions_for_person/0 returns expected value" do
+      assert Blog.viewing_permissions_for_person() == :published
+    end
+
+    test "viewing_permissions_for_person/1 returns expected value" do
+      assert Blog.viewing_permissions_for_person(nil) == :published
+      assert Blog.viewing_permissions_for_person(stranger_person_fixture()) == :published
+      assert Blog.viewing_permissions_for_person(non_stranger_person_fixture()) == :published
+      assert Blog.viewing_permissions_for_person(owner_person_fixture()) == :all
+    end
+
     test "list_blog_posts/0 returns all published blog posts" do
       blog_post = blog_post_fixture()
       unpublished_blog_post_fixture()

@@ -7,12 +7,45 @@ defmodule Tqm.BlogTest do
     alias Tqm.Blog.BlogPost
 
     import Tqm.BlogFixtures
+    import Tqm.AccountsFixtures
 
+    @published_valid_attrs %{
+      content: "some content",
+      published_at: ~U[2023-01-28 02:26:00Z],
+      title: "some title"
+    }
+    @unpublished_valid_attrs %{
+      content: "in progress",
+      published_at: nil,
+      title: "post I want to do"
+    }
     @invalid_attrs %{content: nil, published_at: nil, title: nil}
 
-    test "list_blog_posts/0 returns all blog_posts" do
+    test "viewing_permissions_for_person/0 returns expected value" do
+      assert Blog.viewing_permissions_for_person() == :published
+    end
+
+    test "viewing_permissions_for_person/1 returns expected value" do
+      assert Blog.viewing_permissions_for_person(nil) == :published
+      assert Blog.viewing_permissions_for_person(stranger_person_fixture()) == :published
+      assert Blog.viewing_permissions_for_person(non_stranger_person_fixture()) == :published
+      assert Blog.viewing_permissions_for_person(owner_person_fixture()) == :all
+    end
+
+    test "list_blog_posts/0 returns all published blog posts" do
       blog_post = blog_post_fixture()
+      unpublished_blog_post_fixture()
+      future_blog_post_fixture()
       assert Blog.list_blog_posts() == [blog_post]
+    end
+
+    test "list_blog_posts/1 returns blog posts dependent on passed atom" do
+      blog_post = blog_post_fixture()
+      unpublished_blog_post = unpublished_blog_post_fixture()
+      future_blog_post = future_blog_post_fixture()
+
+      assert Blog.list_blog_posts(:all) == [blog_post, unpublished_blog_post, future_blog_post]
+      assert Blog.list_blog_posts(:published) == [blog_post]
     end
 
     test "get_blog_post!/1 returns the blog_post with given id" do
@@ -21,16 +54,15 @@ defmodule Tqm.BlogTest do
     end
 
     test "create_blog_post/1 with valid data creates a blog_post" do
-      valid_attrs = %{
-        content: "some content",
-        published_at: ~U[2023-01-28 02:26:00Z],
-        title: "some title"
-      }
+      assert {:ok, %BlogPost{} = blog_post} = Blog.create_blog_post(@published_valid_attrs)
+      assert blog_post.content == @published_valid_attrs.content
+      assert blog_post.published_at == @published_valid_attrs.published_at
+      assert blog_post.title == @published_valid_attrs.title
 
-      assert {:ok, %BlogPost{} = blog_post} = Blog.create_blog_post(valid_attrs)
-      assert blog_post.content == "some content"
-      assert blog_post.published_at == ~U[2023-01-28 02:26:00Z]
-      assert blog_post.title == "some title"
+      assert {:ok, %BlogPost{} = blog_post} = Blog.create_blog_post(@unpublished_valid_attrs)
+      assert blog_post.content == @unpublished_valid_attrs.content
+      assert blog_post.published_at == @unpublished_valid_attrs.published_at
+      assert blog_post.title == @unpublished_valid_attrs.title
     end
 
     test "create_blog_post/1 with invalid data returns error changeset" do

@@ -15,6 +15,6 @@ defmodule Tqm.Blog.BlogPost do
   def changeset(blog_post, attrs) do
     blog_post
     |> cast(attrs, [:title, :content, :published_at])
-    |> validate_required([:title, :content, :published_at])
+    |> validate_required([:title, :content])
   end
 end

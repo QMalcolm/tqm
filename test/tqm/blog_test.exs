@@ -48,9 +48,35 @@ defmodule Tqm.BlogTest do
       assert Blog.list_blog_posts(:published) == [blog_post]
     end
 
-    test "get_blog_post!/1 returns the blog_post with given id" do
-      blog_post = blog_post_fixture()
-      assert Blog.get_blog_post!(blog_post.id) == blog_post
+    test "get_blog_post!/1 returns only published blog_posts" do
+      published_blog_post = blog_post_fixture()
+      unpublished_blog_post = unpublished_blog_post_fixture()
+      future_blog_post = future_blog_post_fixture()
+
+      assert Blog.get_blog_post!(published_blog_post.id) == published_blog_post
+      assert_raise Ecto.NoResultsError, fn -> Blog.get_blog_post!(unpublished_blog_post.id) end
+      assert_raise Ecto.NoResultsError, fn -> Blog.get_blog_post!(future_blog_post.id) end
+    end
+
+    test "get_blog_post!/2 returns based on permissions" do
+      published_blog_post = blog_post_fixture()
+      unpublished_blog_post = unpublished_blog_post_fixture()
+      future_blog_post = future_blog_post_fixture()
+
+      assert Blog.get_blog_post!(:published, published_blog_post.id) == published_blog_post
+      assert Blog.get_blog_post!(:all, published_blog_post.id) == published_blog_post
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Blog.get_blog_post!(:published, unpublished_blog_post.id)
+      end
+
+      assert Blog.get_blog_post!(:all, unpublished_blog_post.id) == unpublished_blog_post
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Blog.get_blog_post!(:published, future_blog_post.id)
+      end
+
+      assert Blog.get_blog_post!(:all, future_blog_post.id) == future_blog_post
     end
 
     test "create_blog_post/1 with valid data creates a blog_post" do

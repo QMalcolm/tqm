@@ -72,7 +72,7 @@ defmodule Tqm.Blog do
   def list_blog_posts(:all), do: Repo.all(BlogPost)
 
   @doc """
-  Gets a single blog_post.
+  Gets a single blog_post according to publication status.
 
   Raises `Ecto.NoResultsError` if the Blog post does not exist.
 
@@ -84,8 +84,25 @@ defmodule Tqm.Blog do
       iex> get_blog_post!(456)
       ** (Ecto.NoResultsError)
 
+      iex> get_blog_post!(:published, 111)
+      ** (Ecto.NoResultsError)
+
+      iex> get_blog_post!(:all, 111)
+      %BlogPost{}
+
   """
-  def get_blog_post!(id), do: Repo.get!(BlogPost, id)
+  def get_blog_post!(id), do: get_blog_post!(:published, id)
+
+  def get_blog_post!(:published, id) do
+    time_now = NaiveDateTime.utc_now()
+
+    Repo.one!(
+      from bp in BlogPost,
+        where: bp.id == ^id and bp.published_at <= ^time_now and not is_nil(bp.published_at)
+    )
+  end
+
+  def get_blog_post!(:all, id), do: Repo.get!(BlogPost, id)
 
   @doc """
   Creates a blog_post.

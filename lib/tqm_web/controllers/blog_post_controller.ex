@@ -31,7 +31,11 @@ defmodule TqmWeb.BlogPostController do
   end
 
   def show(conn, %{"id" => id}) do
-    blog_post = Blog.get_blog_post!(id)
+    blog_post =
+      conn.assigns[:current_person]
+      |> Blog.viewing_permissions_for_person()
+      |> Blog.get_blog_post!(id)
+
     render(conn, :show, blog_post: blog_post, tlp: :blog)
   end
 

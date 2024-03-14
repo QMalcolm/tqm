@@ -23,6 +23,34 @@ defmodule TqmWeb.BlogPostControllerTest do
     end
   end
 
+  describe "show" do
+    test "show a blog_post", %{conn: conn} do
+      blog_post = blog_post_fixture()
+      conn = get(conn, ~p"/blog/#{blog_post.id}")
+      assert html_response(conn, 200) =~ blog_post.content
+    end
+
+    test "show unpublished blog_post for owner person", %{conn: conn} do
+      unpublished_blog_post = unpublished_blog_post_fixture()
+
+      conn =
+        conn
+        |> log_in_person(owner_person_fixture())
+        |> get(~p"/blog/#{unpublished_blog_post.id}")
+
+      assert html_response(conn, 200) =~ unpublished_blog_post.content
+    end
+
+    test "show 404 for unpublished blog_post for non owner", %{conn: conn} do
+      unpublished_blog_post = unpublished_blog_post_fixture()
+      assert_error_sent(404, fn -> get(conn, ~p"/blog/#{unpublished_blog_post.id}") end)
+    end
+
+    test "show 404 for non-existant blog_post", %{conn: conn} do
+      assert_error_sent(404, fn -> get(conn, ~p"/blog/0") end)
+    end
+  end
+
   describe "new blog_post" do
     test "renders form", %{conn: conn} do
       conn =

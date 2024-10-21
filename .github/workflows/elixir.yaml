@@ -36,6 +36,7 @@ jobs:
 
     runs-on: ubuntu-latest
     name: Test on OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
+    timeout-minutes: 20
     strategy:
       # Specify the OTP and Elixir versions to use when building
       # and running the workflow steps.

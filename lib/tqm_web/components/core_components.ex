@@ -12,7 +12,7 @@ defmodule TqmWeb.CoreComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import TqmWeb.Gettext
+  use Gettext, backend: TqmWeb.Gettext
 
   @doc """
   Renders a modal.
@@ -560,10 +560,10 @@ defmodule TqmWeb.CoreComponents do
     ~H"""
     <header class="bg-pink-900 text-white pt-3 py-3 px-3">
       <nav class="space-x-3">
-        <.link navigate="/" class={"text-3xl font-semibold #{if @tlp == :home, do: 'underline'}"}>
+        <.link navigate="/" class={"text-3xl font-semibold #{if @tlp == :home, do: "underline"}"}>
           Home
         </.link>
-        <.link navigate="/blog" class={"text-xl #{if @tlp == :blog, do: 'underline'}"}>
+        <.link navigate="/blog" class={"text-xl #{if @tlp == :blog, do: "underline"}"}>
           Blog
         </.link>
         <%!-- <.link navigate = "/recipes" class = {"text-xl #{if @tlp == :recipes, do: 'underline'}"}>
@@ -572,7 +572,7 @@ defmodule TqmWeb.CoreComponents do
         <%!-- <.link navigate = "/projects" class = {"text-xl #{if @tlp == :projects, do: 'underline'}"}>
             Projects
         </.link> --%>
-        <.link navigate="/about" class={"text-xl #{if @tlp == :about, do: 'underline'}"}>
+        <.link navigate="/about" class={"text-xl #{if @tlp == :about, do: "underline"}"}>
           About
         </.link>
         <%= if @current_person do %>

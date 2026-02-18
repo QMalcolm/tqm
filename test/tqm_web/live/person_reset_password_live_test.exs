@@ -93,7 +93,7 @@ defmodule TqmWeb.PersonResetPasswordLiveTest do
 
       {:ok, conn} =
         lv
-        |> element(~s|main a:fl-contains("Log in")|)
+        |> element(~s|main a[href="/people/log_in"]|)
         |> render_click()
         |> follow_redirect(conn, ~p"/people/log_in")
 
@@ -108,7 +108,7 @@ defmodule TqmWeb.PersonResetPasswordLiveTest do
 
       {:ok, conn} =
         lv
-        |> element(~s|main a:fl-contains("Register")|)
+        |> element(~s|main a[href="/people/register"]|)
         |> render_click()
         |> follow_redirect(conn, ~p"/people/register")
 

@@ -10,9 +10,9 @@
 </.header>
 
 <.table id="blog_posts" rows={@blog_posts} row_click={&JS.navigate(~p"/blog/#{&1}")}>
-  <:col :let={blog_post} label="Title"><%= blog_post.title %></:col>
-  <:col :let={blog_post} label="Content"><%= blog_post.content %></:col>
-  <:col :let={blog_post} label="Published at"><%= blog_post.published_at %></:col>
+  <:col :let={blog_post} label="Title">{blog_post.title}</:col>
+  <:col :let={blog_post} label="Content">{blog_post.content}</:col>
+  <:col :let={blog_post} label="Published at">{blog_post.published_at}</:col>
   <:action :let={blog_post}>
     <div class="sr-only">
       <.link navigate={~p"/blog/#{blog_post}"}>Show</.link>

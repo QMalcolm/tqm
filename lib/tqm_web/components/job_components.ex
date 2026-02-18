@@ -18,11 +18,11 @@ defmodule TqmWeb.JobComponents do
       <TqmWeb.CoreComponents.markdown_content markdown={@job.description} />
       <%= for role <- @job.roles do %>
         <p class="pt-2">
-          <span class="text-xl underline"><%= role.title %></span>
+          <span class="text-xl underline">{role.title}</span>
           <span class="pl-1">
-            <%= Calendar.strftime(role.start_date, "%b %Y") %> - <%= if role.end_date == nil,
+            {Calendar.strftime(role.start_date, "%b %Y")} - {if role.end_date == nil,
               do: "Present",
-              else: Calendar.strftime(role.end_date, "%b %Y") %>
+              else: Calendar.strftime(role.end_date, "%b %Y")}
           </span>
           <TqmWeb.CoreComponents.markdown_content markdown={role.details} />
         </p>

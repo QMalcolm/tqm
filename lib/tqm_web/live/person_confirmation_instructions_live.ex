@@ -7,7 +7,13 @@ defmodule TqmWeb.PersonConfirmationInstructionsLive do
     ~H"""
     <.header>Resend confirmation instructions</.header>
 
-    <.simple_form :let={f} for={:person} id="resend_confirmation_form" phx-submit="send_instructions">
+    <.simple_form
+      :let={f}
+      for={%{}}
+      as={:person}
+      id="resend_confirmation_form"
+      phx-submit="send_instructions"
+    >
       <.input field={{f, :email}} type="email" label="Email" required />
       <:actions>
         <.button phx-disable-with="Sending...">Resend confirmation instructions</.button>

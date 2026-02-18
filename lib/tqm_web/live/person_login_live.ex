@@ -18,7 +18,7 @@ defmodule TqmWeb.PersonLoginLive do
       <.simple_form
         :let={f}
         id="login_form"
-        for={:person}
+        for={%{}}
         action={~p"/people/log_in"}
         as={:person}
         phx-update="ignore"

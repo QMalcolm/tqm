@@ -1,18 +1,19 @@
-<.header>
-  {@blog_post.title}
-  <:actions>
-    <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
-      <.link href={~p"/blog/#{@blog_post}/edit"}>
-        <.button>Edit</.button>
-      </.link>
-    <% end %>
-  </:actions>
-</.header>
+<div class="max-w-2xl mx-auto">
+  <.header>
+    {@blog_post.title}
+    <:subtitle :if={@blog_post.published_at}>
+      {Calendar.strftime(@blog_post.published_at, "%B %-d, %Y")}
+    </:subtitle>
+    <:actions>
+      <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
+        <.link href={~p"/blog/#{@blog_post}/edit"}>
+          <.button>Edit</.button>
+        </.link>
+      <% end %>
+    </:actions>
+  </.header>
 
-<.list>
-  <:item title="Published at">{@blog_post.published_at}</:item>
-</.list>
+  <.markdown_content markdown={@blog_post.content} />
 
-<.markdown_content markdown={@blog_post.content} />
-
-<.back navigate={~p"/blog"}>Back to blog</.back>
+  <.back navigate={~p"/blog"}>Back to blog</.back>
+</div>

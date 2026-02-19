@@ -43,7 +43,7 @@ defmodule TqmWeb do
         layouts: [html: TqmWeb.Layouts]
 
       import Plug.Conn
-      import TqmWeb.Gettext
+      use Gettext, backend: TqmWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -85,7 +85,7 @@ defmodule TqmWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import TqmWeb.CoreComponents
-      import TqmWeb.Gettext
+      use Gettext, backend: TqmWeb.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS

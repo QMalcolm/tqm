@@ -77,7 +77,7 @@ defmodule TqmWeb.PersonRegistrationLiveTest do
 
       {:ok, _login_live, login_html} =
         lv
-        |> element(~s|main a:fl-contains("Sign in")|)
+        |> element(~s|main a[href="/people/log_in"]|)
         |> render_click()
         |> follow_redirect(conn, ~p"/people/log_in")
 

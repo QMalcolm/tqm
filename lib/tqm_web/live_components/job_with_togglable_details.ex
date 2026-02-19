@@ -40,7 +40,7 @@ defmodule TqmWeb.LiveComponents.JobWithTogglableDetails do
       >
         <div>
           <span class="text-xl" style="line-height: 3.5rem;">
-            <%= if @show_details, do: "-", else: "+" %>
+            {if @show_details, do: "-", else: "+"}
           </span>
         </div>
         <div>
@@ -48,18 +48,18 @@ defmodule TqmWeb.LiveComponents.JobWithTogglableDetails do
         </div>
         <div>
           <span class="text-xl" style="line-height: 3.5rem;">
-            <%= @job.company_name %>
+            {@job.company_name}
           </span>
         </div>
         <div>
           <span style="line-height: 3.5rem; margin-left: auto; order: 2;">
-            <%= Calendar.strftime(@job.start_date, "%b %Y") %> - <%= if @job.end_date == nil,
+            {Calendar.strftime(@job.start_date, "%b %Y")} - {if @job.end_date == nil,
               do: "Present",
-              else: Calendar.strftime(@job.end_date, "%b %Y") %>
+              else: Calendar.strftime(@job.end_date, "%b %Y")}
           </span>
         </div>
       </div>
-      <div style={"#{if not @show_details, do: 'display: none;'}"}>
+      <div style={"#{if not @show_details, do: "display: none;"}"}>
         <TqmWeb.JobComponents.job_description_and_roles job={@job} />
       </div>
     </div>

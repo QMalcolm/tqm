@@ -11,7 +11,7 @@ defmodule TqmWeb.PersonForgotPasswordLive do
         <:subtitle>We'll send a password reset link to your inbox</:subtitle>
       </.header>
 
-      <.simple_form :let={f} id="reset_password_form" for={:person} phx-submit="send_email">
+      <.simple_form :let={f} id="reset_password_form" for={%{}} as={:person} phx-submit="send_email">
         <.input field={{f, :email}} type="email" placeholder="Email" required />
         <:actions>
           <.button phx-disable-with="Sending..." class="w-full">

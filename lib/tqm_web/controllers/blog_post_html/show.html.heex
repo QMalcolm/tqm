@@ -1,5 +1,5 @@
 <.header>
-  Blog post <%= @blog_post.id %>
+  Blog post {@blog_post.id}
   <:subtitle>This is a blog_post record from your database.</:subtitle>
   <:actions>
     <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
@@ -11,9 +11,9 @@
 </.header>
 
 <.list>
-  <:item title="Title"><%= @blog_post.title %></:item>
-  <:item title="Content"><%= @blog_post.content %></:item>
-  <:item title="Published at"><%= @blog_post.published_at %></:item>
+  <:item title="Title">{@blog_post.title}</:item>
+  <:item title="Content">{@blog_post.content}</:item>
+  <:item title="Published at">{@blog_post.published_at}</:item>
 </.list>
 
 <.back navigate={~p"/blog"}>Back to blog_posts</.back>

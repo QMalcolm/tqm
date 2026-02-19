@@ -18,7 +18,7 @@ defmodule TqmWeb.PersonLoginLive do
       <.simple_form
         :let={f}
         id="login_form"
-        for={:person}
+        for={%{}}
         action={~p"/people/log_in"}
         as={:person}
         phx-update="ignore"
@@ -43,7 +43,7 @@ defmodule TqmWeb.PersonLoginLive do
   end
 
   def mount(_params, _session, socket) do
-    email = live_flash(socket.assigns.flash, :email)
+    email = Phoenix.Flash.get(socket.assigns.flash, :email)
     {:ok, assign(socket, email: email), temporary_assigns: [email: nil]}
   end
 end

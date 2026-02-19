@@ -12,6 +12,11 @@ processes = []
   PHX_HOST = "quigleymalcolm.com"
   PORT = "8080"
 
+[vm]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1
+
 [experimental]
   auto_rollback = true
 

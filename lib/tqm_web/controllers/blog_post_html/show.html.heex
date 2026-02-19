@@ -1,10 +1,9 @@
 <.header>
-  Blog post {@blog_post.id}
-  <:subtitle>This is a blog_post record from your database.</:subtitle>
+  {@blog_post.title}
   <:actions>
     <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
       <.link href={~p"/blog/#{@blog_post}/edit"}>
-        <.button>Edit blog_post</.button>
+        <.button>Edit</.button>
       </.link>
     <% end %>
   </:actions>
@@ -16,4 +15,4 @@
   <:item title="Published at">{@blog_post.published_at}</:item>
 </.list>
 
-<.back navigate={~p"/blog"}>Back to blog_posts</.back>
+<.back navigate={~p"/blog"}>Back to blog</.back>

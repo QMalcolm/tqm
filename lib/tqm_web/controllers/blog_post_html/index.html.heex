@@ -1,9 +1,9 @@
 <.header>
-  Listing Blog posts
+  Blog
   <:actions>
     <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
       <.link href={~p"/blog/new"}>
-        <.button>New Blog post</.button>
+        <.button>New post</.button>
       </.link>
     <% end %>
   </:actions>

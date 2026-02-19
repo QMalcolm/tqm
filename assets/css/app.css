@@ -2,10 +2,23 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+div.markdown_render h1 { font-size: 1.875rem; font-weight: 700; margin: 1rem 0; }
+div.markdown_render h2 { font-size: 1.5rem;   font-weight: 700; margin: 1rem 0; }
+div.markdown_render h3 { font-size: 1.25rem;  font-weight: 600; margin: 0.75rem 0; }
+div.markdown_render h4 { font-size: 1.125rem; font-weight: 600; margin: 0.75rem 0; }
+div.markdown_render h5 { font-size: 1rem;     font-weight: 600; margin: 0.5rem 0; }
+div.markdown_render h6 { font-size: 0.875rem; font-weight: 600; margin: 0.5rem 0; }
+
+div.markdown_render p { margin: 0.75rem 0; }
+
 div.markdown_render ul > li {
     margin-left: 15px;
     list-style-type: initial;
+}
 
+div.markdown_render ol > li {
+    margin-left: 15px;
+    list-style-type: decimal;
 }
 
 div.markdown_render a {

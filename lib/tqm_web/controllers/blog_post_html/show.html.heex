@@ -10,9 +10,9 @@
 </.header>
 
 <.list>
-  <:item title="Title">{@blog_post.title}</:item>
-  <:item title="Content">{@blog_post.content}</:item>
   <:item title="Published at">{@blog_post.published_at}</:item>
 </.list>
+
+<.markdown_content markdown={@blog_post.content} />
 
 <.back navigate={~p"/blog"}>Back to blog</.back>

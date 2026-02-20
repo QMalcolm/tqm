@@ -20,7 +20,13 @@
 </div>
 
 <div :if={@mode == :write}>
-  <.simple_form :let={f} for={@changeset} id="blog_post_form" phx-change="validate" phx-submit="save">
+  <.simple_form
+    :let={f}
+    for={@changeset}
+    id="blog_post_form"
+    phx-change="validate"
+    phx-submit="save"
+  >
     <.error :if={@changeset.action}>
       Oops, something went wrong! Please check the errors below.
     </.error>

@@ -18,13 +18,16 @@ defmodule TqmWeb.BlogPostLive.Form do
      assign(socket,
        blog_post: blog_post,
        changeset: changeset,
-       publish_status: publish_status(blog_post)
+       publish_status: publish_status(blog_post),
+       page_title: "Edit post"
      )}
   end
 
   def handle_params(_params, _url, socket) do
     changeset = Blog.change_blog_post(%BlogPost{})
-    {:noreply, assign(socket, blog_post: %BlogPost{}, changeset: changeset)}
+
+    {:noreply,
+     assign(socket, blog_post: %BlogPost{}, changeset: changeset, page_title: "New post")}
   end
 
   @impl true

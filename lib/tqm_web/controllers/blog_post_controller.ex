@@ -9,7 +9,7 @@ defmodule TqmWeb.BlogPostController do
       |> Blog.viewing_permissions_for_person()
       |> Blog.list_blog_posts()
 
-    render(conn, :index, tlp: :blog, blog_posts: blog_posts)
+    render(conn, :index, tlp: :blog, blog_posts: blog_posts, page_title: "Blog")
   end
 
   def show(conn, %{"id" => id}) do
@@ -18,7 +18,7 @@ defmodule TqmWeb.BlogPostController do
       |> Blog.viewing_permissions_for_person()
       |> Blog.get_blog_post!(id)
 
-    render(conn, :show, blog_post: blog_post, tlp: :blog)
+    render(conn, :show, blog_post: blog_post, tlp: :blog, page_title: blog_post.title)
   end
 
   def delete(conn, %{"id" => id}) do

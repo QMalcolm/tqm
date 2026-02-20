@@ -31,6 +31,7 @@ defmodule TqmWeb.AboutLive.Index do
       socket
       |> assign(:tlp, :about)
       |> assign(:jobs, jobs)
+      |> assign(:page_title, "About")
 
     {:ok, socket}
   end

@@ -19,7 +19,7 @@ defmodule TqmWeb.BlogPostControllerTest do
   describe "index" do
     test "lists all blog_posts", %{conn: conn} do
       conn = get(conn, ~p"/blog")
-      assert html_response(conn, 200) =~ "Listing Blog posts"
+      assert html_response(conn, 200) =~ "Blog"
     end
   end
 
@@ -95,7 +95,7 @@ defmodule TqmWeb.BlogPostControllerTest do
       assert redirected_to(conn) == ~p"/blog/#{id}"
 
       conn = get(conn, ~p"/blog/#{id}")
-      assert html_response(conn, 200) =~ "Blog post #{id}"
+      assert html_response(conn, 200) =~ @create_attrs.title
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

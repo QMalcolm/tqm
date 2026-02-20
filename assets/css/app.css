@@ -2,10 +2,53 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+div.markdown_render h1 { font-size: 1.875rem; font-weight: 700; margin: 1rem 0; }
+div.markdown_render h2 { font-size: 1.5rem;   font-weight: 700; margin: 1rem 0; }
+div.markdown_render h3 { font-size: 1.25rem;  font-weight: 600; margin: 0.75rem 0; }
+div.markdown_render h4 { font-size: 1.125rem; font-weight: 600; margin: 0.75rem 0; }
+div.markdown_render h5 { font-size: 1rem;     font-weight: 600; margin: 0.5rem 0; }
+div.markdown_render h6 { font-size: 0.875rem; font-weight: 600; margin: 0.5rem 0; }
+
+div.markdown_render p { margin: 0.75rem 0; }
+
 div.markdown_render ul > li {
     margin-left: 15px;
     list-style-type: initial;
+}
 
+div.markdown_render ol > li {
+    margin-left: 15px;
+    list-style-type: decimal;
+}
+
+div.markdown_render blockquote {
+    border-left: 4px solid #d1d5db;
+    margin: 1rem 0;
+    padding: 0.25rem 0 0.25rem 1rem;
+    color: #6b7280;
+}
+
+div.markdown_render code {
+    font-family: ui-monospace, monospace;
+    font-size: 0.875em;
+    background-color: #f3f4f6;
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+}
+
+div.markdown_render pre {
+    background-color: #f3f4f6;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+}
+
+div.markdown_render pre > code {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.875rem;
 }
 
 div.markdown_render a {

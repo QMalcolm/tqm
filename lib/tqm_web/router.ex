@@ -20,7 +20,13 @@ defmodule TqmWeb.Router do
   ## Routes requiring :owner person role
   scope "/", TqmWeb do
     pipe_through [:browser, :require_owner_person]
-    resources "/blog", BlogPostController, except: [:show, :index]
+    delete "/blog/:id", BlogPostController, :delete
+
+    live_session :require_owner_person,
+      on_mount: [{TqmWeb.PersonAuth, :ensure_owner}] do
+      live "/blog/new", BlogPostLive.Form, :new
+      live "/blog/:id/edit", BlogPostLive.Form, :edit
+    end
   end
 
   ## Unauthed routes

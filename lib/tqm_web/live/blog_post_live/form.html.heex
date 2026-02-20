@@ -26,11 +26,52 @@
     </.error>
     <.input field={{f, :title}} type="text" label="Title" />
     <.input field={{f, :content}} type="textarea" label="Content" />
-    <.input field={{f, :published_at}} type="datetime-local" label="Published at" />
     <:actions>
-      <.button>Save</.button>
+      <div class="flex flex-wrap items-center gap-3">
+        <.button>Save</.button>
+        <.button
+          :if={@live_action == :edit and @publish_status in [:draft, :scheduled]}
+          type="button"
+          phx-click="publish_now"
+        >
+          Publish now
+        </.button>
+        <button
+          :if={@live_action == :edit and @publish_status in [:draft, :scheduled]}
+          type="button"
+          phx-click="show_schedule_form"
+          class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+        >
+          {if @publish_status == :scheduled, do: "Reschedule", else: "Schedule publishing"}
+        </button>
+      </div>
     </:actions>
   </.simple_form>
+
+  <div :if={@live_action == :edit} class="mt-4">
+    <p :if={@publish_status == :scheduled} class="text-sm text-zinc-600 mb-3">
+      Scheduled for {Calendar.strftime(@blog_post.published_at, "%B %-d, %Y at %H:%M UTC")}
+    </p>
+    <p :if={@publish_status == :published} class="text-sm text-zinc-600 mb-3">
+      Published on {Calendar.strftime(@blog_post.published_at, "%B %-d, %Y")}
+    </p>
+    <form :if={@scheduling} phx-submit="schedule" class="flex flex-wrap items-center gap-3">
+      <input
+        type="datetime-local"
+        name="scheduled_at"
+        required
+        class="block rounded-lg text-zinc-900 focus:outline-none focus:ring-4 sm:text-sm sm:leading-6 border-zinc-300 focus:border-zinc-400 focus:ring-zinc-800/5"
+      />
+      <.button type="submit">Confirm</.button>
+      <button
+        type="button"
+        phx-click="hide_schedule_form"
+        class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+      >
+        Cancel
+      </button>
+    </form>
+  </div>
 </div>
 
 <div :if={@mode == :preview} class="max-w-2xl mx-auto mt-6">

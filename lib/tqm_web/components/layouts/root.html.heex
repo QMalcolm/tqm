@@ -4,9 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
-    <.live_title suffix=" · Phoenix Framework">
-      {assigns[:page_title] || "Tqm"}
+    <.live_title prefix={if assigns[:page_title], do: "QM: ", else: ""}>
+      {assigns[:page_title] || "Quigley Malcolm"}
     </.live_title>
+    <link rel="icon" type="image/png" href={~p"/favicon.png"} />
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>

@@ -166,6 +166,22 @@ defmodule TqmWeb.PersonAuth do
     end
   end
 
+  def on_mount(:ensure_owner, _params, session, socket) do
+    socket = mount_current_person(session, socket)
+    current_person = socket.assigns.current_person
+
+    if current_person != nil and Tqm.Accounts.Person.owner?(current_person) do
+      {:cont, socket}
+    else
+      socket =
+        socket
+        |> Phoenix.LiveView.put_flash(:error, "You must be an owner to access this page.")
+        |> Phoenix.LiveView.redirect(to: ~p"/")
+
+      {:halt, socket}
+    end
+  end
+
   def on_mount(:redirect_if_person_is_authenticated, _params, session, socket) do
     socket = mount_current_person(session, socket)
 

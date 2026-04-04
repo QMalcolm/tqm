@@ -21,3 +21,4 @@ mix test                              # All tests
 - Commit descriptions are encouraged (but not required) and should cover: why the change is necessary, any foreseen issues, and paths intentionally not taken (and why).
 - Commits are GPG-signed (`commit.gpgsign=true`). Do not skip signing.
 - Do not add `Co-Authored-By` trailers.
+- If we change the architecture of the project, we should update the ARCHITECTURE.md when appropriate.

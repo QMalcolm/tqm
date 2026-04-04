@@ -29,6 +29,11 @@ defmodule TqmWeb.Router do
     end
   end
 
+  ## Feed routes (no pipeline — public, no session or CSRF needed)
+  scope "/", TqmWeb do
+    get "/blog/feed.xml", FeedController, :index
+  end
+
   ## Unauthed routes
   scope "/", TqmWeb do
     pipe_through :browser

@@ -9,12 +9,30 @@
   </:actions>
 </.header>
 
+<p :if={@current_tag} class="mt-2 text-sm text-zinc-600">
+  Posts tagged "<span class="font-medium">{@current_tag.name}</span>"
+  &mdash;
+  <.link navigate={~p"/blog"} class="underline hover:text-zinc-900">all posts</.link>
+</p>
+
 <.table id="blog_posts" rows={@blog_posts} row_click={&JS.navigate(~p"/blog/#{&1}")}>
   <:col :let={blog_post} label="Title">{blog_post.title}</:col>
   <:col :let={blog_post} label="Published">
     {if blog_post.published_at,
       do: Calendar.strftime(blog_post.published_at, "%B %-d, %Y"),
       else: "Draft"}
+  </:col>
+  <:col :let={blog_post} label="Tags">
+    <div class="flex flex-wrap gap-1">
+      <%= for tag <- blog_post.tags do %>
+        <.link
+          navigate={~p"/blog/tags/#{tag.slug}"}
+          class="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-200"
+        >
+          {tag.name}
+        </.link>
+      <% end %>
+    </div>
   </:col>
   <:action :let={blog_post}>
     <div class="sr-only">

@@ -40,6 +40,7 @@ defmodule TqmWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/blog/tags/:tag", BlogPostController, :tag
     resources "/blog", BlogPostController, only: [:index, :show]
   end
 

@@ -6,7 +6,14 @@ defmodule TqmWeb.BlogPostLive.Form do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, mode: :write, tlp: :blog, scheduling: false, publish_status: :draft)}
+    {:ok,
+     assign(socket,
+       mode: :write,
+       tlp: :blog,
+       scheduling: false,
+       publish_status: :draft,
+       available_tags: []
+     )}
   end
 
   @impl true
@@ -18,6 +25,7 @@ defmodule TqmWeb.BlogPostLive.Form do
      assign(socket,
        blog_post: blog_post,
        changeset: changeset,
+       available_tags: Blog.list_tags(),
        publish_status: publish_status(blog_post),
        page_title: "Edit post"
      )}
@@ -27,7 +35,12 @@ defmodule TqmWeb.BlogPostLive.Form do
     changeset = Blog.change_blog_post(%BlogPost{})
 
     {:noreply,
-     assign(socket, blog_post: %BlogPost{}, changeset: changeset, page_title: "New post")}
+     assign(socket,
+       blog_post: %BlogPost{},
+       changeset: changeset,
+       available_tags: Blog.list_tags(),
+       page_title: "New post"
+     )}
   end
 
   @impl true
@@ -46,6 +59,28 @@ defmodule TqmWeb.BlogPostLive.Form do
 
   def handle_event("save", %{"blog_post" => params}, socket) do
     save_blog_post(socket, socket.assigns.live_action, params)
+  end
+
+  def handle_event("add_tag", %{"tag" => tag_name}, socket) do
+    current = Ecto.Changeset.get_field(socket.assigns.changeset, :tag_names) || ""
+
+    existing =
+      current
+      |> String.split(",")
+      |> Enum.map(&String.trim/1)
+      |> Enum.reject(&(&1 == ""))
+
+    new_names =
+      if tag_name in existing,
+        do: current,
+        else: (existing ++ [tag_name]) |> Enum.join(", ")
+
+    changeset =
+      socket.assigns.blog_post
+      |> Blog.change_blog_post(%{"tag_names" => new_names})
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign(socket, changeset: changeset)}
   end
 
   def handle_event("publish_now", _params, socket) do
@@ -121,7 +156,7 @@ defmodule TqmWeb.BlogPostLive.Form do
 
   defp current_attrs(changeset) do
     current = Ecto.Changeset.apply_changes(changeset)
-    %{title: current.title, content: current.content}
+    %{title: current.title, content: current.content, tag_names: current.tag_names}
   end
 
   defp publish_status(%{published_at: nil}), do: :draft

@@ -32,6 +32,24 @@
     </.error>
     <.input field={{f, :title}} type="text" label="Title" />
     <.input field={{f, :content}} type="textarea" label="Content" />
+    <.input
+      field={{f, :tag_names}}
+      type="text"
+      label="Tags"
+      placeholder="e.g. elixir, phoenix"
+    />
+    <div :if={@available_tags != []} class="mt-1 flex flex-wrap gap-1">
+      <%= for tag <- @available_tags do %>
+        <button
+          type="button"
+          phx-click="add_tag"
+          phx-value-tag={tag.name}
+          class="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-200"
+        >
+          {tag.name}
+        </button>
+      <% end %>
+    </div>
     <:actions>
       <div class="flex flex-wrap items-center gap-3">
         <.button>Save</.button>

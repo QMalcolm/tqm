@@ -11,8 +11,7 @@
 
 <p :if={@current_tag} class="mt-2 text-sm text-zinc-600">
   Posts tagged "<span class="font-medium">{@current_tag.name}</span>"
-  &mdash;
-  <.link navigate={~p"/blog"} class="underline hover:text-zinc-900">all posts</.link>
+  &mdash; <.link navigate={~p"/blog"} class="underline hover:text-zinc-900">all posts</.link>
 </p>
 
 <.table id="blog_posts" rows={@blog_posts} row_click={&JS.navigate(~p"/blog/#{&1}")}>

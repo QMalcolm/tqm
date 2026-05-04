@@ -8,7 +8,7 @@ defmodule Tqm.MixProject do
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
-      listeners: [Phoenix.CodeReloader],
+      listeners: if(Mix.env() == :dev, do: [Phoenix.CodeReloader], else: []),
       aliases: aliases(),
       deps: deps()
     ]

@@ -134,6 +134,17 @@ defmodule Tqm.Blog do
   end
 
   @doc """
+  Returns tags whose names partially match `term`, case-insensitively.
+  Returns an empty list when `term` is blank.
+  """
+  def search_tags(""), do: []
+
+  def search_tags(term) do
+    pattern = "%#{term}%"
+    Repo.all(from t in Tag, where: ilike(t.name, ^pattern), order_by: t.name)
+  end
+
+  @doc """
   Returns the tag with the given slug, or nil if none exists.
   """
   def get_tag_by_slug(slug), do: Repo.get_by(Tag, slug: slug)

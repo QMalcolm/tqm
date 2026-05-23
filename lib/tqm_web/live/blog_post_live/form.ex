@@ -12,7 +12,10 @@ defmodule TqmWeb.BlogPostLive.Form do
        tlp: :blog,
        scheduling: false,
        publish_status: :draft,
-       available_tags: []
+       selected_tag_names: [],
+       tag_search: "",
+       tag_suggestions: [],
+       tag_create_option: nil
      )}
   end
 
@@ -25,7 +28,7 @@ defmodule TqmWeb.BlogPostLive.Form do
      assign(socket,
        blog_post: blog_post,
        changeset: changeset,
-       available_tags: Blog.list_tags(),
+       selected_tag_names: Enum.map(blog_post.tags, & &1.name),
        publish_status: publish_status(blog_post),
        page_title: "Edit post"
      )}
@@ -38,7 +41,6 @@ defmodule TqmWeb.BlogPostLive.Form do
      assign(socket,
        blog_post: %BlogPost{},
        changeset: changeset,
-       available_tags: Blog.list_tags(),
        page_title: "New post"
      )}
   end
@@ -49,42 +51,80 @@ defmodule TqmWeb.BlogPostLive.Form do
   end
 
   def handle_event("validate", %{"blog_post" => params}, socket) do
+    tag_names = Enum.join(socket.assigns.selected_tag_names, ", ")
+
     changeset =
       socket.assigns.blog_post
-      |> Blog.change_blog_post(params)
+      |> Blog.change_blog_post(Map.put(params, "tag_names", tag_names))
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, changeset: changeset)}
   end
 
   def handle_event("save", %{"blog_post" => params}, socket) do
-    save_blog_post(socket, socket.assigns.live_action, params)
+    tag_names = Enum.join(socket.assigns.selected_tag_names, ", ")
+    save_blog_post(socket, socket.assigns.live_action, Map.put(params, "tag_names", tag_names))
   end
 
-  def handle_event("add_tag", %{"tag" => tag_name}, socket) do
-    current = Ecto.Changeset.get_field(socket.assigns.changeset, :tag_names) || ""
+  def handle_event("search_tags", %{"tag_search" => term}, socket) do
+    term = String.trim(term)
+    all_suggestions = Blog.search_tags(term)
 
-    existing =
-      current
-      |> String.split(",")
-      |> Enum.map(&String.trim/1)
-      |> Enum.reject(&(&1 == ""))
+    exact_match_exists =
+      Enum.any?(all_suggestions, fn t ->
+        String.downcase(t.name) == String.downcase(term)
+      end)
 
-    new_names =
-      if tag_name in existing,
-        do: current,
-        else: (existing ++ [tag_name]) |> Enum.join(", ")
+    selected_lower = Enum.map(socket.assigns.selected_tag_names, &String.downcase/1)
 
-    changeset =
-      socket.assigns.blog_post
-      |> Blog.change_blog_post(%{"tag_names" => new_names})
-      |> Map.put(:action, :validate)
+    filtered =
+      Enum.reject(all_suggestions, fn t ->
+        String.downcase(t.name) in selected_lower
+      end)
 
-    {:noreply, assign(socket, changeset: changeset)}
+    create_option =
+      if term != "" and not exact_match_exists, do: term, else: nil
+
+    {:noreply,
+     assign(socket,
+       tag_search: term,
+       tag_suggestions: filtered,
+       tag_create_option: create_option
+     )}
+  end
+
+  def handle_event("select_tag", %{"name" => name}, socket) do
+    name = String.trim(name)
+    selected = socket.assigns.selected_tag_names
+    selected_lower = Enum.map(selected, &String.downcase/1)
+
+    new_selected =
+      if String.downcase(name) in selected_lower,
+        do: selected,
+        else: selected ++ [name]
+
+    {:noreply,
+     assign(socket,
+       selected_tag_names: new_selected,
+       tag_search: "",
+       tag_suggestions: [],
+       tag_create_option: nil
+     )}
+  end
+
+  def handle_event("remove_tag", %{"name" => name}, socket) do
+    new_selected =
+      Enum.reject(socket.assigns.selected_tag_names, fn n ->
+        String.downcase(n) == String.downcase(name)
+      end)
+
+    {:noreply, assign(socket, selected_tag_names: new_selected)}
   end
 
   def handle_event("publish_now", _params, socket) do
-    attrs = current_attrs(socket.assigns.changeset) |> Map.put(:published_at, DateTime.utc_now())
+    attrs =
+      current_attrs(socket.assigns.changeset, socket.assigns.selected_tag_names)
+      |> Map.put(:published_at, DateTime.utc_now())
 
     case Blog.update_blog_post(socket.assigns.blog_post, attrs) do
       {:ok, blog_post} ->
@@ -110,7 +150,10 @@ defmodule TqmWeb.BlogPostLive.Form do
     case NaiveDateTime.from_iso8601(scheduled_at_str <> ":00") do
       {:ok, naive_dt} ->
         {:ok, utc_dt} = DateTime.from_naive(naive_dt, "Etc/UTC")
-        attrs = current_attrs(socket.assigns.changeset) |> Map.put(:published_at, utc_dt)
+
+        attrs =
+          current_attrs(socket.assigns.changeset, socket.assigns.selected_tag_names)
+          |> Map.put(:published_at, utc_dt)
 
         case Blog.update_blog_post(socket.assigns.blog_post, attrs) do
           {:ok, blog_post} ->
@@ -154,9 +197,14 @@ defmodule TqmWeb.BlogPostLive.Form do
     end
   end
 
-  defp current_attrs(changeset) do
+  defp current_attrs(changeset, selected_tag_names) do
     current = Ecto.Changeset.apply_changes(changeset)
-    %{title: current.title, content: current.content, tag_names: current.tag_names}
+
+    %{
+      title: current.title,
+      content: current.content,
+      tag_names: Enum.join(selected_tag_names, ", ")
+    }
   end
 
   defp publish_status(%{published_at: nil}), do: :draft

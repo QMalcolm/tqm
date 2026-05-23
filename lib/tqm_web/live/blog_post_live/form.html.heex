@@ -32,23 +32,64 @@
     </.error>
     <.input field={{f, :title}} type="text" label="Title" />
     <.input field={{f, :content}} type="textarea" label="Content" />
-    <.input
-      field={{f, :tag_names}}
-      type="text"
-      label="Tags"
-      placeholder="e.g. elixir, phoenix"
-    />
-    <div :if={@available_tags != []} class="mt-1 flex flex-wrap gap-1">
-      <%= for tag <- @available_tags do %>
-        <button
-          type="button"
-          phx-click="add_tag"
-          phx-value-tag={tag.name}
-          class="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-200"
+    <div>
+      <label class="block text-sm font-semibold leading-6 text-zinc-900">Tags</label>
+      <div :if={@selected_tag_names != []} class="mt-2 flex flex-wrap gap-1.5">
+        <%= for name <- @selected_tag_names do %>
+          <span class="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700">
+            {name}
+            <button
+              type="button"
+              phx-click="remove_tag"
+              phx-value-name={name}
+              aria-label={"Remove #{name}"}
+              class="ml-0.5 rounded-full p-0.5 text-zinc-400 hover:bg-zinc-200 hover:text-zinc-600"
+            >
+              <svg class="h-2.5 w-2.5" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
+                <path d="M6.414 5l3.293-3.293a1 1 0 00-1.414-1.414L5 3.586 1.707.293A1 1 0 00.293 1.707L3.586 5 .293 8.293a1 1 0 101.414 1.414L5 6.414l3.293 3.293a1 1 0 001.414-1.414L6.414 5z" />
+              </svg>
+            </button>
+          </span>
+        <% end %>
+      </div>
+      <div class="relative mt-2">
+        <input
+          type="text"
+          name="tag_search"
+          value={@tag_search}
+          phx-keyup="search_tags"
+          phx-debounce="200"
+          placeholder="Search tags..."
+          autocomplete="off"
+          class="block w-full rounded-lg border border-zinc-300 py-[7px] px-[11px] text-zinc-900 focus:border-zinc-400 focus:outline-none focus:ring-4 focus:ring-zinc-800/5 sm:text-sm sm:leading-6"
+        />
+        <ul
+          :if={@tag_suggestions != [] or @tag_create_option != nil}
+          class="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white py-1 shadow-lg text-sm text-zinc-700"
         >
-          {tag.name}
-        </button>
-      <% end %>
+          <li :for={tag <- @tag_suggestions}>
+            <button
+              type="button"
+              phx-click="select_tag"
+              phx-value-name={tag.name}
+              class="w-full px-4 py-2 text-left hover:bg-zinc-50"
+            >
+              {tag.name}
+            </button>
+          </li>
+          <li :if={@tag_create_option != nil}>
+            <button
+              type="button"
+              phx-click="select_tag"
+              phx-value-name={@tag_create_option}
+              class="w-full px-4 py-2 text-left hover:bg-zinc-50"
+            >
+              {@tag_create_option}
+              <span class="text-zinc-400">(create new)</span>
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
     <:actions>
       <div class="flex flex-wrap items-center gap-3">

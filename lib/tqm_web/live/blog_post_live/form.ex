@@ -70,11 +70,19 @@ defmodule TqmWeb.BlogPostLive.Form do
   end
 
   def handle_event("lock_slug", %{"blog_post" => params}, socket) do
+    current = Ecto.Changeset.apply_changes(socket.assigns.changeset)
     tag_names = Enum.join(socket.assigns.selected_tag_names, ", ")
+
+    attrs = %{
+      "title" => current.title,
+      "content" => current.content,
+      "slug" => params["slug"],
+      "tag_names" => tag_names
+    }
 
     changeset =
       socket.assigns.blog_post
-      |> Blog.change_blog_post(Map.put(params, "tag_names", tag_names))
+      |> Blog.change_blog_post(attrs)
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, slug_locked: true, changeset: changeset)}

@@ -85,8 +85,19 @@ defmodule Tqm.Blog do
     Repo.all(from bp in query, preload: :tags)
   end
 
-  def list_blog_posts(:all, _opts) do
-    Repo.all(from bp in BlogPost, preload: :tags)
+  def list_blog_posts(:all, opts) do
+    tag_slug = Keyword.get(opts, :tag)
+
+    query =
+      if tag_slug do
+        from bp in BlogPost,
+          join: t in assoc(bp, :tags),
+          where: t.slug == ^tag_slug
+      else
+        from(bp in BlogPost)
+      end
+
+    Repo.all(from bp in query, preload: :tags)
   end
 
   @doc """

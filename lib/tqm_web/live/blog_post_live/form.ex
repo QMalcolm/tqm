@@ -4,6 +4,8 @@ defmodule TqmWeb.BlogPostLive.Form do
   alias Tqm.Blog
   alias Tqm.Blog.BlogPost
 
+  import Tqm.Blog.BlogPost, only: [slugify: 1]
+
   @impl true
   def mount(_params, _session, socket) do
     {:ok,
@@ -12,6 +14,7 @@ defmodule TqmWeb.BlogPostLive.Form do
        tlp: :blog,
        scheduling: false,
        publish_status: :draft,
+       slug_locked: false,
        selected_tag_names: [],
        tag_search: "",
        tag_suggestions: [],
@@ -20,8 +23,8 @@ defmodule TqmWeb.BlogPostLive.Form do
   end
 
   @impl true
-  def handle_params(%{"id" => id}, _url, socket) do
-    blog_post = Blog.get_blog_post!(:all, id)
+  def handle_params(%{"slug" => slug}, _url, socket) do
+    blog_post = Blog.get_blog_post!(:all, slug)
     changeset = Blog.change_blog_post(blog_post)
 
     {:noreply,
@@ -53,12 +56,36 @@ defmodule TqmWeb.BlogPostLive.Form do
   def handle_event("validate", %{"blog_post" => params}, socket) do
     tag_names = Enum.join(socket.assigns.selected_tag_names, ", ")
 
+    params =
+      params
+      |> Map.put("tag_names", tag_names)
+      |> maybe_inject_slug(socket)
+
     changeset =
       socket.assigns.blog_post
-      |> Blog.change_blog_post(Map.put(params, "tag_names", tag_names))
+      |> Blog.change_blog_post(params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, changeset: changeset)}
+  end
+
+  def handle_event("lock_slug", %{"blog_post" => params}, socket) do
+    current = Ecto.Changeset.apply_changes(socket.assigns.changeset)
+    tag_names = Enum.join(socket.assigns.selected_tag_names, ", ")
+
+    attrs = %{
+      "title" => current.title,
+      "content" => current.content,
+      "slug" => params["slug"],
+      "tag_names" => tag_names
+    }
+
+    changeset =
+      socket.assigns.blog_post
+      |> Blog.change_blog_post(attrs)
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign(socket, slug_locked: true, changeset: changeset)}
   end
 
   def handle_event("save", %{"blog_post" => params}, socket) do
@@ -212,4 +239,11 @@ defmodule TqmWeb.BlogPostLive.Form do
   defp publish_status(%{published_at: published_at}) do
     if DateTime.compare(published_at, DateTime.utc_now()) == :gt, do: :scheduled, else: :published
   end
+
+  # Auto-populate slug from title for new posts until the user manually edits the slug field.
+  defp maybe_inject_slug(params, %{assigns: %{live_action: :new, slug_locked: false}}) do
+    Map.put(params, "slug", slugify(params["title"] || ""))
+  end
+
+  defp maybe_inject_slug(params, _socket), do: params
 end

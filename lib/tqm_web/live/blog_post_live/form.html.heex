@@ -31,6 +31,18 @@
       Oops, something went wrong! Please check the errors below.
     </.error>
     <.input field={{f, :title}} type="text" label="Title" />
+    <div :if={@live_action == :new}>
+      <.input
+        field={{f, :slug}}
+        type="text"
+        label="Slug"
+        phx-change="lock_slug"
+        phx-debounce="200"
+      />
+      <p :if={not @slug_locked} class="mt-1 text-xs text-zinc-400">
+        Auto-populated from title
+      </p>
+    </div>
     <.input field={{f, :content}} type="textarea" label="Content" />
     <div>
       <label class="block text-sm font-semibold leading-6 text-zinc-900">Tags</label>

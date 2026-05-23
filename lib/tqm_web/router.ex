@@ -20,12 +20,12 @@ defmodule TqmWeb.Router do
   ## Routes requiring :owner person role
   scope "/", TqmWeb do
     pipe_through [:browser, :require_owner_person]
-    delete "/blog/:id", BlogPostController, :delete
+    delete "/blog/:slug", BlogPostController, :delete
 
     live_session :require_owner_person,
       on_mount: [{TqmWeb.PersonAuth, :ensure_owner}] do
       live "/blog/new", BlogPostLive.Form, :new
-      live "/blog/:id/edit", BlogPostLive.Form, :edit
+      live "/blog/:slug/edit", BlogPostLive.Form, :edit
     end
   end
 
@@ -41,7 +41,8 @@ defmodule TqmWeb.Router do
 
     get "/", PageController, :home
     get "/blog/tags/:tag", BlogPostController, :tag
-    resources "/blog", BlogPostController, only: [:index, :show]
+    get "/blog", BlogPostController, :index
+    get "/blog/:slug", BlogPostController, :show
   end
 
   # Other scopes may use custom stacks.

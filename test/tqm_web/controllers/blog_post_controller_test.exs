@@ -20,7 +20,7 @@ defmodule TqmWeb.BlogPostControllerTest do
   describe "show" do
     test "show a blog_post", %{conn: conn} do
       blog_post = blog_post_fixture()
-      conn = get(conn, ~p"/blog/#{blog_post.id}")
+      conn = get(conn, ~p"/blog/#{blog_post}")
       assert html_response(conn, 200) =~ blog_post.content
     end
 
@@ -30,18 +30,18 @@ defmodule TqmWeb.BlogPostControllerTest do
       conn =
         conn
         |> log_in_person(owner_person_fixture())
-        |> get(~p"/blog/#{unpublished_blog_post.id}")
+        |> get(~p"/blog/#{unpublished_blog_post}")
 
       assert html_response(conn, 200) =~ unpublished_blog_post.content
     end
 
     test "show 404 for unpublished blog_post for non owner", %{conn: conn} do
       unpublished_blog_post = unpublished_blog_post_fixture()
-      assert_error_sent(404, fn -> get(conn, ~p"/blog/#{unpublished_blog_post.id}") end)
+      assert_error_sent(404, fn -> get(conn, ~p"/blog/#{unpublished_blog_post}") end)
     end
 
     test "show 404 for non-existant blog_post", %{conn: conn} do
-      assert_error_sent(404, fn -> get(conn, ~p"/blog/0") end)
+      assert_error_sent(404, fn -> get(conn, ~p"/blog/nonexistent-post") end)
     end
   end
 

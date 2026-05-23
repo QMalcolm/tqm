@@ -49,8 +49,8 @@ defmodule TqmWeb.FeedController do
         """
             <item>
               <title>#{xml_escape(post.title)}</title>
-              <link>#{base_url}/blog/#{post.id}</link>
-              <guid>#{base_url}/blog/#{post.id}</guid>
+              <link>#{base_url}/blog/#{post.slug}</link>
+              <guid>#{base_url}/blog/#{post.slug}</guid>
               <pubDate>#{rss_date(post.published_at)}</pubDate>
               <description><![CDATA[#{post.content}]]></description>
               #{tag_categories(post)}

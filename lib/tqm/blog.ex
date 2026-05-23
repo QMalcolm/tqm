@@ -107,33 +107,33 @@ defmodule Tqm.Blog do
 
   ## Examples
 
-      iex> get_blog_post!(123)
+      iex> get_blog_post!("my-post")
       %BlogPost{}
 
-      iex> get_blog_post!(456)
+      iex> get_blog_post!("nonexistent")
       ** (Ecto.NoResultsError)
 
-      iex> get_blog_post!(:published, 111)
+      iex> get_blog_post!(:published, "draft-post")
       ** (Ecto.NoResultsError)
 
-      iex> get_blog_post!(:all, 111)
+      iex> get_blog_post!(:all, "draft-post")
       %BlogPost{}
 
   """
-  def get_blog_post!(id), do: get_blog_post!(:published, id)
+  def get_blog_post!(slug), do: get_blog_post!(:published, slug)
 
-  def get_blog_post!(:published, id) do
+  def get_blog_post!(:published, slug) do
     time_now = NaiveDateTime.utc_now()
 
     Repo.one!(
       from bp in BlogPost,
-        where: bp.id == ^id and bp.published_at <= ^time_now and not is_nil(bp.published_at)
+        where: bp.slug == ^slug and bp.published_at <= ^time_now and not is_nil(bp.published_at)
     )
     |> Repo.preload(:tags)
   end
 
-  def get_blog_post!(:all, id) do
-    Repo.get!(BlogPost, id)
+  def get_blog_post!(:all, slug) do
+    Repo.get_by!(BlogPost, slug: slug)
     |> Repo.preload(:tags)
   end
 

@@ -30,17 +30,17 @@ defmodule TqmWeb.BlogPostController do
     )
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{"slug" => slug}) do
     blog_post =
       conn.assigns[:current_person]
       |> Blog.viewing_permissions_for_person()
-      |> Blog.get_blog_post!(id)
+      |> Blog.get_blog_post!(slug)
 
     render(conn, :show, blog_post: blog_post, tlp: :blog, page_title: blog_post.title)
   end
 
-  def delete(conn, %{"id" => id}) do
-    blog_post = Blog.get_blog_post!(id)
+  def delete(conn, %{"slug" => slug}) do
+    blog_post = Blog.get_blog_post!(slug)
     {:ok, _blog_post} = Blog.delete_blog_post(blog_post)
 
     conn

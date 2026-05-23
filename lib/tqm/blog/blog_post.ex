@@ -48,6 +48,11 @@ defmodule Tqm.Blog.BlogPost do
     |> String.trim("-")
   end
 
+  defimpl Phoenix.Param do
+    def to_param(%{slug: slug}) when is_binary(slug), do: slug
+    def to_param(%{id: id}), do: to_string(id)
+  end
+
   # Sets slug from title only when the post doesn't already have one.
   # Slug is immutable after creation so that published URLs don't change on title edits.
   defp maybe_put_slug(changeset) do

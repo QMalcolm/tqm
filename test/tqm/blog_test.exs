@@ -67,9 +67,9 @@ defmodule Tqm.BlogTest do
       unpublished_blog_post = unpublished_blog_post_fixture()
       future_blog_post = future_blog_post_fixture()
 
-      assert Blog.get_blog_post!(published_blog_post.id) == published_blog_post
-      assert_raise Ecto.NoResultsError, fn -> Blog.get_blog_post!(unpublished_blog_post.id) end
-      assert_raise Ecto.NoResultsError, fn -> Blog.get_blog_post!(future_blog_post.id) end
+      assert Blog.get_blog_post!(published_blog_post.slug) == published_blog_post
+      assert_raise Ecto.NoResultsError, fn -> Blog.get_blog_post!(unpublished_blog_post.slug) end
+      assert_raise Ecto.NoResultsError, fn -> Blog.get_blog_post!(future_blog_post.slug) end
     end
 
     test "get_blog_post!/2 returns based on permissions" do
@@ -77,20 +77,20 @@ defmodule Tqm.BlogTest do
       unpublished_blog_post = unpublished_blog_post_fixture()
       future_blog_post = future_blog_post_fixture()
 
-      assert Blog.get_blog_post!(:published, published_blog_post.id) == published_blog_post
-      assert Blog.get_blog_post!(:all, published_blog_post.id) == published_blog_post
+      assert Blog.get_blog_post!(:published, published_blog_post.slug) == published_blog_post
+      assert Blog.get_blog_post!(:all, published_blog_post.slug) == published_blog_post
 
       assert_raise Ecto.NoResultsError, fn ->
-        Blog.get_blog_post!(:published, unpublished_blog_post.id)
+        Blog.get_blog_post!(:published, unpublished_blog_post.slug)
       end
 
-      assert Blog.get_blog_post!(:all, unpublished_blog_post.id) == unpublished_blog_post
+      assert Blog.get_blog_post!(:all, unpublished_blog_post.slug) == unpublished_blog_post
 
       assert_raise Ecto.NoResultsError, fn ->
-        Blog.get_blog_post!(:published, future_blog_post.id)
+        Blog.get_blog_post!(:published, future_blog_post.slug)
       end
 
-      assert Blog.get_blog_post!(:all, future_blog_post.id) == future_blog_post
+      assert Blog.get_blog_post!(:all, future_blog_post.slug) == future_blog_post
     end
 
     test "create_blog_post/1 with valid data creates a blog_post" do
@@ -98,11 +98,13 @@ defmodule Tqm.BlogTest do
       assert blog_post.content == @published_valid_attrs.content
       assert blog_post.published_at == @published_valid_attrs.published_at
       assert blog_post.title == @published_valid_attrs.title
+      assert blog_post.slug == "some-title"
 
       assert {:ok, %BlogPost{} = blog_post} = Blog.create_blog_post(@unpublished_valid_attrs)
       assert blog_post.content == @unpublished_valid_attrs.content
       assert blog_post.published_at == @unpublished_valid_attrs.published_at
       assert blog_post.title == @unpublished_valid_attrs.title
+      assert blog_post.slug == "post-i-want-to-do"
     end
 
     test "create_blog_post/1 with invalid data returns error changeset" do
@@ -147,7 +149,13 @@ defmodule Tqm.BlogTest do
     test "update_blog_post/2 with invalid data returns error changeset" do
       blog_post = blog_post_fixture()
       assert {:error, %Ecto.Changeset{}} = Blog.update_blog_post(blog_post, @invalid_attrs)
-      assert blog_post == Blog.get_blog_post!(blog_post.id)
+      assert blog_post == Blog.get_blog_post!(blog_post.slug)
+    end
+
+    test "update_blog_post/2 preserves slug when title changes" do
+      blog_post = blog_post_fixture()
+      assert {:ok, updated} = Blog.update_blog_post(blog_post, %{title: "Completely Different"})
+      assert updated.slug == blog_post.slug
     end
 
     test "update_blog_post/2 replaces tags when tag_names provided" do
@@ -165,7 +173,7 @@ defmodule Tqm.BlogTest do
     test "delete_blog_post/1 deletes the blog_post" do
       blog_post = blog_post_fixture()
       assert {:ok, %BlogPost{}} = Blog.delete_blog_post(blog_post)
-      assert_raise Ecto.NoResultsError, fn -> Blog.get_blog_post!(blog_post.id) end
+      assert_raise Ecto.NoResultsError, fn -> Blog.get_blog_post!(blog_post.slug) end
     end
 
     test "change_blog_post/1 returns a blog_post changeset" do

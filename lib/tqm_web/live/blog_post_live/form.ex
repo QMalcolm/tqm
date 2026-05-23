@@ -20,8 +20,8 @@ defmodule TqmWeb.BlogPostLive.Form do
   end
 
   @impl true
-  def handle_params(%{"id" => id}, _url, socket) do
-    blog_post = Blog.get_blog_post!(:all, id)
+  def handle_params(%{"slug" => slug}, _url, socket) do
+    blog_post = Blog.get_blog_post!(:all, slug)
     changeset = Blog.change_blog_post(blog_post)
 
     {:noreply,

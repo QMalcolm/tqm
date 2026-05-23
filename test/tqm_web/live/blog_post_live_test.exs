@@ -40,8 +40,45 @@ defmodule TqmWeb.BlogPostLive.FormTest do
                |> form("#blog_post_form", blog_post: %{title: "My title", content: "My content"})
                |> render_submit()
 
-      assert path =~ ~p"/blog/"
+      assert path == ~p"/blog/my-title"
       assert html_response(get(owner_conn, path), 200) =~ "My title"
+    end
+
+    test "slug is auto-populated from title", %{conn: conn} do
+      {:ok, lv, _html} =
+        conn
+        |> log_in_person(owner_person_fixture())
+        |> live(~p"/blog/new")
+
+      html =
+        lv
+        |> form("#blog_post_form", blog_post: %{title: "My Elixir Post"})
+        |> render_change()
+
+      assert html =~ ~s(value="my-elixir-post")
+      assert html =~ "Auto-populated from title"
+    end
+
+    test "manually editing slug locks it from further title changes", %{conn: conn} do
+      {:ok, lv, _html} =
+        conn
+        |> log_in_person(owner_person_fixture())
+        |> live(~p"/blog/new")
+
+      # Simulate user manually editing the slug field (fires lock_slug event)
+      lv
+      |> render_hook("lock_slug", %{
+        "blog_post" => %{"title" => "My Post", "slug" => "custom-slug", "content" => ""}
+      })
+
+      # Subsequent title change should not override the manually set slug
+      html =
+        lv
+        |> form("#blog_post_form", blog_post: %{title: "Completely Different Title"})
+        |> render_change()
+
+      assert html =~ ~s(value="custom-slug")
+      refute html =~ "Auto-populated from title"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

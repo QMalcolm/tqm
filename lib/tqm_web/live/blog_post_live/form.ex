@@ -66,7 +66,7 @@ defmodule TqmWeb.BlogPostLive.Form do
     save_blog_post(socket, socket.assigns.live_action, Map.put(params, "tag_names", tag_names))
   end
 
-  def handle_event("search_tags", %{"tag_search" => term}, socket) do
+  def handle_event("search_tags", %{"value" => term}, socket) do
     term = String.trim(term)
     all_suggestions = Blog.search_tags(term)
 

@@ -162,15 +162,15 @@ const TiptapEditor = {
         Placeholder.configure({ placeholder: "Write something…" }),
       ],
       content: initial,
-      onUpdate: () => this._onUpdate(),
-      onSelectionUpdate: () => this._updateActiveStates(),
+      onUpdate: ({ editor }) => this._onUpdate(editor),
+      onSelectionUpdate: ({ editor }) => this._updateActiveStates(editor),
     })
     this._hiddenInput.value = initial
     return ed
   },
 
-  _onUpdate() {
-    const md = this._editor.storage.markdown.getMarkdown()
+  _onUpdate(editor) {
+    const md = editor.storage.markdown.getMarkdown()
     this._hiddenInput.value = md
     this._hiddenInput.dispatchEvent(new Event("input", { bubbles: true }))
   },
@@ -179,15 +179,15 @@ const TiptapEditor = {
     const cmd = ACTION_COMMANDS[action]
     if (!cmd) return
     cmd(this._editor)
-    this._updateActiveStates()
+    this._updateActiveStates(this._editor)
   },
 
-  _updateActiveStates() {
+  _updateActiveStates(editor) {
     const btns = this._toolbar.querySelectorAll("button[data-action]")
     btns.forEach((btn) => {
       const check = ACTIVE_CHECKS[btn.dataset.action]
       if (!check) return
-      btn.classList.toggle("is-active", check(this._editor))
+      btn.classList.toggle("is-active", check(editor))
     })
   },
 

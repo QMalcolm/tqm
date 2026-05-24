@@ -13,7 +13,7 @@ defmodule TqmWeb.BlogPostControllerTest do
   describe "index" do
     test "lists all blog_posts", %{conn: conn} do
       conn = get(conn, ~p"/blog")
-      assert html_response(conn, 200) =~ "Blog"
+      assert html_response(conn, 200) =~ "Writing"
     end
   end
 

@@ -1,51 +1,112 @@
-<.header>
-  Blog
-  <:actions>
-    <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
-      <.link href={~p"/blog/new"}>
-        <.button>New post</.button>
-      </.link>
-    <% end %>
-  </:actions>
-</.header>
-
-<p :if={@current_tag} class="mt-2 text-sm text-zinc-600">
-  Posts tagged "<span class="font-medium">{@current_tag.name}</span>"
-  &mdash; <.link navigate={~p"/blog"} class="underline hover:text-zinc-900">all posts</.link>
-</p>
-
-<.table id="blog_posts" rows={@blog_posts} row_click={&JS.navigate(~p"/blog/#{&1}")}>
-  <:col :let={blog_post} label="Title">{blog_post.title}</:col>
-  <:col :let={blog_post} label="Published">
-    {if blog_post.published_at,
-      do: Calendar.strftime(blog_post.published_at, "%B %-d, %Y"),
-      else: "Draft"}
-  </:col>
-  <:col :let={blog_post} label="Tags">
-    <div class="flex flex-wrap gap-1">
-      <%= for tag <- blog_post.tags do %>
-        <.link
-          navigate={~p"/blog/tags/#{tag.slug}"}
-          class="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-200"
-        >
-          {tag.name}
-        </.link>
-      <% end %>
-    </div>
-  </:col>
-  <:action :let={blog_post}>
-    <div class="sr-only">
-      <.link navigate={~p"/blog/#{blog_post}"}>Show</.link>
+<div class="qm-page" style="padding-top: 64px;">
+  <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; gap: 24px;">
+    <div>
+      <p class="qm-eyebrow">
+        Writing
+        <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
+          <span class="qm-admin-pill">ADMIN</span>
+        <% end %>
+      </p>
+      <h1 class="qm-h1" style="font-size: 56px; margin-bottom: 0;">
+        Things I've <em>written down</em>
+      </h1>
     </div>
     <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
-      <.link navigate={~p"/blog/#{blog_post}/edit"}>Edit</.link>
-    <% end %>
-  </:action>
-  <:action :let={blog_post}>
-    <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
-      <.link href={~p"/blog/#{blog_post}"} method="delete" data-confirm="Are you sure?">
-        Delete
+      <.link navigate={~p"/blog/new"} style="font-size: 13px; padding: 8px 14px; border: 1px solid var(--line-2); border-radius: 999px; color: var(--ink-2); text-decoration: none; white-space: nowrap; align-self: center; flex-shrink: 0;">
+        ＋ New post
       </.link>
     <% end %>
-  </:action>
-</.table>
+  </div>
+
+  <p class="qm-body" style="max-width: 52ch; margin-top: 18px; color: var(--muted); font-size: 17px;">
+    A scratch pad. Mostly half-thoughts about Elixir, dnd, woodworking, and whatever I'm reading.
+  </p>
+
+  <form method="get" action={~p"/blog"} style="display: flex; gap: 14px; align-items: center; margin-top: 36px; padding-bottom: 14px; border-bottom: 1px solid var(--line);" id="search-filter-form">
+    <div class="qm-search-wrap" style={"flex: 0 0 auto; width: #{if Tqm.Accounts.Person.owner?(assigns[:current_person]), do: "320px", else: "380px"};"}>
+      <span class="qm-search-icon">⌕</span>
+      <input
+        type="text"
+        name="q"
+        value={@search_query}
+        placeholder="Search titles, content, tags…"
+        id="search-input"
+        phx-debounce="250"
+      />
+      <span class="qm-search-kbd">/</span>
+    </div>
+    <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
+      <span style="width: 1px; height: 20px; background: var(--line); flex-shrink: 0;"></span>
+      <.link navigate={~p"/blog?status=all&q=#{@search_query}"} class={"qm-filter-pill #{if @status_filter == "all", do: "active"}"}>All</.link>
+      <.link navigate={~p"/blog?status=published&q=#{@search_query}"} class={"qm-filter-pill #{if @status_filter == "published", do: "active"}"}>Published</.link>
+      <.link navigate={~p"/blog?status=drafts&q=#{@search_query}"} class={"qm-filter-pill #{if @status_filter == "drafts", do: "active"}"}>Drafts</.link>
+      <span style="margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; white-space: nowrap;">
+        {Enum.count(@blog_posts, &is_nil(&1.published_at))} drafts ·
+        {Enum.count(@blog_posts, &(&1.published_at != nil))} published
+      </span>
+    <% end %>
+  </form>
+
+  <%
+    grouped = @blog_posts
+      |> Enum.group_by(fn post ->
+        cond do
+          is_nil(post.published_at) -> "Drafts"
+          true -> Calendar.strftime(post.published_at, "%Y")
+        end
+      end)
+      |> Enum.sort_by(fn {year, _} -> year end, :desc)
+  %>
+
+  <%= if @blog_posts == [] do %>
+    <p style="margin-top: 48px; color: var(--muted); font-size: 15px;">
+      Nothing matches. <.link navigate={~p"/blog"} style="color: var(--accent); text-decoration: none;">Clear search?</.link>
+    </p>
+  <% end %>
+
+  <%= for {year, posts} <- grouped do %>
+    <section style="margin-top: 36px;">
+      <div style="display: grid; grid-template-columns: 120px 1fr; gap: 24px; align-items: start;">
+        <h3 style="font-family: var(--serif); font-size: 34px; margin: 0; color: var(--muted); position: sticky; top: 24px; font-style: italic;">
+          {year}
+        </h3>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <%= for {post, i} <- Enum.with_index(posts) do %>
+            <li class={if Tqm.Accounts.Person.owner?(assigns[:current_person]), do: "qm-blog-row-admin", else: "qm-blog-row-visitor"} style={"border-top: #{if i == 0, do: "none", else: "1px solid var(--line)"};"}>
+              <span style="font-family: var(--mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em;">
+                <%= if is_nil(post.published_at) do %>
+                  draft
+                <% else %>
+                  {Calendar.strftime(post.published_at, "%b %-d")}
+                <% end %>
+              </span>
+              <.link navigate={~p"/blog/#{post}"} style={"font-family: var(--serif); font-size: 22px; text-decoration: none; #{if is_nil(post.published_at), do: "color: var(--muted); font-style: italic;", else: "color: var(--ink);"}"}>
+                {post.title}
+              </.link>
+              <span style="display: flex; flex-wrap: wrap; gap: 0;">
+                <%= for tag <- post.tags do %>
+                  <.link navigate={~p"/blog/tags/#{tag.slug}"} class="qm-tag">{tag.name}</.link>
+                <% end %>
+              </span>
+              <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
+                <span style="display: flex; justify-content: flex-end; gap: 14px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;">
+                  <.link navigate={~p"/blog/#{post}/edit"} style="color: var(--muted); text-decoration: none;">edit</.link>
+                  <.link href={~p"/blog/#{post}"} method="delete" data-confirm="Delete this post?" style="color: var(--accent); text-decoration: none; opacity: 0.75;">delete</.link>
+                </span>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </section>
+  <% end %>
+</div>
+
+<script>
+  document.addEventListener('keydown', function(e) {
+    if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+      document.getElementById('search-input').focus();
+    }
+  });
+</script>

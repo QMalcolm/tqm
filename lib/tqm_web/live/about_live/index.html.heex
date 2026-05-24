@@ -66,9 +66,9 @@
           <li style="padding: 0 0 20px; border-top: none;">
             <div style="padding-left: 196px;">
               <%= if job.description do %>
-                <p style="font-size: 15px; line-height: 1.6; color: var(--muted); margin: 0 0 16px; max-width: 62ch;">
-                  {job.description}
-                </p>
+                <div style="font-size: 15px; line-height: 1.6; color: var(--muted); margin: 0 0 16px; max-width: 62ch;">
+                  {job.description |> Earmark.as_html!() |> Phoenix.HTML.raw()}
+                </div>
               <% end %>
               <%= for role <- job.roles do %>
                 <div style="margin-bottom: 12px;">

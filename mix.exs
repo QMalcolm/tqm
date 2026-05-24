@@ -10,7 +10,11 @@ defmodule Tqm.MixProject do
       start_permanent: Mix.env() == :prod,
       listeners: if(Mix.env() == :dev, do: [Phoenix.CodeReloader], else: []),
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [
+        summary: [threshold: 80],
+        ignore_modules: [Tqm.Release, Tqm.Seeds]
+      ]
     ]
   end
 

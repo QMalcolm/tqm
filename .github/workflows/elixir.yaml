@@ -111,6 +111,6 @@ jobs:
     - name: Check Formatting
       run: mix format --check-formatted
 
-    # Step: Execute the tests.
+    # Step: Execute the tests with coverage enforcement.
     - name: Run tests
-      run: mix test
+      run: mix test --cover

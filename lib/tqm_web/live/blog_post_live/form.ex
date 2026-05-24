@@ -10,7 +10,6 @@ defmodule TqmWeb.BlogPostLive.Form do
   def mount(_params, _session, socket) do
     {:ok,
      assign(socket,
-       mode: :write,
        tlp: :blog,
        scheduling: false,
        publish_status: :draft,
@@ -49,10 +48,6 @@ defmodule TqmWeb.BlogPostLive.Form do
   end
 
   @impl true
-  def handle_event("set_mode", %{"mode" => mode}, socket) do
-    {:noreply, assign(socket, mode: String.to_existing_atom(mode))}
-  end
-
   def handle_event("validate", %{"blog_post" => params}, socket) do
     tag_names = Enum.join(socket.assigns.selected_tag_names, ", ")
 

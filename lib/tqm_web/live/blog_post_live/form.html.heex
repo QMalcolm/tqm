@@ -2,160 +2,145 @@
   {if @live_action == :new, do: "New post", else: "Edit post"}
 </.header>
 
-<div class="flex gap-4 mt-4 mb-2 border-b border-zinc-200">
-  <button
-    phx-click="set_mode"
-    phx-value-mode="write"
-    class={"pb-2 text-sm font-semibold " <> if(@mode == :write, do: "border-b-2 border-zinc-900 text-zinc-900", else: "text-zinc-500 hover:text-zinc-700")}
-  >
-    Write
-  </button>
-  <button
-    phx-click="set_mode"
-    phx-value-mode="preview"
-    class={"pb-2 text-sm font-semibold " <> if(@mode == :preview, do: "border-b-2 border-zinc-900 text-zinc-900", else: "text-zinc-500 hover:text-zinc-700")}
-  >
-    Preview
-  </button>
-</div>
-
-<div :if={@mode == :write}>
-  <.simple_form
-    :let={f}
-    for={@changeset}
-    id="blog_post_form"
-    phx-change="validate"
-    phx-submit="save"
-  >
-    <.error :if={@changeset.action}>
-      Oops, something went wrong! Please check the errors below.
-    </.error>
-    <.input field={{f, :title}} type="text" label="Title" />
-    <div :if={@live_action == :new}>
-      <.input
-        field={{f, :slug}}
-        type="text"
-        label="Slug"
-        phx-change="lock_slug"
-        phx-debounce="200"
-      />
-      <p :if={not @slug_locked} class="mt-1 text-xs text-zinc-400">
-        Auto-populated from title
-      </p>
-    </div>
-    <.input field={{f, :content}} type="textarea" label="Content" />
-    <div>
-      <label class="block text-sm font-semibold leading-6 text-zinc-900">Tags</label>
-      <div :if={@selected_tag_names != []} class="mt-2 flex flex-wrap gap-1.5">
-        <%= for name <- @selected_tag_names do %>
-          <span class="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700">
-            {name}
-            <button
-              type="button"
-              phx-click="remove_tag"
-              phx-value-name={name}
-              aria-label={"Remove #{name}"}
-              class="ml-0.5 rounded-full p-0.5 text-zinc-400 hover:bg-zinc-200 hover:text-zinc-600"
-            >
-              <svg class="h-2.5 w-2.5" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
-                <path d="M6.414 5l3.293-3.293a1 1 0 00-1.414-1.414L5 3.586 1.707.293A1 1 0 00.293 1.707L3.586 5 .293 8.293a1 1 0 101.414 1.414L5 6.414l3.293 3.293a1 1 0 001.414-1.414L6.414 5z" />
-              </svg>
-            </button>
-          </span>
-        <% end %>
-      </div>
-      <div class="relative mt-2">
-        <input
-          type="text"
-          name="tag_search"
-          value={@tag_search}
-          phx-keyup="search_tags"
-          phx-debounce="200"
-          placeholder="Search tags..."
-          autocomplete="off"
-          class="block w-full rounded-lg border border-zinc-300 py-[7px] px-[11px] text-zinc-900 focus:border-zinc-400 focus:outline-none focus:ring-4 focus:ring-zinc-800/5 sm:text-sm sm:leading-6"
-        />
-        <ul
-          :if={@tag_suggestions != [] or @tag_create_option != nil}
-          class="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white py-1 shadow-lg text-sm text-zinc-700"
-        >
-          <li :for={tag <- @tag_suggestions}>
-            <button
-              type="button"
-              phx-click="select_tag"
-              phx-value-name={tag.name}
-              class="w-full px-4 py-2 text-left hover:bg-zinc-50"
-            >
-              {tag.name}
-            </button>
-          </li>
-          <li :if={@tag_create_option != nil}>
-            <button
-              type="button"
-              phx-click="select_tag"
-              phx-value-name={@tag_create_option}
-              class="w-full px-4 py-2 text-left hover:bg-zinc-50"
-            >
-              {@tag_create_option}
-              <span class="text-zinc-400">(create new)</span>
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <:actions>
-      <div class="flex flex-wrap items-center gap-3">
-        <.button>Save</.button>
-        <.button
-          :if={@live_action == :edit and @publish_status in [:draft, :scheduled]}
-          type="button"
-          phx-click="publish_now"
-        >
-          Publish now
-        </.button>
-        <button
-          :if={@live_action == :edit and @publish_status in [:draft, :scheduled]}
-          type="button"
-          phx-click="show_schedule_form"
-          class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
-        >
-          {if @publish_status == :scheduled, do: "Reschedule", else: "Schedule publishing"}
-        </button>
-      </div>
-    </:actions>
-  </.simple_form>
-
-  <div :if={@live_action == :edit} class="mt-4">
-    <p :if={@publish_status == :scheduled} class="text-sm text-zinc-600 mb-3">
-      Scheduled for {Calendar.strftime(@blog_post.published_at, "%B %-d, %Y at %H:%M UTC")}
+<.simple_form
+  :let={f}
+  for={@changeset}
+  id="blog_post_form"
+  phx-change="validate"
+  phx-submit="save"
+>
+  <.error :if={@changeset.action}>
+    Oops, something went wrong! Please check the errors below.
+  </.error>
+  <.input field={{f, :title}} type="text" label="Title" />
+  <div :if={@live_action == :new}>
+    <.input
+      field={{f, :slug}}
+      type="text"
+      label="Slug"
+      phx-change="lock_slug"
+      phx-debounce="200"
+    />
+    <p :if={not @slug_locked} class="mt-1 text-xs text-zinc-400">
+      Auto-populated from title
     </p>
-    <p :if={@publish_status == :published} class="text-sm text-zinc-600 mb-3">
-      Published on {Calendar.strftime(@blog_post.published_at, "%B %-d, %Y")}
-    </p>
-    <form :if={@scheduling} phx-submit="schedule" class="flex flex-wrap items-center gap-3">
+  </div>
+  <div>
+    <label class="block text-sm font-semibold leading-6 text-zinc-900">Content</label>
+    <div
+      id="tiptap-content"
+      phx-hook="TiptapEditor"
+      phx-update="ignore"
+      data-field-name="blog_post[content]"
+      data-initial={Ecto.Changeset.get_field(@changeset, :content) || ""}
+      class="mt-2"
+    >
+    </div>
+  </div>
+  <div>
+    <label class="block text-sm font-semibold leading-6 text-zinc-900">Tags</label>
+    <div :if={@selected_tag_names != []} class="mt-2 flex flex-wrap gap-1.5">
+      <%= for name <- @selected_tag_names do %>
+        <span class="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700">
+          {name}
+          <button
+            type="button"
+            phx-click="remove_tag"
+            phx-value-name={name}
+            aria-label={"Remove #{name}"}
+            class="ml-0.5 rounded-full p-0.5 text-zinc-400 hover:bg-zinc-200 hover:text-zinc-600"
+          >
+            <svg class="h-2.5 w-2.5" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
+              <path d="M6.414 5l3.293-3.293a1 1 0 00-1.414-1.414L5 3.586 1.707.293A1 1 0 00.293 1.707L3.586 5 .293 8.293a1 1 0 101.414 1.414L5 6.414l3.293 3.293a1 1 0 001.414-1.414L6.414 5z" />
+            </svg>
+          </button>
+        </span>
+      <% end %>
+    </div>
+    <div class="relative mt-2">
       <input
-        type="datetime-local"
-        name="scheduled_at"
-        required
-        class="block rounded-lg text-zinc-900 focus:outline-none focus:ring-4 sm:text-sm sm:leading-6 border-zinc-300 focus:border-zinc-400 focus:ring-zinc-800/5"
+        type="text"
+        name="tag_search"
+        value={@tag_search}
+        phx-keyup="search_tags"
+        phx-debounce="200"
+        placeholder="Search tags..."
+        autocomplete="off"
+        class="block w-full rounded-lg border border-zinc-300 py-[7px] px-[11px] text-zinc-900 focus:border-zinc-400 focus:outline-none focus:ring-4 focus:ring-zinc-800/5 sm:text-sm sm:leading-6"
       />
-      <.button type="submit">Confirm</.button>
-      <button
+      <ul
+        :if={@tag_suggestions != [] or @tag_create_option != nil}
+        class="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white py-1 shadow-lg text-sm text-zinc-700"
+      >
+        <li :for={tag <- @tag_suggestions}>
+          <button
+            type="button"
+            phx-click="select_tag"
+            phx-value-name={tag.name}
+            class="w-full px-4 py-2 text-left hover:bg-zinc-50"
+          >
+            {tag.name}
+          </button>
+        </li>
+        <li :if={@tag_create_option != nil}>
+          <button
+            type="button"
+            phx-click="select_tag"
+            phx-value-name={@tag_create_option}
+            class="w-full px-4 py-2 text-left hover:bg-zinc-50"
+          >
+            {@tag_create_option}
+            <span class="text-zinc-400">(create new)</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <:actions>
+    <div class="flex flex-wrap items-center gap-3">
+      <.button>Save</.button>
+      <.button
+        :if={@live_action == :edit and @publish_status in [:draft, :scheduled]}
         type="button"
-        phx-click="hide_schedule_form"
+        phx-click="publish_now"
+      >
+        Publish now
+      </.button>
+      <button
+        :if={@live_action == :edit and @publish_status in [:draft, :scheduled]}
+        type="button"
+        phx-click="show_schedule_form"
         class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
       >
-        Cancel
+        {if @publish_status == :scheduled, do: "Reschedule", else: "Schedule publishing"}
       </button>
-    </form>
-  </div>
-</div>
+    </div>
+  </:actions>
+</.simple_form>
 
-<div :if={@mode == :preview} class="max-w-2xl mx-auto mt-6">
-  <h1 class="text-2xl font-bold mb-1">
-    {Ecto.Changeset.get_field(@changeset, :title) || "Untitled"}
-  </h1>
-  <.markdown_content markdown={Ecto.Changeset.get_field(@changeset, :content) || ""} />
+<div :if={@live_action == :edit} class="mt-4">
+  <p :if={@publish_status == :scheduled} class="text-sm text-zinc-600 mb-3">
+    Scheduled for {Calendar.strftime(@blog_post.published_at, "%B %-d, %Y at %H:%M UTC")}
+  </p>
+  <p :if={@publish_status == :published} class="text-sm text-zinc-600 mb-3">
+    Published on {Calendar.strftime(@blog_post.published_at, "%B %-d, %Y")}
+  </p>
+  <form :if={@scheduling} phx-submit="schedule" class="flex flex-wrap items-center gap-3">
+    <input
+      type="datetime-local"
+      name="scheduled_at"
+      required
+      class="block rounded-lg text-zinc-900 focus:outline-none focus:ring-4 sm:text-sm sm:leading-6 border-zinc-300 focus:border-zinc-400 focus:ring-zinc-800/5"
+    />
+    <.button type="submit">Confirm</.button>
+    <button
+      type="button"
+      phx-click="hide_schedule_form"
+      class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+    >
+      Cancel
+    </button>
+  </form>
 </div>
 
 <.back navigate={~p"/blog"}>Back to blog</.back>

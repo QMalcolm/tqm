@@ -37,8 +37,8 @@ defmodule TqmWeb.BlogPostLive.FormTest do
 
       assert {:error, {:live_redirect, %{to: path}}} =
                lv
-               |> form("#blog_post_form", blog_post: %{title: "My title", content: "My content"})
-               |> render_submit()
+               |> form("#blog_post_form", blog_post: %{title: "My title"})
+               |> render_submit(%{blog_post: %{content: "My content"}})
 
       assert path == ~p"/blog/my-title"
       assert html_response(get(owner_conn, path), 200) =~ "My title"
@@ -89,7 +89,7 @@ defmodule TqmWeb.BlogPostLive.FormTest do
 
       result =
         lv
-        |> form("#blog_post_form", blog_post: %{title: "", content: ""})
+        |> form("#blog_post_form", blog_post: %{title: ""})
         |> render_submit()
 
       assert result =~ "Oops, something went wrong!"
@@ -151,40 +151,10 @@ defmodule TqmWeb.BlogPostLive.FormTest do
 
       result =
         lv
-        |> form("#blog_post_form", blog_post: %{title: "", content: ""})
+        |> form("#blog_post_form", blog_post: %{title: ""})
         |> render_submit()
 
       assert result =~ "Oops, something went wrong!"
-    end
-  end
-
-  describe "write/preview mode" do
-    test "toggles between write and preview", %{conn: conn} do
-      {:ok, lv, _html} =
-        conn
-        |> log_in_person(owner_person_fixture())
-        |> live(~p"/blog/new")
-
-      html = lv |> element("button", "Preview") |> render_click()
-      assert html =~ "Untitled"
-
-      html = lv |> element("button", "Write") |> render_click()
-      assert html =~ "Title"
-    end
-
-    test "preview reflects live changeset content", %{conn: conn} do
-      {:ok, lv, _html} =
-        conn
-        |> log_in_person(owner_person_fixture())
-        |> live(~p"/blog/new")
-
-      lv
-      |> form("#blog_post_form", blog_post: %{title: "Preview title", content: "Preview content"})
-      |> render_change()
-
-      html = lv |> element("button", "Preview") |> render_click()
-      assert html =~ "Preview title"
-      assert html =~ "Preview content"
     end
   end
 

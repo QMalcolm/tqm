@@ -29,8 +29,8 @@ defmodule TqmWeb.AboutLive.IndexTest do
   describe "about page" do
     test "renders the page", %{conn: conn} do
       {:ok, _lv, html} = live(conn, ~p"/about")
-      assert html =~ "About Me"
-      assert html =~ "Professional History"
+      assert html =~ "Quigley"
+      assert html =~ "Work, in order"
     end
 
     test "lists jobs with company names", %{conn: conn} do
@@ -53,14 +53,14 @@ defmodule TqmWeb.AboutLive.IndexTest do
     test "initially hides job details", %{conn: conn} do
       create_job_with_role()
       {:ok, _lv, html} = live(conn, ~p"/about")
-      assert html =~ ~s(style="display: none;")
+      refute html =~ "Did engineering things"
     end
 
     test "clicking job summary toggles details visibility", %{conn: conn} do
       job = create_job_with_role()
       {:ok, lv, _html} = live(conn, ~p"/about")
-      lv |> element("#summary-#{job.id}") |> render_click()
-      refute render(lv) =~ ~s(style="display: none;")
+      lv |> element("#job-#{job.id}") |> render_click()
+      assert render(lv) =~ "Did engineering things"
     end
   end
 end

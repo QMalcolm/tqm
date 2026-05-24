@@ -5,8 +5,6 @@ import Placeholder from "@tiptap/extension-placeholder"
 
 // ─── Tiptap rich-text editor ──────────────────────────────────────────────────
 
-const SHORTCUT_MAP = { b: "bold", i: "italic" }
-
 function svgIcon(paths, sw = "1.6") {
   return (
     `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" ` +
@@ -18,7 +16,7 @@ function svgIcon(paths, sw = "1.6") {
 const TOOLBAR_BTNS = [
   {
     action: "bold",
-    title: "Bold (Ctrl+B)",
+    title: "Bold",
     svg: svgIcon(
       `<path d="M4 3v10"/>` +
       `<path d="M4 3h4a2.5 2.5 0 010 5H4"/>` +
@@ -27,7 +25,7 @@ const TOOLBAR_BTNS = [
   },
   {
     action: "italic",
-    title: "Italic (Ctrl+I)",
+    title: "Italic",
     svg: svgIcon(
       `<path d="M10 3.5H6"/>` +
       `<path d="M10 12.5H6"/>` +
@@ -124,12 +122,9 @@ const TiptapEditor = {
     this.el.appendChild(this._proseMirrorEl)
     this.el.appendChild(this._hiddenInput)
     this._editor = this._initEditor()
-    this._keydown = this._onKeydown.bind(this)
-    this.el.addEventListener("keydown", this._keydown)
   },
 
   destroyed() {
-    this.el.removeEventListener("keydown", this._keydown)
     if (this._editor) this._editor.destroy()
   },
 
@@ -196,17 +191,6 @@ const TiptapEditor = {
     })
   },
 
-  _hasModifier(e) {
-    return e.ctrlKey || e.metaKey
-  },
-
-  _onKeydown(e) {
-    if (!this._hasModifier(e)) return
-    const action = SHORTCUT_MAP[e.key.toLowerCase()]
-    if (!action) return
-    e.preventDefault()
-    this._runAction(action)
-  },
 }
 
 export default { TiptapEditor }

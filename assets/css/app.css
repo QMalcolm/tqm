@@ -248,6 +248,16 @@ div.markdown_render a:visited {
 .qm-post-body code { font-family: var(--mono); font-size: 0.85em; background: var(--bg-alt); padding: 2px 5px; border-radius: 4px; }
 .qm-post-body pre { background: var(--bg-alt); border-radius: 8px; padding: 1rem; margin: 0 0 20px; overflow-x: auto; }
 .qm-post-body pre code { background: none; padding: 0; font-size: 0.875rem; }
+.qm-post-body sup { font-size: 0.7em; line-height: 0; vertical-align: super; }
+.qm-post-body a.footnote { font-family: var(--mono); font-size: 0.7em; color: var(--muted); background-image: none; padding-bottom: 0; }
+.qm-post-body a.footnote:hover { color: var(--ink); }
+.qm-post-body .footnotes { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 15px; color: var(--muted); }
+.qm-post-body .footnotes ol { list-style: none; counter-reset: footnote; padding-left: 0; margin: 16px 0 0; }
+.qm-post-body .footnotes li { display: flex; flex-wrap: wrap; align-items: baseline; margin-bottom: 8px; line-height: 1.5; counter-increment: footnote; }
+.qm-post-body .footnotes li::before { content: counter(footnote) ". "; flex-shrink: 0; }
+.qm-post-body .footnotes p { order: 0; margin: 0; font-size: inherit; color: inherit; }
+.qm-post-body a.reversefootnote { order: 1; font-family: var(--mono); font-size: 0.85em; color: var(--muted); background-image: none; padding: 0 0 0 0.3em; }
+.qm-post-body a.reversefootnote:hover { color: var(--ink); }
 
 /* ── Admin pill ─────────────────────────────────────────────────────────── */
 .qm-admin-pill { margin-left: 10px; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 10px; letter-spacing: 0.12em; font-family: var(--mono); text-transform: uppercase; vertical-align: middle; }

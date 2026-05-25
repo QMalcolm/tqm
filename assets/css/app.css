@@ -71,47 +71,47 @@ div.markdown_render a:visited {
 }
 
 .tiptap-toolbar button {
-  background: #fff;
-  border: 1px solid #d4d4d8;
+  background: var(--bg);
+  border: 1px solid var(--line-2);
   border-radius: 4px;
   padding: 4px 6px;
   cursor: pointer;
-  color: #71717a;
+  color: var(--muted);
   line-height: 0;
   display: flex;
   align-items: center;
 }
 
 .tiptap-toolbar button:hover {
-  background: #f4f4f5;
-  color: #18181b;
+  background: var(--bg-alt);
+  color: var(--ink);
 }
 
 .tiptap-toolbar button.is-active {
-  background: #f4f4f5;
-  color: #18181b;
-  border-color: #a1a1aa;
+  background: var(--bg-alt);
+  color: var(--ink);
+  border-color: var(--muted);
 }
 
 .tiptap-prosemirror > .ProseMirror {
-  border: 1px solid #d4d4d8;
+  border: 1px solid var(--line-2);
   border-radius: 8px;
   padding: 10px 12px;
   min-height: 200px;
   outline: none;
   font-size: 0.875rem;
   line-height: 1.6;
-  color: #18181b;
+  color: var(--ink);
 }
 
 .tiptap-prosemirror > .ProseMirror:focus {
-  border-color: #a1a1aa;
-  box-shadow: 0 0 0 4px rgb(39 39 42 / 0.05);
+  border-color: var(--muted);
+  box-shadow: 0 0 0 4px rgb(0 0 0 / 0.05);
 }
 
 .tiptap-prosemirror > .ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
-  color: #a1a1aa;
+  color: var(--muted);
   pointer-events: none;
   float: left;
   height: 0;
@@ -125,10 +125,10 @@ div.markdown_render a:visited {
 .tiptap-prosemirror .ProseMirror ol { list-style: decimal; padding-left: 1.25rem; margin: 0 0 0.5rem; }
 .tiptap-prosemirror .ProseMirror li { margin-bottom: 0.2rem; }
 .tiptap-prosemirror .ProseMirror blockquote {
-  border-left: 4px solid #d4d4d8;
+  border-left: 4px solid var(--line-2);
   margin: 0.5rem 0;
   padding: 0.25rem 0 0.25rem 1rem;
-  color: #71717a;
+  color: var(--muted);
   font-style: italic;
 }
 .tiptap-prosemirror .ProseMirror strong { font-weight: 600; }
@@ -136,12 +136,12 @@ div.markdown_render a:visited {
 .tiptap-prosemirror .ProseMirror code {
   font-family: ui-monospace, monospace;
   font-size: 0.8125em;
-  background: #f4f4f5;
+  background: var(--bg-alt);
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
 }
 .tiptap-prosemirror .ProseMirror pre {
-  background: #f4f4f5;
+  background: var(--bg-alt);
   border-radius: 6px;
   padding: 0.75rem 1rem;
   margin: 0.5rem 0;

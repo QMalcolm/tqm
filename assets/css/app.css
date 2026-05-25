@@ -229,6 +229,9 @@ div.markdown_render a:visited {
 .qm-job-dot { width: 10px; height: 10px; border-radius: 3px; margin-top: 9px; flex-shrink: 0; }
 .qm-job-description a { color: var(--ink); text-decoration: none; background-image: linear-gradient(var(--accent), var(--accent)); background-repeat: no-repeat; background-size: 100% 1px; background-position: 0 100%; padding-bottom: 1px; transition: background-size 0.15s; }
 .qm-job-description a:hover { background-size: 100% 2px; }
+.qm-job-description ul { list-style: disc; padding-left: 1.25rem; margin: 6px 0; }
+.qm-job-description ol { list-style: decimal; padding-left: 1.25rem; margin: 6px 0; }
+.qm-job-description li { margin-bottom: 3px; }
 
 /* ── Post body prose ────────────────────────────────────────────────────── */
 .qm-post-body { font-size: 19px; line-height: 1.65; color: var(--ink-2); }

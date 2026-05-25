@@ -1,5 +1,8 @@
 <div class="qm-page" style="padding-top: 64px;">
-  <div class="qm-about-grid" style="display: grid; grid-template-columns: 1fr 280px; gap: 64px; align-items: start;">
+  <div
+    class="qm-about-grid"
+    style="display: grid; grid-template-columns: 1fr 280px; gap: 64px; align-items: start;"
+  >
     <div>
       <p class="qm-eyebrow">About</p>
       <p class="qm-lede" style="max-width: 22ch;">
@@ -18,13 +21,20 @@
         </p>
         <p>
           If you're trying to track me down in Iowa City, I can probably be found working in
-          <a href="https://mergeic.com/" class="qm-prose-link">MERGE</a> coworking space or meandering through
-          <a href="https://en.wikipedia.org/wiki/Hickory_Hill_Park" class="qm-prose-link">Hickory Hill Park</a>.
+          <a href="https://mergeic.com/" class="qm-prose-link">MERGE</a>
+          coworking space or meandering through <a
+            href="https://en.wikipedia.org/wiki/Hickory_Hill_Park"
+            class="qm-prose-link"
+          >Hickory Hill Park</a>.
         </p>
       </div>
     </div>
     <div>
-      <img src="images/me.jpg" alt="Quigley reading on a chair" style="width: 100%; border-radius: 6px; display: block;" />
+      <img
+        src="images/me.jpg"
+        alt="Quigley reading on a chair"
+        style="width: 100%; border-radius: 6px; display: block;"
+      />
     </div>
   </div>
 
@@ -66,7 +76,10 @@
           <li style="padding: 0 0 20px; border-top: none;">
             <div style="padding-left: 196px;">
               <%= if job.description do %>
-                <div class="qm-job-description" style="font-size: 15px; line-height: 1.6; color: var(--muted); margin: 0 0 16px; max-width: 62ch;">
+                <div
+                  class="qm-job-description"
+                  style="font-size: 15px; line-height: 1.6; color: var(--muted); margin: 0 0 16px; max-width: 62ch;"
+                >
                   {job.description |> Earmark.as_html!() |> Phoenix.HTML.raw()}
                 </div>
               <% end %>
@@ -76,11 +89,15 @@
                     {role.title}
                   </span>
                   <span style="font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: 8px;">
-                    {Calendar.strftime(role.start_date, "%b %Y")} –
-                    {if role.end_date, do: Calendar.strftime(role.end_date, "%b %Y"), else: "Present"}
+                    {Calendar.strftime(role.start_date, "%b %Y")} – {if role.end_date,
+                      do: Calendar.strftime(role.end_date, "%b %Y"),
+                      else: "Present"}
                   </span>
                   <%= if role.details do %>
-                    <div class="qm-job-description" style="font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 6px 0 0; max-width: 62ch;">
+                    <div
+                      class="qm-job-description"
+                      style="font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 6px 0 0; max-width: 62ch;"
+                    >
                       {role.details |> Earmark.as_html!() |> Phoenix.HTML.raw()}
                     </div>
                   <% end %>

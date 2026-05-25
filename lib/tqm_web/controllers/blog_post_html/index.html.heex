@@ -12,18 +12,32 @@
       </h1>
     </div>
     <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
-      <.link navigate={~p"/blog/new"} style="font-size: 13px; padding: 8px 14px; border: 1px solid var(--line-2); border-radius: 999px; color: var(--ink-2); text-decoration: none; white-space: nowrap; align-self: center; flex-shrink: 0;">
+      <.link
+        navigate={~p"/blog/new"}
+        style="font-size: 13px; padding: 8px 14px; border: 1px solid var(--line-2); border-radius: 999px; color: var(--ink-2); text-decoration: none; white-space: nowrap; align-self: center; flex-shrink: 0;"
+      >
         ＋ New post
       </.link>
     <% end %>
   </div>
 
-  <p class="qm-body" style="max-width: 52ch; margin-top: 18px; color: var(--muted); font-size: 17px;">
+  <p
+    class="qm-body"
+    style="max-width: 52ch; margin-top: 18px; color: var(--muted); font-size: 17px;"
+  >
     My notes, and moderately put together thoughts.
   </p>
 
-  <form method="get" action={~p"/blog"} style="display: flex; gap: 14px; align-items: center; margin-top: 36px; padding-bottom: 14px; border-bottom: 1px solid var(--line);" id="search-filter-form">
-    <div class="qm-search-wrap" style={"flex: 0 0 auto; width: #{if Tqm.Accounts.Person.owner?(assigns[:current_person]), do: "320px", else: "380px"};"}>
+  <form
+    method="get"
+    action={~p"/blog"}
+    style="display: flex; gap: 14px; align-items: center; margin-top: 36px; padding-bottom: 14px; border-bottom: 1px solid var(--line);"
+    id="search-filter-form"
+  >
+    <div
+      class="qm-search-wrap"
+      style={"flex: 0 0 auto; width: #{if Tqm.Accounts.Person.owner?(assigns[:current_person]), do: "320px", else: "380px"};"}
+    >
       <span class="qm-search-icon">⌕</span>
       <input
         type="text"
@@ -37,30 +51,49 @@
     </div>
     <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
       <span style="width: 1px; height: 20px; background: var(--line); flex-shrink: 0;"></span>
-      <.link navigate={~p"/blog?status=all&q=#{@search_query}"} class={"qm-filter-pill #{if @status_filter == "all", do: "active"}"}>All</.link>
-      <.link navigate={~p"/blog?status=published&q=#{@search_query}"} class={"qm-filter-pill #{if @status_filter == "published", do: "active"}"}>Published</.link>
-      <.link navigate={~p"/blog?status=drafts&q=#{@search_query}"} class={"qm-filter-pill #{if @status_filter == "drafts", do: "active"}"}>Drafts</.link>
+      <.link
+        navigate={~p"/blog?status=all&q=#{@search_query}"}
+        class={"qm-filter-pill #{if @status_filter == "all", do: "active"}"}
+      >
+        All
+      </.link>
+      <.link
+        navigate={~p"/blog?status=published&q=#{@search_query}"}
+        class={"qm-filter-pill #{if @status_filter == "published", do: "active"}"}
+      >
+        Published
+      </.link>
+      <.link
+        navigate={~p"/blog?status=drafts&q=#{@search_query}"}
+        class={"qm-filter-pill #{if @status_filter == "drafts", do: "active"}"}
+      >
+        Drafts
+      </.link>
       <span style="margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; white-space: nowrap;">
-        {Enum.count(@blog_posts, &is_nil(&1.published_at))} drafts ·
-        {Enum.count(@blog_posts, &(&1.published_at != nil))} published
+        {Enum.count(@blog_posts, &is_nil(&1.published_at))} drafts · {Enum.count(
+          @blog_posts,
+          &(&1.published_at != nil)
+        )} published
       </span>
     <% end %>
   </form>
 
-  <%
-    grouped = @blog_posts
-      |> Enum.group_by(fn post ->
-        cond do
-          is_nil(post.published_at) -> "Drafts"
-          true -> Calendar.strftime(post.published_at, "%Y")
-        end
-      end)
-      |> Enum.sort_by(fn {year, _} -> year end, :desc)
-  %>
+  <% grouped =
+    @blog_posts
+    |> Enum.group_by(fn post ->
+      cond do
+        is_nil(post.published_at) -> "Drafts"
+        true -> Calendar.strftime(post.published_at, "%Y")
+      end
+    end)
+    |> Enum.sort_by(fn {year, _} -> year end, :desc) %>
 
   <%= if @blog_posts == [] do %>
     <p style="margin-top: 48px; color: var(--muted); font-size: 15px;">
-      Nothing matches. <.link navigate={~p"/blog"} style="color: var(--accent); text-decoration: none;">Clear search?</.link>
+      Nothing matches.
+      <.link navigate={~p"/blog"} style="color: var(--accent); text-decoration: none;">
+        Clear search?
+      </.link>
     </p>
   <% end %>
 
@@ -72,7 +105,14 @@
         </h3>
         <ul style="list-style: none; padding: 0; margin: 0;">
           <%= for {post, i} <- Enum.with_index(posts) do %>
-            <li class={if Tqm.Accounts.Person.owner?(assigns[:current_person]), do: "qm-blog-row-admin", else: "qm-blog-row-visitor"} style={"border-top: #{if i == 0, do: "none", else: "1px solid var(--line)"};"}>
+            <li
+              class={
+                if Tqm.Accounts.Person.owner?(assigns[:current_person]),
+                  do: "qm-blog-row-admin",
+                  else: "qm-blog-row-visitor"
+              }
+              style={"border-top: #{if i == 0, do: "none", else: "1px solid var(--line)"};"}
+            >
               <span style="font-family: var(--mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em;">
                 <%= if is_nil(post.published_at) do %>
                   draft
@@ -80,7 +120,10 @@
                   {Calendar.strftime(post.published_at, "%b %-d")}
                 <% end %>
               </span>
-              <.link navigate={~p"/blog/#{post}"} style={"font-family: var(--serif); font-size: 22px; text-decoration: none; #{if is_nil(post.published_at), do: "color: var(--muted); font-style: italic;", else: "color: var(--ink);"}"}>
+              <.link
+                navigate={~p"/blog/#{post}"}
+                style={"font-family: var(--serif); font-size: 22px; text-decoration: none; #{if is_nil(post.published_at), do: "color: var(--muted); font-style: italic;", else: "color: var(--ink);"}"}
+              >
                 {post.title}
               </.link>
               <span style="display: flex; flex-wrap: wrap; gap: 0;">
@@ -90,8 +133,20 @@
               </span>
               <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
                 <span style="display: flex; justify-content: flex-end; gap: 14px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;">
-                  <.link navigate={~p"/blog/#{post}/edit"} style="color: var(--muted); text-decoration: none;">edit</.link>
-                  <.link href={~p"/blog/#{post}"} method="delete" data-confirm="Delete this post?" style="color: var(--accent); text-decoration: none; opacity: 0.75;">delete</.link>
+                  <.link
+                    navigate={~p"/blog/#{post}/edit"}
+                    style="color: var(--muted); text-decoration: none;"
+                  >
+                    edit
+                  </.link>
+                  <.link
+                    href={~p"/blog/#{post}"}
+                    method="delete"
+                    data-confirm="Delete this post?"
+                    style="color: var(--accent); text-decoration: none; opacity: 0.75;"
+                  >
+                    delete
+                  </.link>
                 </span>
               <% end %>
             </li>

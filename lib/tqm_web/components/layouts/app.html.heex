@@ -2,8 +2,12 @@
   <a href="/" class="qm-brand">quigley<span class="qm-brand-dot">.</span></a>
   <div class="qm-navlinks">
     <.link navigate="/" class={if assigns[:tlp] == :home, do: "active", else: ""}>Home</.link>
-    <.link navigate="/blog" class={if assigns[:tlp] == :blog, do: "active", else: ""}>Writing</.link>
-    <.link navigate="/about" class={if assigns[:tlp] == :about, do: "active", else: ""}>About</.link>
+    <.link navigate="/blog" class={if assigns[:tlp] == :blog, do: "active", else: ""}>
+      Writing
+    </.link>
+    <.link navigate="/about" class={if assigns[:tlp] == :about, do: "active", else: ""}>
+      About
+    </.link>
     <%= if @current_person do %>
       <.link href="/people/log_out" method="delete" class="qm-logout">Log out</.link>
     <% end %>

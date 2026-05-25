@@ -1,11 +1,17 @@
 <div style="max-width: 980px; margin: 0 auto; padding: 48px 64px 96px;">
   <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;">
-    <.link navigate={~p"/blog"} style="font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.05em;">← all writing</.link>
+    <.link
+      navigate={~p"/blog"}
+      style="font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.05em;"
+    >
+      ← all writing
+    </.link>
     <span
       :if={@live_action == :edit}
       style={"display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 999px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; #{status_pill_style(@publish_status)}"}
     >
-      <span style={"width: 6px; height: 6px; border-radius: 999px; background: #{status_dot_color(@publish_status)}; flex-shrink: 0;"}></span>
+      <span style={"width: 6px; height: 6px; border-radius: 999px; background: #{status_dot_color(@publish_status)}; flex-shrink: 0;"}>
+      </span>
       {status_label(@publish_status)}
     </span>
   </div>
@@ -15,9 +21,12 @@
         New <em>post</em>
       <% else %>
         <%= case @publish_status do %>
-          <% :draft -> %>Editing a <em>draft</em>
-          <% :scheduled -> %>Editing a <em>scheduled</em> post
-          <% :published -> %>Editing a <em>published</em> post
+          <% :draft -> %>
+            Editing a <em>draft</em>
+          <% :scheduled -> %>
+            Editing a <em>scheduled</em> post
+          <% :published -> %>
+            Editing a <em>published</em> post
         <% end %>
       <% end %>
     </h1>
@@ -39,7 +48,12 @@
 
   <form id="blog_post_form" phx-change="validate" phx-submit="save">
     <div style="margin-bottom: 32px;">
-      <label for="blog_post_form_title" style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;">Title</label>
+      <label
+        for="blog_post_form_title"
+        style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;"
+      >
+        Title
+      </label>
       <input
         type="text"
         id="blog_post_form_title"
@@ -48,15 +62,28 @@
         style="width: 100%; padding: 14px 16px; border-radius: 10px; border: 1px solid var(--line-2); background: transparent; font-family: var(--serif); font-size: 26px; color: var(--ink); outline: none; box-sizing: border-box;"
       />
       <%= for msg <- field_errors(@changeset, :title) do %>
-        <p style="margin: 6px 0 0; font-family: var(--sans); font-size: 13px; color: var(--accent);">{msg}</p>
+        <p style="margin: 6px 0 0; font-family: var(--sans); font-size: 13px; color: var(--accent);">
+          {msg}
+        </p>
       <% end %>
     </div>
     <div style="margin-bottom: 32px;">
-      <label for="blog_post_form_slug" style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;">Slug</label>
+      <label
+        for="blog_post_form_slug"
+        style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;"
+      >
+        Slug
+      </label>
       <div style="display: flex; align-items: center; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line-2);">
-        <span style="font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; flex-shrink: 0;">quigleymalcolm.com /blog/</span>
+        <span style="font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; flex-shrink: 0;">
+          quigleymalcolm.com /blog/
+        </span>
         <%= if @live_action == :edit and @publish_status == :published do %>
-          <input type="hidden" name="blog_post[slug]" value={Ecto.Changeset.get_field(@changeset, :slug) || ""} />
+          <input
+            type="hidden"
+            name="blog_post[slug]"
+            value={Ecto.Changeset.get_field(@changeset, :slug) || ""}
+          />
           <span style="flex: 1; font-family: var(--mono); font-size: 13px; color: var(--muted);">
             {Ecto.Changeset.get_field(@changeset, :slug) || ""}
           </span>
@@ -72,18 +99,28 @@
           />
         <% end %>
       </div>
-      <p :if={@live_action == :new and not @slug_locked} style="margin: 6px 0 0; font-family: var(--mono); font-size: 11px; color: var(--muted);">
+      <p
+        :if={@live_action == :new and not @slug_locked}
+        style="margin: 6px 0 0; font-family: var(--mono); font-size: 11px; color: var(--muted);"
+      >
         Auto-populated from title
       </p>
-      <p :if={@live_action == :edit and @publish_status == :published} style="margin: 6px 0 0; font-family: var(--mono); font-size: 11px; color: var(--muted);">
+      <p
+        :if={@live_action == :edit and @publish_status == :published}
+        style="margin: 6px 0 0; font-family: var(--mono); font-size: 11px; color: var(--muted);"
+      >
         Locked — changing the slug of a live post would break existing links
       </p>
       <%= for msg <- field_errors(@changeset, :slug) do %>
-        <p style="margin: 6px 0 0; font-family: var(--sans); font-size: 13px; color: var(--accent);">{msg}</p>
+        <p style="margin: 6px 0 0; font-family: var(--sans); font-size: 13px; color: var(--accent);">
+          {msg}
+        </p>
       <% end %>
     </div>
     <div style="margin-bottom: 32px;">
-      <label style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;">Content</label>
+      <label style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;">
+        Content
+      </label>
       <div
         id="tiptap-content"
         phx-hook="TiptapEditor"
@@ -93,11 +130,15 @@
       >
       </div>
       <%= for msg <- field_errors(@changeset, :content) do %>
-        <p style="margin: 6px 0 0; font-family: var(--sans); font-size: 13px; color: var(--accent);">{msg}</p>
+        <p style="margin: 6px 0 0; font-family: var(--sans); font-size: 13px; color: var(--accent);">
+          {msg}
+        </p>
       <% end %>
     </div>
     <div style="margin-bottom: 32px;">
-      <label style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;">Tags</label>
+      <label style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;">
+        Tags
+      </label>
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line-2); min-height: 48px; position: relative;">
         <%= for name <- @selected_tag_names do %>
           <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--bg-alt); border: 1px solid var(--line-2); font-family: var(--mono); font-size: 12px; color: var(--ink-2);">
@@ -108,7 +149,9 @@
               phx-value-name={name}
               aria-label={"Remove #{name}"}
               style="color: var(--muted); cursor: pointer; font-size: 14px; line-height: 1; opacity: 0.7; background: none; border: none; padding: 0;"
-            >×</button>
+            >
+              ×
+            </button>
           </span>
         <% end %>
         <div style="flex: 1; min-width: 200px; position: relative;">
@@ -150,23 +193,30 @@
         </div>
       </div>
       <p style="margin: 8px 0 0; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.04em;">
-        press <kbd style="padding: 1px 5px; border: 1px solid var(--line-2); border-radius: 4px;">↵</kbd> to add ·
-        <kbd style="padding: 1px 5px; border: 1px solid var(--line-2); border-radius: 4px;">⌫</kbd> to remove the last
+        press
+        <kbd style="padding: 1px 5px; border: 1px solid var(--line-2); border-radius: 4px;">
+          ↵
+        </kbd>
+        to add ·
+        <kbd style="padding: 1px 5px; border: 1px solid var(--line-2); border-radius: 4px;">
+          ⌫
+        </kbd>
+        to remove the last
       </p>
     </div>
 
     <hr style="border: 0; height: 1px; background: var(--line); margin: 40px 0 28px;" />
     <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
-
       <button type="submit" class="qm-action-btn-dark">
         <span>Save</span>
         <span class="qm-kbd-hint">⌘S</span>
       </button>
 
       <%= if @live_action == :edit do %>
-
         <%= if @publish_status == :published do %>
-          <button type="button" phx-click="publish_now" class="qm-action-btn-dark">Update post</button>
+          <button type="button" phx-click="publish_now" class="qm-action-btn-dark">
+            Update post
+          </button>
         <% else %>
           <button type="button" phx-click="publish_now" class="qm-action-btn-dark">
             <span>Publish now</span>
@@ -181,7 +231,9 @@
             </button>
           <% end %>
           <%= if @publish_status == :published do %>
-            <button type="button" phx-click="unpublish" class="qm-action-btn-quiet">Unpublish</button>
+            <button type="button" phx-click="unpublish" class="qm-action-btn-quiet">
+              Unpublish
+            </button>
           <% end %>
           <span style="flex: 1;"></span>
           <.link
@@ -190,25 +242,33 @@
             data-confirm="Delete this post?"
             class="qm-action-btn-quiet"
             style="color: var(--accent); border-color: var(--accent-soft);"
-          >Delete post</.link>
+          >
+            Delete post
+          </.link>
         <% end %>
-
       <% end %>
-
     </div>
-
   </form>
   <%= if @live_action == :edit and @scheduling do %>
-    <form phx-submit="schedule" style="display: flex; align-items: center; gap: 12px; margin-top: 14px; padding: 8px 12px; border-radius: 10px; background: var(--bg-alt); border: 1px solid var(--line-2); flex-wrap: wrap;">
-      <span style="font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;">Publish at</span>
+    <form
+      phx-submit="schedule"
+      style="display: flex; align-items: center; gap: 12px; margin-top: 14px; padding: 8px 12px; border-radius: 10px; background: var(--bg-alt); border: 1px solid var(--line-2); flex-wrap: wrap;"
+    >
+      <span style="font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;">
+        Publish at
+      </span>
       <input
         type="datetime-local"
         name="scheduled_at"
         required
         style="padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--bg); font-family: var(--mono); font-size: 13px; color: var(--ink); outline: none;"
       />
-      <button type="submit" class="qm-action-btn-dark" style="padding: 10px 16px;">Confirm</button>
-      <button type="button" phx-click="hide_schedule_form" class="qm-action-btn-ghost">Cancel</button>
+      <button type="submit" class="qm-action-btn-dark" style="padding: 10px 16px;">
+        Confirm
+      </button>
+      <button type="button" phx-click="hide_schedule_form" class="qm-action-btn-ghost">
+        Cancel
+      </button>
     </form>
   <% end %>
   <%= if @live_action == :edit do %>
@@ -218,9 +278,11 @@
           <% :draft -> %>
             ● <strong style="font-weight: 500;">DRAFT</strong> — not visible to anyone but you
           <% :scheduled -> %>
-            ◷ <strong style="font-weight: 500;">SCHEDULED</strong> — goes live {Calendar.strftime(@blog_post.published_at, "%b %-d, %Y at %H:%M UTC")}
+            ◷ <strong style="font-weight: 500;">SCHEDULED</strong>
+            — goes live {Calendar.strftime(@blog_post.published_at, "%b %-d, %Y at %H:%M UTC")}
           <% :published -> %>
-            ✓ <strong style="font-weight: 500;">PUBLISHED</strong> — live since {Calendar.strftime(@blog_post.published_at, "%b %-d, %Y")}
+            ✓ <strong style="font-weight: 500;">PUBLISHED</strong>
+            — live since {Calendar.strftime(@blog_post.published_at, "%b %-d, %Y")}
         <% end %>
       </span>
       <span style="opacity: 0.7;">
@@ -230,10 +292,14 @@
           <% :scheduled -> %>
             &nbsp;
           <% :published -> %>
-            <.link navigate={~p"/blog/#{@blog_post}"} style="color: inherit; text-decoration: none;">view on site →</.link>
+            <.link
+              navigate={~p"/blog/#{@blog_post}"}
+              style="color: inherit; text-decoration: none;"
+            >
+              view on site →
+            </.link>
         <% end %>
       </span>
     </div>
   <% end %>
-
 </div>

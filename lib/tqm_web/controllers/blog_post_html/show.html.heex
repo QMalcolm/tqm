@@ -1,5 +1,10 @@
 <article class="qm-page-narrow" style="padding-top: 56px;">
-  <.link navigate={~p"/blog"} style="font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.05em;">← all writing</.link>
+  <.link
+    navigate={~p"/blog"}
+    style="font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.05em;"
+  >
+    ← all writing
+  </.link>
 
   <div style="display: flex; gap: 14px; align-items: center; margin: 28px 0 18px; font-family: var(--mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; flex-wrap: wrap;">
     <%= if @blog_post.published_at do %>
@@ -10,7 +15,13 @@
     <%= if @blog_post.tags != [] do %>
       <span class="qm-meta-dot"></span>
       <%= for tag <- @blog_post.tags do %>
-        <.link navigate={~p"/blog/tags/#{tag.slug}"} class="qm-tag" style="margin: 0; text-transform: none; letter-spacing: 0;">{tag.name}</.link>
+        <.link
+          navigate={~p"/blog/tags/#{tag.slug}"}
+          class="qm-tag"
+          style="margin: 0; text-transform: none; letter-spacing: 0;"
+        >
+          {tag.name}
+        </.link>
       <% end %>
     <% end %>
   </div>
@@ -22,9 +33,17 @@
   </div>
 
   <div style="margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
-    <.link navigate={~p"/blog"} style="font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.05em;">← all writing</.link>
+    <.link
+      navigate={~p"/blog"}
+      style="font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.05em;"
+    >
+      ← all writing
+    </.link>
     <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
-      <.link navigate={~p"/blog/#{@blog_post}/edit"} style="font-size: 13px; color: var(--muted); text-decoration: none; border: 1px solid var(--line-2); padding: 8px 14px; border-radius: 999px;">
+      <.link
+        navigate={~p"/blog/#{@blog_post}/edit"}
+        style="font-size: 13px; color: var(--muted); text-decoration: none; border: 1px solid var(--line-2); padding: 8px 14px; border-radius: 999px;"
+      >
         Edit post
       </.link>
     <% end %>

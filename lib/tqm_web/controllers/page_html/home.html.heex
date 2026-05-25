@@ -1,18 +1,22 @@
 <div class="qm-page" style="padding-top: 80px;">
-  <div class="qm-hero-grid" style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 80px; align-items: start;">
+  <div
+    class="qm-hero-grid"
+    style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 80px; align-items: start;"
+  >
     <div>
       <p class="qm-eyebrow">Iowa City, IA · Software Engineer</p>
       <h1 class="qm-h1">
-        Hi, I'm <em>Quigley</em>.<br/>
-        Amateur at life,<br/>
-        real human person.
+        Hi, I'm <em>Quigley</em>.<br /> Amateur at life,<br /> real human person.
       </h1>
       <p class="qm-body" style="max-width: 52ch; font-size: 19px;">
         Just trying to do my best, the goal is to do better than yesterday.
-        If you want to learn more about me, head to my
-        <.link navigate="/about" class="qm-prose-link">about page</.link>. Also if
+        If you want to learn more about me, head to my <.link
+          navigate="/about"
+          class="qm-prose-link"
+        >about page</.link>. Also if
         you are so inclined, feel free to peruse
-        <.link navigate="/blog" class="qm-prose-link">what I've been thinking about</.link> lately.
+        <.link navigate="/blog" class="qm-prose-link">what I've been thinking about</.link>
+        lately.
       </p>
     </div>
     <div>
@@ -29,7 +33,9 @@
   <section>
     <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 28px;">
       <h2 class="qm-h2">Recent writing</h2>
-      <.link navigate="/blog" style="font-size: 14px; color: var(--muted); text-decoration: none;">All posts →</.link>
+      <.link navigate="/blog" style="font-size: 14px; color: var(--muted); text-decoration: none;">
+        All posts →
+      </.link>
     </div>
     <ul style="list-style: none; padding: 0; margin: 0;">
       <%= for post <- @recent_posts do %>

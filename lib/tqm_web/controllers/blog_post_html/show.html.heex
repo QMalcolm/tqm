@@ -28,6 +28,17 @@
 
   <h1 class="qm-h1" style="font-size: 60px; margin-bottom: 32px;">{@blog_post.title}</h1>
 
+  <%= if @blog_post.foreword do %>
+    <aside style="margin-bottom: 48px; padding: 20px 24px; border-radius: 10px; background: var(--bg-alt); border: 1px solid var(--line-2);">
+      <p style="margin: 0 0 10px; font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted);">
+        Foreword
+      </p>
+      <div class="qm-post-body" style="font-style: italic; color: var(--ink-2);">
+        {@blog_post.foreword |> Earmark.as_html!() |> Phoenix.HTML.raw()}
+      </div>
+    </aside>
+  <% end %>
+
   <div class="qm-post-body">
     {@blog_post.content |> Earmark.as_html!() |> Phoenix.HTML.raw()}
   </div>

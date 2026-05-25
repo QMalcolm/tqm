@@ -5,6 +5,7 @@ defmodule Tqm.Blog.BlogPost do
 
   schema "blog_posts" do
     field :content, :string
+    field :foreword, :string
     field :published_at, :utc_datetime
     field :title, :string
     field :slug, :string
@@ -18,7 +19,7 @@ defmodule Tqm.Blog.BlogPost do
   @doc false
   def changeset(blog_post, attrs) do
     blog_post
-    |> cast(attrs, [:title, :content, :published_at, :tag_names, :slug])
+    |> cast(attrs, [:title, :content, :foreword, :published_at, :tag_names, :slug])
     |> validate_required([:title, :content])
     |> maybe_put_slug()
     |> validate_exclusion(:slug, ~w(new), message: "is reserved — choose a different title")

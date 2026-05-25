@@ -143,21 +143,22 @@ defmodule TqmWeb.BlogPostLive.Form do
     {:noreply, assign(socket, selected_tag_names: new_selected)}
   end
 
+  def handle_event("unpublish", _params, socket) do
+    attrs =
+      current_attrs(socket.assigns.changeset, socket.assigns.selected_tag_names)
+      |> Map.put(:published_at, nil)
+
+    Blog.update_blog_post(socket.assigns.blog_post, attrs)
+    |> apply_post_result(socket, "Blog post unpublished.", fn p -> ~p"/blog/#{p}/edit" end)
+  end
+
   def handle_event("publish_now", _params, socket) do
     attrs =
       current_attrs(socket.assigns.changeset, socket.assigns.selected_tag_names)
       |> Map.put(:published_at, DateTime.utc_now())
 
-    case Blog.update_blog_post(socket.assigns.blog_post, attrs) do
-      {:ok, blog_post} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Blog post published.")
-         |> push_navigate(to: ~p"/blog/#{blog_post}")}
-
-      {:error, changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
-    end
+    Blog.update_blog_post(socket.assigns.blog_post, attrs)
+    |> apply_post_result(socket, "Blog post published.", fn p -> ~p"/blog/#{p}" end)
   end
 
   def handle_event("show_schedule_form", _params, socket) do
@@ -177,16 +178,8 @@ defmodule TqmWeb.BlogPostLive.Form do
           current_attrs(socket.assigns.changeset, socket.assigns.selected_tag_names)
           |> Map.put(:published_at, utc_dt)
 
-        case Blog.update_blog_post(socket.assigns.blog_post, attrs) do
-          {:ok, blog_post} ->
-            {:noreply,
-             socket
-             |> put_flash(:info, "Blog post scheduled.")
-             |> push_navigate(to: ~p"/blog/#{blog_post}")}
-
-          {:error, changeset} ->
-            {:noreply, assign(socket, changeset: changeset)}
-        end
+        Blog.update_blog_post(socket.assigns.blog_post, attrs)
+        |> apply_post_result(socket, "Blog post scheduled.", fn p -> ~p"/blog/#{p}" end)
 
       {:error, _} ->
         {:noreply, put_flash(socket, :error, "Invalid date/time.")}
@@ -194,29 +187,24 @@ defmodule TqmWeb.BlogPostLive.Form do
   end
 
   defp save_blog_post(socket, :new, params) do
-    case Blog.create_blog_post(params) do
-      {:ok, blog_post} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Blog post created successfully.")
-         |> push_navigate(to: ~p"/blog/#{blog_post}")}
-
-      {:error, changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
-    end
+    Blog.create_blog_post(params)
+    |> apply_post_result(socket, "Blog post created successfully.", fn p -> ~p"/blog/#{p}" end)
   end
 
   defp save_blog_post(socket, :edit, params) do
-    case Blog.update_blog_post(socket.assigns.blog_post, params) do
-      {:ok, blog_post} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Blog post updated successfully.")
-         |> push_navigate(to: ~p"/blog/#{blog_post}")}
+    Blog.update_blog_post(socket.assigns.blog_post, params)
+    |> apply_post_result(socket, "Blog post updated successfully.", fn p -> ~p"/blog/#{p}" end)
+  end
 
-      {:error, changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
-    end
+  defp apply_post_result({:ok, blog_post}, socket, flash_msg, path_fn) do
+    {:noreply,
+     socket
+     |> put_flash(:info, flash_msg)
+     |> push_navigate(to: path_fn.(blog_post))}
+  end
+
+  defp apply_post_result({:error, changeset}, socket, _flash_msg, _path_fn) do
+    {:noreply, assign(socket, changeset: changeset)}
   end
 
   defp current_attrs(changeset, selected_tag_names) do
@@ -224,9 +212,31 @@ defmodule TqmWeb.BlogPostLive.Form do
 
     %{
       title: current.title,
+      slug: current.slug,
       content: current.content,
       tag_names: Enum.join(selected_tag_names, ", ")
     }
+  end
+
+  def status_label(:draft), do: "Draft"
+  def status_label(:scheduled), do: "Scheduled"
+  def status_label(:published), do: "Published"
+
+  def status_style(:draft), do: "background: var(--bg-alt); color: var(--muted);"
+  def status_style(:scheduled), do: "background: var(--accent-soft); color: var(--accent);"
+  def status_style(:published), do: "background: #E7F0E9; color: #2F6B3D;"
+
+  def status_dot_color(:draft), do: "var(--muted)"
+  def status_dot_color(:scheduled), do: "var(--accent)"
+  def status_dot_color(:published), do: "#2F6B3D"
+
+  def field_errors(changeset, field) do
+    Keyword.get_values(changeset.errors, field)
+    |> Enum.map(fn {msg, opts} ->
+      Enum.reduce(opts, msg, fn {key, value}, acc ->
+        String.replace(acc, "%{#{key}}", to_string(value))
+      end)
+    end)
   end
 
   defp publish_status(%{published_at: nil}), do: :draft

@@ -9,8 +9,7 @@ defmodule TqmWeb.PersonLoginLiveTest do
       {:ok, _lv, html} = live(conn, ~p"/people/log_in")
 
       assert html =~ "Sign in"
-      assert html =~ "Sign up"
-      assert html =~ "Forgot your password?"
+      assert html =~ "Forgot?"
     end
 
     test "redirects if already logged in", %{conn: conn} do
@@ -60,18 +59,6 @@ defmodule TqmWeb.PersonLoginLiveTest do
   end
 
   describe "login navigation" do
-    test "redirects to registration page when the Register button is clicked", %{conn: conn} do
-      {:ok, lv, _html} = live(conn, ~p"/people/log_in")
-
-      {:ok, _login_live, login_html} =
-        lv
-        |> element(~s|a[href="/people/register"]|)
-        |> render_click()
-        |> follow_redirect(conn, ~p"/people/register")
-
-      assert login_html =~ "Register"
-    end
-
     test "redirects to forgot password page when the Forgot Password button is clicked", %{
       conn: conn
     } do

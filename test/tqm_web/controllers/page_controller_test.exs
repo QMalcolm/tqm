@@ -3,6 +3,6 @@ defmodule TqmWeb.PageControllerTest do
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")
-    assert html_response(conn, 200) =~ "Hi, welcome to my website!"
+    assert html_response(conn, 200) =~ "Iowa City, IA"
   end
 end

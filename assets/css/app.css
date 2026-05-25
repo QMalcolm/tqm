@@ -148,3 +148,150 @@ div.markdown_render a:visited {
   overflow-x: auto;
 }
 .tiptap-prosemirror .ProseMirror pre code { background: none; padding: 0; font-size: 0.875rem; }
+
+/* ── Design tokens ──────────────────────────────────────────────────────── */
+:root {
+  --bg: #FAF7F2;
+  --bg-alt: #F2EDE4;
+  --ink: #1A1612;
+  --ink-2: #3D332A;
+  --muted: #7A6E62;
+  --line: #E5DDD0;
+  --line-2: #D8CFC0;
+  --accent: #8B2840;
+  --accent-soft: #F4E8EB;
+  --serif: "Instrument Serif", "Newsreader", Georgia, serif;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* ── Nav ────────────────────────────────────────────────────────────────── */
+.qm-nav { display: flex; align-items: center; justify-content: space-between; padding: 28px 64px 0; }
+.qm-brand { font-family: var(--serif); font-size: 26px; font-style: italic; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; }
+.qm-brand-dot { color: var(--accent); }
+.qm-navlinks { display: flex; gap: 28px; align-items: center; }
+.qm-navlinks a { color: var(--ink-2); text-decoration: none; font-family: var(--sans); font-size: 15px; position: relative; padding: 4px 0; }
+.qm-navlinks a.active::after { content: ""; position: absolute; left: 50%; bottom: -2px; width: 4px; height: 4px; border-radius: 999px; background: var(--accent); transform: translateX(-50%); }
+.qm-navlinks a:hover { color: var(--ink); }
+.qm-logout { font-size: 13px !important; color: var(--muted) !important; border: 1px solid var(--line); padding: 6px 12px; border-radius: 999px; }
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+.qm-foot { border-top: 1px solid var(--line); margin: 80px 64px 0; padding: 24px 0 36px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted); }
+.qm-foot a { color: var(--muted); text-decoration: none; margin-left: 18px; }
+.qm-foot a:hover { color: var(--ink); }
+
+/* ── Page containers ────────────────────────────────────────────────────── */
+.qm-page { padding: 56px 64px 96px; }
+.qm-page-narrow { max-width: 760px; margin: 0 auto; padding: 56px 64px 96px; }
+
+/* ── Typography ─────────────────────────────────────────────────────────── */
+.qm-eyebrow { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin: 0 0 14px; }
+.qm-h1 { font-family: var(--serif); font-weight: 400; font-size: 72px; line-height: 1.02; letter-spacing: -0.015em; margin: 0 0 24px; color: var(--ink); text-wrap: balance; }
+.qm-h1 em { font-style: italic; color: var(--accent); }
+.qm-h2 { font-family: var(--serif); font-weight: 400; font-size: 38px; line-height: 1.1; letter-spacing: -0.01em; margin: 0 0 14px; }
+.qm-lede { font-family: var(--serif); font-size: 26px; line-height: 1.35; color: var(--ink-2); font-weight: 400; margin: 0 0 28px; text-wrap: pretty; }
+.qm-body { font-size: 18px; line-height: 1.65; color: var(--ink-2); }
+.qm-body p { margin: 0 0 18px; }
+.qm-body a, .qm-prose-link { color: var(--ink); text-decoration: none; background-image: linear-gradient(var(--accent), var(--accent)); background-repeat: no-repeat; background-size: 100% 1px; background-position: 0 100%; padding-bottom: 1px; transition: background-size 0.15s; }
+.qm-body a:hover, .qm-prose-link:hover { background-size: 100% 2px; }
+.qm-rule { height: 1px; background: var(--line); border: 0; margin: 56px 0; }
+
+/* ── Tags ───────────────────────────────────────────────────────────────── */
+.qm-tag { display: inline-flex; align-items: center; gap: 2px; font-family: var(--mono); font-size: 12px; color: var(--muted); margin-right: 8px; text-decoration: none; }
+.qm-tag::before { content: "#"; opacity: 0.55; }
+.qm-tag:hover { color: var(--accent); }
+
+/* ── Post rows (home + blog index) ─────────────────────────────────────── */
+.qm-post-row { display: grid; grid-template-columns: 120px 1fr auto; align-items: baseline; gap: 24px; padding: 18px 0; border-top: 1px solid var(--line); text-decoration: none; color: inherit; }
+.qm-post-row:hover { background: var(--bg-alt); }
+.qm-post-row-date { font-family: var(--mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.qm-post-row-title { font-family: var(--serif); font-size: 24px; color: var(--ink); }
+.qm-post-row-title.draft { color: var(--muted); font-style: italic; }
+
+/* ── Blog index rows (admin grid) ───────────────────────────────────────── */
+.qm-blog-row-admin { display: grid; grid-template-columns: 70px 1fr auto 110px; gap: 24px; align-items: baseline; padding: 14px 0; }
+.qm-blog-row-visitor { display: grid; grid-template-columns: 70px 1fr auto; gap: 24px; align-items: baseline; padding: 14px 0; }
+
+/* ── Search bar ─────────────────────────────────────────────────────────── */
+.qm-search-wrap { position: relative; }
+.qm-search-wrap input { width: 100%; padding: 9px 40px 9px 36px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent; font-family: var(--sans); font-size: 14px; color: var(--ink); outline: none; }
+.qm-search-wrap input:focus { border-color: var(--muted); }
+.qm-search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: 13px; color: var(--muted); pointer-events: none; }
+.qm-search-kbd { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: 10px; color: var(--muted); border: 1px solid var(--line-2); border-radius: 4px; padding: 1px 5px; pointer-events: none; }
+
+/* ── Status filter pills ────────────────────────────────────────────────── */
+.qm-filter-pill { font-family: var(--sans); font-size: 14px; padding: 5px 12px; border-radius: 999px; background: transparent; color: var(--muted); border: 1px solid transparent; text-decoration: none; cursor: pointer; }
+.qm-filter-pill.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.qm-filter-pill:not(.active):hover { color: var(--ink); }
+
+/* ── Job timeline ───────────────────────────────────────────────────────── */
+.qm-job-row { display: grid; grid-template-columns: 160px 16px 1fr 20px; gap: 20px; align-items: start; padding: 20px 0; border-top: 1px solid var(--line); }
+.qm-job-dot { width: 10px; height: 10px; border-radius: 3px; margin-top: 9px; flex-shrink: 0; }
+.qm-job-description a { color: var(--ink); text-decoration: none; background-image: linear-gradient(var(--accent), var(--accent)); background-repeat: no-repeat; background-size: 100% 1px; background-position: 0 100%; padding-bottom: 1px; transition: background-size 0.15s; }
+.qm-job-description a:hover { background-size: 100% 2px; }
+.qm-job-description ul { list-style: disc; padding-left: 1.25rem; margin: 6px 0; }
+.qm-job-description ol { list-style: decimal; padding-left: 1.25rem; margin: 6px 0; }
+.qm-job-description li { margin-bottom: 3px; }
+
+/* ── Post body prose ────────────────────────────────────────────────────── */
+.qm-post-body { font-size: 19px; line-height: 1.65; color: var(--ink-2); }
+.qm-post-body p { margin: 0 0 20px; }
+.qm-post-body p:first-child { font-family: var(--serif); font-size: 22px; line-height: 1.45; color: var(--ink); }
+.qm-post-body blockquote { border-left: 2px solid var(--accent); padding-left: 24px; margin: 28px 0; font-family: var(--serif); font-size: 24px; line-height: 1.4; color: var(--ink); font-style: italic; }
+.qm-post-body a { color: var(--ink); text-decoration: none; background-image: linear-gradient(var(--accent), var(--accent)); background-repeat: no-repeat; background-size: 100% 1px; background-position: 0 100%; padding-bottom: 1px; transition: background-size 0.15s; }
+.qm-post-body a:hover { background-size: 100% 2px; }
+.qm-post-body h2 { font-family: var(--serif); font-size: 28px; font-weight: 400; margin: 32px 0 12px; color: var(--ink); }
+.qm-post-body h3 { font-family: var(--serif); font-size: 22px; font-weight: 400; margin: 24px 0 8px; color: var(--ink); }
+.qm-post-body ul { list-style: disc; padding-left: 1.5rem; margin: 0 0 20px; }
+.qm-post-body ol { list-style: decimal; padding-left: 1.5rem; margin: 0 0 20px; }
+.qm-post-body li { margin-bottom: 6px; }
+.qm-post-body code { font-family: var(--mono); font-size: 0.85em; background: var(--bg-alt); padding: 2px 5px; border-radius: 4px; }
+.qm-post-body pre { background: var(--bg-alt); border-radius: 8px; padding: 1rem; margin: 0 0 20px; overflow-x: auto; }
+.qm-post-body pre code { background: none; padding: 0; font-size: 0.875rem; }
+
+/* ── Admin pill ─────────────────────────────────────────────────────────── */
+.qm-admin-pill { margin-left: 10px; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 10px; letter-spacing: 0.12em; font-family: var(--mono); text-transform: uppercase; vertical-align: middle; }
+
+/* ── Form fields (login) ────────────────────────────────────────────────── */
+.qm-field { display: flex; flex-direction: column; gap: 8px; }
+.qm-field-label-row { display: flex; justify-content: space-between; align-items: baseline; }
+.qm-field-label { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
+.qm-field input { padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line-2); background: transparent; font-family: var(--sans); font-size: 15px; color: var(--ink); outline: none; width: 100%; }
+.qm-field input:focus { border-color: var(--muted); }
+.qm-btn-dark { padding: 14px 18px; border-radius: 10px; background: var(--ink); color: var(--bg); border: none; font-family: var(--sans); font-size: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; width: 100%; transition: opacity 0.15s; }
+.qm-btn-dark:hover { opacity: 0.88; }
+.qm-btn-dark:active { transform: translateY(1px); }
+
+/* ── Editor action buttons ──────────────────────────────────────────────── */
+.qm-action-btn-dark { display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 10px; background: var(--ink); color: var(--bg); border: none; font-family: var(--sans); font-size: 14px; cursor: pointer; font-weight: 500; text-decoration: none; transition: opacity 0.15s; }
+.qm-action-btn-dark:hover { opacity: 0.88; }
+.qm-action-btn-dark:active { transform: translateY(1px); }
+.qm-action-btn-quiet { display: inline-flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 10px; background: transparent; color: var(--ink-2); border: 1px solid var(--line-2); font-family: var(--sans); font-size: 14px; cursor: pointer; text-decoration: none; }
+.qm-action-btn-quiet:hover { color: var(--ink); }
+.qm-action-btn-ghost { display: inline-flex; align-items: center; padding: 12px 14px; border-radius: 10px; background: transparent; color: var(--muted); border: none; font-family: var(--sans); font-size: 14px; cursor: pointer; }
+.qm-kbd-hint { font-family: var(--mono); font-size: 10px; opacity: 0.55; padding: 1px 5px; border: 1px solid rgba(250,247,242,0.25); border-radius: 4px; }
+
+/* ── Meta dot separator ─────────────────────────────────────────────────── */
+.qm-meta-dot { width: 3px; height: 3px; border-radius: 99px; background: var(--line-2); display: inline-block; flex-shrink: 0; }
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .qm-nav { padding: 20px 24px 0; }
+  .qm-page { padding: 40px 24px 64px; }
+  .qm-page-narrow { padding: 40px 24px 64px; }
+  .qm-foot { margin: 48px 24px 0; }
+  .qm-hero-grid { grid-template-columns: 1fr !important; }
+  .qm-hero-grid > div:last-child { order: -1; }
+  .qm-about-grid { grid-template-columns: 1fr !important; }
+  .qm-h1 { font-size: 48px !important; }
+}
+@media (max-width: 639px) {
+  .qm-nav { padding: 16px 24px 0; }
+  .qm-page { padding: 40px 24px 64px; }
+  .qm-page-narrow { padding: 40px 20px 64px; }
+  .qm-foot { margin: 40px 24px 0; flex-direction: column; gap: 12px; text-align: center; }
+  .qm-foot a { margin-left: 8px; margin-right: 8px; }
+  .qm-post-row { grid-template-columns: 1fr; gap: 4px; }
+  .qm-post-row-date { display: none; }
+  .qm-job-row { grid-template-columns: 1fr; gap: 4px; }
+}

@@ -1,30 +1,51 @@
-<div class="max-w-2xl mx-auto">
-  <.header>
-    {@blog_post.title}
-    <:subtitle :if={@blog_post.published_at}>
-      {Calendar.strftime(@blog_post.published_at, "%B %-d, %Y")}
-    </:subtitle>
-    <:actions>
-      <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
-        <.link href={~p"/blog/#{@blog_post}/edit"}>
-          <.button>Edit</.button>
+<article class="qm-page-narrow" style="padding-top: 56px;">
+  <.link
+    navigate={~p"/blog"}
+    style="font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.05em;"
+  >
+    ← all writing
+  </.link>
+
+  <div style="display: flex; gap: 14px; align-items: center; margin: 28px 0 18px; font-family: var(--mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; flex-wrap: wrap;">
+    <%= if @blog_post.published_at do %>
+      <span>{Calendar.strftime(@blog_post.published_at, "%b %-d, %Y")}</span>
+      <span class="qm-meta-dot"></span>
+    <% end %>
+    <span>{reading_time(@blog_post.content)}</span>
+    <%= if @blog_post.tags != [] do %>
+      <span class="qm-meta-dot"></span>
+      <%= for tag <- @blog_post.tags do %>
+        <.link
+          navigate={~p"/blog/tags/#{tag.slug}"}
+          class="qm-tag"
+          style="margin: 0; text-transform: none; letter-spacing: 0;"
+        >
+          {tag.name}
         </.link>
       <% end %>
-    </:actions>
-  </.header>
-
-  <div :if={@blog_post.tags != []} class="mt-2 flex flex-wrap gap-1">
-    <%= for tag <- @blog_post.tags do %>
-      <.link
-        navigate={~p"/blog/tags/#{tag.slug}"}
-        class="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-200"
-      >
-        {tag.name}
-      </.link>
     <% end %>
   </div>
 
-  <.markdown_content markdown={@blog_post.content} />
+  <h1 class="qm-h1" style="font-size: 60px; margin-bottom: 32px;">{@blog_post.title}</h1>
 
-  <.back navigate={~p"/blog"}>Back to blog</.back>
-</div>
+  <div class="qm-post-body">
+    {@blog_post.content |> Earmark.as_html!() |> Phoenix.HTML.raw()}
+  </div>
+
+  <div style="margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
+    <.link
+      navigate={~p"/blog"}
+      style="font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.05em;"
+    >
+      ← all writing
+    </.link>
+    <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
+      <.link
+        navigate={~p"/blog/#{@blog_post}/edit"}
+        style="font-size: 13px; color: var(--muted); text-decoration: none; border: 1px solid var(--line-2); padding: 8px 14px; border-radius: 999px;"
+      >
+        Edit post
+      </.link>
+    <% end %>
+  </div>
+</article>

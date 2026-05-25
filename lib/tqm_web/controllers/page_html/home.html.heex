@@ -1,44 +1,60 @@
-<div class="flex flex-col h-screen max-h-screen">
-  <div id="page-body" class="flex flex-grow">
-    <div
-      id="left-short-about"
-      class="sm:flex flex-col flex-grow w-1/5 max-w-xs border-r-2 border-gray-400  hidden"
-    >
-      <div id="photo-and-blurb" class="flex flex-col w-full pt-3">
-        <img
-          src="images/me.jpg"
-          alt="Me at a laptop, in a comfy chair"
-          class="flex w-3/4 self-center rounded-3xl drop-shadow-md mb-3"
-        />
-        <span class="px-3 text-center">
-          Hi, welcome to my website!
-          I'm Quigley, amateur at life, and totally real human person.
-          Just trying to do my best, but I don't always succeed.
-          If you want to learn more about me head on over to my
-          <.link navigate="/about" class="text-blue-500 underline">
-            about
-          </.link>
-          page.
-        </span>
-      </div>
-      <div id="spacer" class="h-full"></div>
-      <div id="bottom links" class="pb-4 px-3 flex justify-around">
-        <a href="https://github.com/QMalcolm">
-          <img src="images/GitHub-Mark-32px.png" altcp="Github" title="Github" />
-        </a>
-        <a href="https://www.linkedin.com/in/quigley-malcolm/">
-          <img src="images/linkedin.png" alt="Linkedin" title="Linkedin" />
-        </a>
-        <a href="https://www.librarything.com/profile/Literary_Libations">
-          <img src="images/librarything.png" alt="Library Thing" title="Library Thing" />
-        </a>
-      </div>
-    </div>
-    <div id="recent-stuff" class="flex flex-col flex-grow w-full">
-      <h1 class="text-2xl pl-3 pt-3">
-        Recent Happenings
+<div class="qm-page" style="padding-top: 80px;">
+  <div
+    class="qm-hero-grid"
+    style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 80px; align-items: start;"
+  >
+    <div>
+      <p class="qm-eyebrow">Iowa City, IA · Software Engineer</p>
+      <h1 class="qm-h1">
+        Hi, I'm <em>Quigley</em>.<br /> Amateur at life,<br /> real human person.
       </h1>
-      <div id="content"></div>
+      <p class="qm-body" style="max-width: 52ch; font-size: 19px;">
+        Just trying to do my best, the goal is to do better than yesterday.
+        If you want to learn more about me, head to my <.link
+          navigate="/about"
+          class="qm-prose-link"
+        >about page</.link>. Also if
+        you are so inclined, feel free to peruse
+        <.link navigate="/blog" class="qm-prose-link">what I've been thinking about</.link>
+        lately.
+      </p>
+    </div>
+    <div>
+      <img
+        src="images/me.jpg"
+        alt="Quigley in a chair working on a laptop."
+        style="width: 100%; border-radius: 6px; display: block; box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 18px 40px -20px rgba(0,0,0,.25);"
+      />
     </div>
   </div>
+
+  <hr class="qm-rule" />
+
+  <section>
+    <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 28px;">
+      <h2 class="qm-h2">Recent writing</h2>
+      <.link navigate="/blog" style="font-size: 14px; color: var(--muted); text-decoration: none;">
+        All posts →
+      </.link>
+    </div>
+    <ul style="list-style: none; padding: 0; margin: 0;">
+      <%= for post <- @recent_posts do %>
+        <li>
+          <.link navigate={~p"/blog/#{post}"} class="qm-post-row">
+            <span class="qm-post-row-date">
+              <%= if post.published_at do %>
+                {Calendar.strftime(post.published_at, "%b %-d, %Y")}
+              <% end %>
+            </span>
+            <span class="qm-post-row-title">{post.title}</span>
+            <span>
+              <%= for tag <- post.tags do %>
+                <span class="qm-tag">{tag.name}</span>
+              <% end %>
+            </span>
+          </.link>
+        </li>
+      <% end %>
+    </ul>
+  </section>
 </div>

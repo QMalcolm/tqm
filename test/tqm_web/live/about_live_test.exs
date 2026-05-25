@@ -29,8 +29,8 @@ defmodule TqmWeb.AboutLive.IndexTest do
   describe "about page" do
     test "renders the page", %{conn: conn} do
       {:ok, _lv, html} = live(conn, ~p"/about")
-      assert html =~ "About Me"
-      assert html =~ "Professional History"
+      assert html =~ "Quigley"
+      assert html =~ "Work, in order"
     end
 
     test "lists jobs with company names", %{conn: conn} do
@@ -49,18 +49,32 @@ defmodule TqmWeb.AboutLive.IndexTest do
     end
   end
 
-  describe "JobWithTogglableDetails component" do
+  describe "expandable job rows" do
     test "initially hides job details", %{conn: conn} do
       create_job_with_role()
       {:ok, _lv, html} = live(conn, ~p"/about")
-      assert html =~ ~s(style="display: none;")
+      refute html =~ "Did engineering things"
     end
 
-    test "clicking job summary toggles details visibility", %{conn: conn} do
+    test "clicking job row expands details", %{conn: conn} do
       job = create_job_with_role()
       {:ok, lv, _html} = live(conn, ~p"/about")
-      lv |> element("#summary-#{job.id}") |> render_click()
-      refute render(lv) =~ ~s(style="display: none;")
+      lv |> element("#job-#{job.id}") |> render_click()
+      assert render(lv) =~ "Did engineering things"
+    end
+
+    test "clicking an expanded job row collapses it", %{conn: conn} do
+      job = create_job_with_role()
+      {:ok, lv, _html} = live(conn, ~p"/about")
+      lv |> element("#job-#{job.id}") |> render_click()
+      lv |> element("#job-#{job.id}") |> render_click()
+      refute render(lv) =~ "Did engineering things"
+    end
+
+    test "job without roles renders without crashing", %{conn: conn} do
+      job = job_fixture(%{company_name: "Roleless Corp"})
+      {:ok, _lv, html} = live(conn, ~p"/about")
+      assert html =~ job.company_name
     end
   end
 end

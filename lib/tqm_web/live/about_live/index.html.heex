@@ -1,44 +1,112 @@
-<div id="about-page-content" class="md:grid md:grid-cols-2 md:gap-4 flex flex-wrap">
-  <div id="personal">
-    <h1 class="text-xl font-semibold text-center pb-2">About Me</h1>
-    <img
-      src="images/me.jpg"
-      alt="Me at a laptop, in a comfy chair"
-      class="w-1/4 float-left rounded-3xl drop-shadow-md mb-5 mr-5"
-    />
-    <p>
-      Hi, I'm not sure if it's weird or cool that you're on my about page,
-      but hey you're here now.
-    </p>
-    <br />
-    <p>
-      My name is Thomas Quigley Malcolm, but I generally go by Quigley.
-      I grew up in a small town in Northern Wisconsin, but currently live in Iowa City, IA.
-      Professionally I'm a Software Engineer. Non-professionally I'm a bit of a lot of things:
-      wood worker, tinkerer, runner, bartender, barista, and TTRPG Player.
-      I like to read and if I'm carrying a book it's likely either fantasy, mystery, or philosophy.
-      <br />
-      <br /> If you're looking to find me in Iowa City your best bets are either at
-      <.link navigate="https://mergeic.com/" class="text-blue-500 underline">
-        MERGE
-      </.link>
-      coworking space or the
-      <.link navigate="https://icfablab.org/" class="text-blue-500 underline">
-        FabLab
-      </.link>
-      maker space.
-    </p>
-  </div>
-  <div id="professional-history" class="w-full">
-    <h2 class="text-xl font-semibold text-center pb-2">Professional History</h2>
-    <div id="jobs">
-      <%= for job <- @jobs do %>
-        <.live_component
-          module={TqmWeb.LiveComponents.JobWithTogglableDetails}
-          id={"job-#{job.id}"}
-          job={job}
-        />
-      <% end %>
+<div class="qm-page" style="padding-top: 64px;">
+  <div
+    class="qm-about-grid"
+    style="display: grid; grid-template-columns: 1fr 280px; gap: 64px; align-items: start;"
+  >
+    <div>
+      <p class="qm-eyebrow">About</p>
+      <p class="qm-lede" style="max-width: 22ch;">
+        Not sure if it's weird or cool that you're here. Either way, hello and welcome!
+      </p>
+      <div class="qm-body" style="max-width: 58ch;">
+        <p>
+          My name is <strong style="color: var(--ink); font-weight: 500;">Thomas Quigley Malcolm</strong>, but I generally go by Quigley.
+          I grew up in a small town in Northern Wisconsin and currently live in Iowa City, IA.
+          Professionally I'm an Open Source Software Engineer.
+        </p>
+        <p>
+          Non-professionally I'm a bit of a lot of things: wood worker, tinkerer, runner,
+          bartender, barista, and TTRPG player. I like to read, and if I'm carrying a book it's
+          likely fantasy, philosophy, or a short story collection.
+        </p>
+        <p>
+          If you're trying to track me down in Iowa City, I can probably be found working in
+          <a href="https://mergeic.com/" class="qm-prose-link">MERGE</a>
+          coworking space or meandering through <a
+            href="https://en.wikipedia.org/wiki/Hickory_Hill_Park"
+            class="qm-prose-link"
+          >Hickory Hill Park</a>.
+        </p>
+      </div>
+    </div>
+    <div>
+      <img
+        src="images/me.jpg"
+        alt="Quigley reading on a chair"
+        style="width: 100%; border-radius: 6px; display: block;"
+      />
     </div>
   </div>
+
+  <hr class="qm-rule" />
+
+  <section>
+    <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 32px;">
+      <h2 class="qm-h2">Work, in order</h2>
+      <span style="font-family: var(--mono); font-size: 12px; color: var(--muted);">
+        {length(@jobs)} positions
+      </span>
+    </div>
+    <ol style="list-style: none; padding: 0; margin: 0;">
+      <%= for job <- @jobs do %>
+        <li
+          id={"job-#{job.id}"}
+          class="qm-job-row"
+          phx-click="toggle_job"
+          phx-value-id={job.id}
+          style="cursor: pointer;"
+        >
+          <span style="font-family: var(--mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; padding-top: 6px;">
+            {job_year_range(job)}
+          </span>
+          <span class="qm-job-dot" style={"background: #{job_color(job)}"}></span>
+          <div>
+            <div style="font-family: var(--serif); font-size: 24px; line-height: 1.2; color: var(--ink);">
+              {job.company_name}
+            </div>
+            <div style="font-size: 14px; color: var(--muted); margin-top: 2px;">
+              {current_role_title(job)}
+            </div>
+          </div>
+          <span style="color: var(--muted); font-size: 18px; line-height: 1; padding-top: 8px; text-align: right;">
+            {if MapSet.member?(@expanded_jobs, job.id), do: "–", else: "+"}
+          </span>
+        </li>
+        <%= if MapSet.member?(@expanded_jobs, job.id) do %>
+          <li style="padding: 0 0 20px; border-top: none;">
+            <div style="padding-left: 196px;">
+              <%= if job.description do %>
+                <div
+                  class="qm-job-description"
+                  style="font-size: 15px; line-height: 1.6; color: var(--muted); margin: 0 0 16px; max-width: 62ch;"
+                >
+                  {job.description |> Earmark.as_html!() |> Phoenix.HTML.raw()}
+                </div>
+              <% end %>
+              <%= for role <- job.roles do %>
+                <div style="margin-bottom: 12px;">
+                  <span style="font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--ink);">
+                    {role.title}
+                  </span>
+                  <span style="font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: 8px;">
+                    {Calendar.strftime(role.start_date, "%b %Y")} – {if role.end_date,
+                      do: Calendar.strftime(role.end_date, "%b %Y"),
+                      else: "Present"}
+                  </span>
+                  <%= if role.details do %>
+                    <div
+                      class="qm-job-description"
+                      style="font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 6px 0 0; max-width: 62ch;"
+                    >
+                      {role.details |> Earmark.as_html!() |> Phoenix.HTML.raw()}
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </li>
+        <% end %>
+      <% end %>
+    </ol>
+  </section>
 </div>

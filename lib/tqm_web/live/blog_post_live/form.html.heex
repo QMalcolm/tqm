@@ -118,6 +118,24 @@
       <% end %>
     </div>
     <div style="margin-bottom: 32px;">
+      <label
+        for="blog_post_form_foreword"
+        style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;"
+      >
+        Foreword
+        <span style="font-weight: 400; text-transform: none; letter-spacing: 0; opacity: 0.6;">
+          — optional, rendered before the post body
+        </span>
+      </label>
+      <textarea
+        id="blog_post_form_foreword"
+        name="blog_post[foreword]"
+        rows="4"
+        placeholder="Add context about when or why this was written…"
+        style="width: 100%; padding: 14px 16px; border-radius: 10px; border: 1px solid var(--line-2); background: transparent; font-family: var(--serif); font-size: 16px; color: var(--ink); outline: none; box-sizing: border-box; resize: vertical; line-height: 1.6;"
+      >{Ecto.Changeset.get_field(@changeset, :foreword) || ""}</textarea>
+    </div>
+    <div style="margin-bottom: 32px;">
       <label style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;">
         Content
       </label>

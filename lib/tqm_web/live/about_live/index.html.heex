@@ -80,9 +80,9 @@
                     {if role.end_date, do: Calendar.strftime(role.end_date, "%b %Y"), else: "Present"}
                   </span>
                   <%= if role.details do %>
-                    <p style="font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 6px 0 0; max-width: 62ch;">
-                      {role.details}
-                    </p>
+                    <div class="qm-job-description" style="font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 6px 0 0; max-width: 62ch;">
+                      {role.details |> Earmark.as_html!() |> Phoenix.HTML.raw()}
+                    </div>
                   <% end %>
                 </div>
               <% end %>

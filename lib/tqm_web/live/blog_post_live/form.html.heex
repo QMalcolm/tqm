@@ -154,13 +154,11 @@
             </button>
           </span>
         <% end %>
-        <div style="flex: 1; min-width: 200px; position: relative;">
+        <div id="tag_search_container" phx-hook="TagSearch" style="flex: 1; min-width: 200px; position: relative;">
           <input
             type="text"
-            id="tag_search"
             name="tag_search"
             value={@tag_search}
-            phx-hook="TagSearch"
             phx-keyup="search_tags"
             phx-debounce="200"
             placeholder="Search or create a tag…"

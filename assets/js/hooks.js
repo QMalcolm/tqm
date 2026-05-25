@@ -193,4 +193,17 @@ const TiptapEditor = {
 
 }
 
-export default { TiptapEditor }
+// ─── Tag search keyboard handling ─────────────────────────────────────────────
+
+const TagSearch = {
+  mounted() {
+    this.el.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter") return
+      e.preventDefault()
+      const firstOption = this.el.parentElement.querySelector("ul button")
+      if (firstOption) firstOption.click()
+    })
+  },
+}
+
+export default { TiptapEditor, TagSearch }

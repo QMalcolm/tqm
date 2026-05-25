@@ -170,7 +170,11 @@ const TiptapEditor = {
   },
 
   _onUpdate(editor) {
+    // prosemirror-markdown escapes all square brackets, which breaks footnote
+    // syntax ([^1] → \[^1\]). Restore it: [^ is exclusively footnote syntax
+    // in Earmark so this replacement is unambiguous.
     const md = editor.storage.markdown.getMarkdown()
+      .replace(/\\\[(\^[^\]]+)\\\]/g, "[$1]")
     this._hiddenInput.value = md
     this._hiddenInput.dispatchEvent(new Event("input", { bubbles: true }))
   },

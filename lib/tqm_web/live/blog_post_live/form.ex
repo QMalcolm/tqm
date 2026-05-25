@@ -143,6 +143,23 @@ defmodule TqmWeb.BlogPostLive.Form do
     {:noreply, assign(socket, selected_tag_names: new_selected)}
   end
 
+  def handle_event("unpublish", _params, socket) do
+    attrs =
+      current_attrs(socket.assigns.changeset, socket.assigns.selected_tag_names)
+      |> Map.put(:published_at, nil)
+
+    case Blog.update_blog_post(socket.assigns.blog_post, attrs) do
+      {:ok, blog_post} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Blog post unpublished.")
+         |> push_navigate(to: ~p"/blog/#{blog_post}/edit")}
+
+      {:error, changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
+  end
+
   def handle_event("publish_now", _params, socket) do
     attrs =
       current_attrs(socket.assigns.changeset, socket.assigns.selected_tag_names)
@@ -224,9 +241,35 @@ defmodule TqmWeb.BlogPostLive.Form do
 
     %{
       title: current.title,
+      slug: current.slug,
       content: current.content,
       tag_names: Enum.join(selected_tag_names, ", ")
     }
+  end
+
+  def status_label(:draft), do: "Draft"
+  def status_label(:scheduled), do: "Scheduled"
+  def status_label(:published), do: "Published"
+
+  def status_pill_style(:draft), do: "background: var(--bg-alt); color: var(--muted);"
+  def status_pill_style(:scheduled), do: "background: var(--accent-soft); color: var(--accent);"
+  def status_pill_style(:published), do: "background: #E7F0E9; color: #2F6B3D;"
+
+  def status_dot_color(:draft), do: "var(--muted)"
+  def status_dot_color(:scheduled), do: "var(--accent)"
+  def status_dot_color(:published), do: "#2F6B3D"
+
+  def status_strip_style(:draft), do: "background: var(--bg-alt); color: var(--muted);"
+  def status_strip_style(:scheduled), do: "background: var(--accent-soft); color: var(--accent);"
+  def status_strip_style(:published), do: "background: #E7F0E9; color: #2F6B3D;"
+
+  def field_errors(changeset, field) do
+    Keyword.get_values(changeset.errors, field)
+    |> Enum.map(fn {msg, opts} ->
+      Enum.reduce(opts, msg, fn {key, value}, acc ->
+        String.replace(acc, "%{#{key}}", to_string(value))
+      end)
+    end)
   end
 
   defp publish_status(%{published_at: nil}), do: :draft

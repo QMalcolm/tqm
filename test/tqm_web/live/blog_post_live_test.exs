@@ -92,7 +92,7 @@ defmodule TqmWeb.BlogPostLive.FormTest do
         |> form("#blog_post_form", blog_post: %{title: ""})
         |> render_submit()
 
-      assert result =~ "Oops, something went wrong!"
+      assert result =~ "Please fix the errors below before saving."
     end
   end
 
@@ -154,7 +154,7 @@ defmodule TqmWeb.BlogPostLive.FormTest do
         |> form("#blog_post_form", blog_post: %{title: ""})
         |> render_submit()
 
-      assert result =~ "Oops, something went wrong!"
+      assert result =~ "Please fix the errors below before saving."
     end
   end
 

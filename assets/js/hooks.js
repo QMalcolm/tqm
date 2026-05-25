@@ -193,4 +193,61 @@ const TiptapEditor = {
 
 }
 
-export default { TiptapEditor }
+// ─── Tag search keyboard handling ─────────────────────────────────────────────
+//
+// Hook lives on the wrapper div (not the input) so it owns the dropdown too.
+// MutationObserver resets the highlight to index 0 whenever the dropdown's
+// children change (new suggestions or closed). Style mutations don't trigger
+// childList observers, so _applyHighlight() never causes a loop.
+
+const TagSearch = {
+  mounted() {
+    this.highlightedIndex = -1
+    this._input = this.el.querySelector("input[name='tag_search']")
+
+    this._observer = new MutationObserver(() => {
+      const options = this._getOptions()
+      this.highlightedIndex = options.length > 0 ? 0 : -1
+      this._applyHighlight(options)
+    })
+    this._observer.observe(this.el, { childList: true, subtree: true })
+
+    this._input.addEventListener("keydown", (e) => {
+      const options = this._getOptions()
+      if (e.key === "ArrowDown") {
+        e.preventDefault()
+        if (options.length === 0) return
+        this.highlightedIndex =
+          this.highlightedIndex < options.length - 1 ? this.highlightedIndex + 1 : 0
+        this._applyHighlight(options)
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault()
+        if (options.length === 0) return
+        this.highlightedIndex =
+          this.highlightedIndex <= 0 ? options.length - 1 : this.highlightedIndex - 1
+        this._applyHighlight(options)
+      } else if (e.key === "Enter") {
+        e.preventDefault()
+        const idx = this.highlightedIndex >= 0 ? this.highlightedIndex : 0
+        const target = options[idx]
+        if (target) target.click()
+      }
+    })
+  },
+
+  destroyed() {
+    if (this._observer) this._observer.disconnect()
+  },
+
+  _getOptions() {
+    return Array.from(this.el.querySelectorAll("ul button"))
+  },
+
+  _applyHighlight(options) {
+    options.forEach((btn, i) => {
+      btn.style.background = i === this.highlightedIndex ? "var(--bg-alt)" : "none"
+    })
+  },
+}
+
+export default { TiptapEditor, TagSearch }

@@ -251,17 +251,13 @@ defmodule TqmWeb.BlogPostLive.Form do
   def status_label(:scheduled), do: "Scheduled"
   def status_label(:published), do: "Published"
 
-  def status_pill_style(:draft), do: "background: var(--bg-alt); color: var(--muted);"
-  def status_pill_style(:scheduled), do: "background: var(--accent-soft); color: var(--accent);"
-  def status_pill_style(:published), do: "background: #E7F0E9; color: #2F6B3D;"
+  def status_style(:draft), do: "background: var(--bg-alt); color: var(--muted);"
+  def status_style(:scheduled), do: "background: var(--accent-soft); color: var(--accent);"
+  def status_style(:published), do: "background: #E7F0E9; color: #2F6B3D;"
 
   def status_dot_color(:draft), do: "var(--muted)"
   def status_dot_color(:scheduled), do: "var(--accent)"
   def status_dot_color(:published), do: "#2F6B3D"
-
-  def status_strip_style(:draft), do: "background: var(--bg-alt); color: var(--muted);"
-  def status_strip_style(:scheduled), do: "background: var(--accent-soft); color: var(--accent);"
-  def status_strip_style(:published), do: "background: #E7F0E9; color: #2F6B3D;"
 
   def field_errors(changeset, field) do
     Keyword.get_values(changeset.errors, field)

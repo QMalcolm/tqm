@@ -8,7 +8,7 @@
     </.link>
     <span
       :if={@live_action == :edit}
-      style={"display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 999px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; #{status_pill_style(@publish_status)}"}
+      style={"display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 999px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; #{status_style(@publish_status)}"}
     >
       <span style={"width: 6px; height: 6px; border-radius: 999px; background: #{status_dot_color(@publish_status)}; flex-shrink: 0;"}>
       </span>
@@ -272,7 +272,7 @@
     </form>
   <% end %>
   <%= if @live_action == :edit do %>
-    <div style={"margin-top: 20px; padding: 14px 18px; border-radius: 10px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em; display: flex; align-items: center; justify-content: space-between; #{status_strip_style(@publish_status)}"}>
+    <div style={"margin-top: 20px; padding: 14px 18px; border-radius: 10px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em; display: flex; align-items: center; justify-content: space-between; #{status_style(@publish_status)}"}>
       <span>
         <%= case @publish_status do %>
           <% :draft -> %>

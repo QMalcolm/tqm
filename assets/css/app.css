@@ -71,47 +71,47 @@ div.markdown_render a:visited {
 }
 
 .tiptap-toolbar button {
-  background: #fff;
-  border: 1px solid #d4d4d8;
+  background: var(--bg);
+  border: 1px solid var(--line-2);
   border-radius: 4px;
   padding: 4px 6px;
   cursor: pointer;
-  color: #71717a;
+  color: var(--muted);
   line-height: 0;
   display: flex;
   align-items: center;
 }
 
 .tiptap-toolbar button:hover {
-  background: #f4f4f5;
-  color: #18181b;
+  background: var(--bg-alt);
+  color: var(--ink);
 }
 
 .tiptap-toolbar button.is-active {
-  background: #f4f4f5;
-  color: #18181b;
-  border-color: #a1a1aa;
+  background: var(--bg-alt);
+  color: var(--ink);
+  border-color: var(--muted);
 }
 
 .tiptap-prosemirror > .ProseMirror {
-  border: 1px solid #d4d4d8;
+  border: 1px solid var(--line-2);
   border-radius: 8px;
   padding: 10px 12px;
   min-height: 200px;
   outline: none;
   font-size: 0.875rem;
   line-height: 1.6;
-  color: #18181b;
+  color: var(--ink);
 }
 
 .tiptap-prosemirror > .ProseMirror:focus {
-  border-color: #a1a1aa;
-  box-shadow: 0 0 0 4px rgb(39 39 42 / 0.05);
+  border-color: var(--muted);
+  box-shadow: 0 0 0 4px rgb(0 0 0 / 0.05);
 }
 
 .tiptap-prosemirror > .ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
-  color: #a1a1aa;
+  color: var(--muted);
   pointer-events: none;
   float: left;
   height: 0;
@@ -125,10 +125,10 @@ div.markdown_render a:visited {
 .tiptap-prosemirror .ProseMirror ol { list-style: decimal; padding-left: 1.25rem; margin: 0 0 0.5rem; }
 .tiptap-prosemirror .ProseMirror li { margin-bottom: 0.2rem; }
 .tiptap-prosemirror .ProseMirror blockquote {
-  border-left: 4px solid #d4d4d8;
+  border-left: 4px solid var(--line-2);
   margin: 0.5rem 0;
   padding: 0.25rem 0 0.25rem 1rem;
-  color: #71717a;
+  color: var(--muted);
   font-style: italic;
 }
 .tiptap-prosemirror .ProseMirror strong { font-weight: 600; }
@@ -136,12 +136,12 @@ div.markdown_render a:visited {
 .tiptap-prosemirror .ProseMirror code {
   font-family: ui-monospace, monospace;
   font-size: 0.8125em;
-  background: #f4f4f5;
+  background: var(--bg-alt);
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
 }
 .tiptap-prosemirror .ProseMirror pre {
-  background: #f4f4f5;
+  background: var(--bg-alt);
   border-radius: 6px;
   padding: 0.75rem 1rem;
   margin: 0.5rem 0;
@@ -150,7 +150,7 @@ div.markdown_render a:visited {
 .tiptap-prosemirror .ProseMirror pre code { background: none; padding: 0; font-size: 0.875rem; }
 
 /* ── Design tokens ──────────────────────────────────────────────────────── */
-:root {
+.qm {
   --bg: #FAF7F2;
   --bg-alt: #F2EDE4;
   --ink: #1A1612;
@@ -160,9 +160,26 @@ div.markdown_render a:visited {
   --line-2: #D8CFC0;
   --accent: #8B2840;
   --accent-soft: #F4E8EB;
+  --status-ok-bg: #E7F0E9;
+  --status-ok-fg: #2F6B3D;
   --serif: "Instrument Serif", "Newsreader", Georgia, serif;
   --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.qm.qm-dark {
+  --bg: #14110D;
+  --bg-alt: #1E1A14;
+  --ink: #F2ECE0;
+  --ink-2: #C9C0B1;
+  --muted: #847A6C;
+  --line: #2A241D;
+  --line-2: #3A3328;
+  --accent: #E48BA0;
+  --accent-soft: #2A1B22;
+  --status-ok-bg: #1C2A21;
+  --status-ok-fg: #8FCFA1;
 }
 
 /* ── Nav ────────────────────────────────────────────────────────────────── */
@@ -174,6 +191,8 @@ div.markdown_render a:visited {
 .qm-navlinks a.active::after { content: ""; position: absolute; left: 50%; bottom: -2px; width: 4px; height: 4px; border-radius: 999px; background: var(--accent); transform: translateX(-50%); }
 .qm-navlinks a:hover { color: var(--ink); }
 .qm-logout { font-size: 13px !important; color: var(--muted) !important; border: 1px solid var(--line); padding: 6px 12px; border-radius: 999px; }
+.qm-theme-toggle { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: 1px solid var(--line); border-radius: 999px; color: var(--ink-2); cursor: pointer; padding: 0; transition: border-color 0.15s, color 0.15s; }
+.qm-theme-toggle:hover { border-color: var(--line-2); color: var(--ink); }
 
 /* ── Footer ─────────────────────────────────────────────────────────────── */
 .qm-foot { border-top: 1px solid var(--line); margin: 80px 64px 0; padding: 24px 0 36px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted); }

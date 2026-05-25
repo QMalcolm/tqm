@@ -254,4 +254,17 @@ const TagSearch = {
   },
 }
 
-export default { TiptapEditor, TagSearch }
+// ─── Theme toggle ──────────────────────────────────────────────────────────────
+
+const ThemeToggle = {
+  mounted() {
+    this.el.addEventListener("click", () => {
+      const html = document.documentElement
+      const isDark = html.classList.toggle("qm-dark")
+      localStorage.setItem("theme", isDark ? "dark" : "light")
+      window.dispatchEvent(new CustomEvent("qm-theme-flip"))
+    })
+  },
+}
+
+export default { TiptapEditor, TagSearch, ThemeToggle }

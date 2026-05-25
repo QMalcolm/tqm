@@ -34,13 +34,13 @@
         Foreword
       </p>
       <div class="qm-post-body" style="font-style: italic; color: var(--ink-2);">
-        {@blog_post.foreword |> Earmark.as_html!() |> Phoenix.HTML.raw()}
+        {@blog_post.foreword |> Earmark.as_html!(footnotes: true) |> Phoenix.HTML.raw()}
       </div>
     </aside>
   <% end %>
 
   <div class="qm-post-body">
-    {@blog_post.content |> Earmark.as_html!() |> Phoenix.HTML.raw()}
+    {@blog_post.content |> Earmark.as_html!(footnotes: true) |> Phoenix.HTML.raw()}
   </div>
 
   <div style="margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">

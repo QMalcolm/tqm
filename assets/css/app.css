@@ -253,10 +253,9 @@ div.markdown_render a:visited {
 .qm-post-body a.footnote:hover { color: var(--ink); }
 .qm-post-body .footnotes { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 15px; color: var(--muted); }
 .qm-post-body .footnotes ol { padding-left: 1.25rem; margin: 16px 0 0; }
-.qm-post-body .footnotes li { margin-bottom: 8px; line-height: 1.5; }
-.qm-post-body .footnotes p { margin: 0; font-size: inherit; color: inherit; }
-.qm-post-body .footnotes p:first-child { font-family: inherit; font-size: inherit; color: inherit; }
-.qm-post-body a.reversefootnote { font-family: var(--mono); font-size: 0.85em; color: var(--muted); background-image: none; padding: 0 0 0 4px; }
+.qm-post-body .footnotes li { display: flex; flex-wrap: wrap; align-items: baseline; margin-bottom: 8px; line-height: 1.5; }
+.qm-post-body .footnotes p { order: 0; margin: 0; font-size: inherit; color: inherit; }
+.qm-post-body a.reversefootnote { order: 1; font-family: var(--mono); font-size: 0.85em; color: var(--muted); background-image: none; padding: 0 0 0 0.3em; }
 .qm-post-body a.reversefootnote:hover { color: var(--ink); }
 
 /* ── Admin pill ─────────────────────────────────────────────────────────── */

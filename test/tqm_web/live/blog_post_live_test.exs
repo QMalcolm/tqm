@@ -198,5 +198,83 @@ defmodule TqmWeb.BlogPostLive.FormTest do
       refute html =~ "Publish now"
       refute html =~ "Schedule publishing"
     end
+
+    test "unpublish resets a published post to draft and redirects to edit", %{conn: conn} do
+      blog_post = blog_post_fixture()
+      owner_conn = conn |> log_in_person(owner_person_fixture())
+      {:ok, lv, _html} = live(owner_conn, ~p"/blog/#{blog_post}/edit")
+
+      assert {:error, {:live_redirect, %{to: path}}} =
+               lv |> element("button[phx-click='unpublish']") |> render_click()
+
+      assert path =~ "/edit"
+    end
+
+    test "scheduling a post at a future date redirects to show", %{conn: conn} do
+      blog_post = unpublished_blog_post_fixture()
+      owner_conn = conn |> log_in_person(owner_person_fixture())
+      {:ok, lv, _html} = live(owner_conn, ~p"/blog/#{blog_post}/edit")
+
+      lv |> element("button[phx-click='show_schedule_form']") |> render_click()
+
+      assert {:error, {:live_redirect, %{to: path}}} =
+               lv
+               |> form("form[phx-submit='schedule']", scheduled_at: "2099-01-01T12:00")
+               |> render_submit()
+
+      assert path == ~p"/blog/#{blog_post}"
+    end
+
+    test "scheduling with an invalid datetime flashes an error", %{conn: conn} do
+      blog_post = unpublished_blog_post_fixture()
+
+      {:ok, lv, _html} =
+        conn
+        |> log_in_person(owner_person_fixture())
+        |> live(~p"/blog/#{blog_post}/edit")
+
+      lv |> element("button[phx-click='show_schedule_form']") |> render_click()
+
+      html =
+        lv
+        |> form("form[phx-submit='schedule']", scheduled_at: "not-a-date")
+        |> render_submit()
+
+      assert html =~ "Invalid date"
+    end
+  end
+
+  describe "tag management" do
+    test "searching for a non-existent tag shows a create option", %{conn: conn} do
+      {:ok, lv, _html} =
+        conn
+        |> log_in_person(owner_person_fixture())
+        |> live(~p"/blog/new")
+
+      html = lv |> render_hook("search_tags", %{"value" => "brandnewtag"})
+      assert html =~ "brandnewtag"
+      assert html =~ "create new"
+    end
+
+    test "selecting a tag adds it to the selected list", %{conn: conn} do
+      {:ok, lv, _html} =
+        conn
+        |> log_in_person(owner_person_fixture())
+        |> live(~p"/blog/new")
+
+      lv |> render_hook("select_tag", %{"name" => "elixir"})
+      assert render(lv) =~ "#elixir"
+    end
+
+    test "removing a tag removes it from the selected list", %{conn: conn} do
+      {:ok, lv, _html} =
+        conn
+        |> log_in_person(owner_person_fixture())
+        |> live(~p"/blog/new")
+
+      lv |> render_hook("select_tag", %{"name" => "elixir"})
+      lv |> render_hook("remove_tag", %{"name" => "elixir"})
+      refute render(lv) =~ "#elixir"
+    end
   end
 end

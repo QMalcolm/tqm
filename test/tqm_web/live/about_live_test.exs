@@ -4,24 +4,19 @@ defmodule TqmWeb.AboutLive.IndexTest do
   import Phoenix.LiveViewTest
   import Tqm.JobsFixtures
 
-  # The role_fixture doesn't associate roles with jobs (job_id isn't cast by
-  # Role.changeset), so we need to set it explicitly.
   defp create_job_with_role(job_attrs \\ %{}, role_attrs \\ %{}) do
     job = job_fixture(job_attrs)
 
-    role_attrs =
-      Enum.into(role_attrs, %{
+    _role =
+      role_attrs
+      |> Enum.into(%{
+        job_id: job.id,
         start_date: ~D[2023-01-01],
         end_date: ~D[2023-12-31],
         title: "Engineer",
         details: "Did engineering things"
       })
-
-    {:ok, _role} =
-      %Tqm.Jobs.Role{}
-      |> Tqm.Jobs.Role.changeset(role_attrs)
-      |> Ecto.Changeset.put_change(:job_id, job.id)
-      |> Tqm.Repo.insert()
+      |> role_fixture()
 
     job
   end

@@ -22,7 +22,7 @@ defmodule Tqm.JobsFixtures do
   end
 
   @doc """
-  Generate a role.
+  Generate a role. Pass `job_id` to associate it with a job.
   """
   def role_fixture(attrs \\ %{}) do
     {:ok, role} =

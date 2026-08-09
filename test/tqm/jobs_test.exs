@@ -110,6 +110,43 @@ defmodule Tqm.JobsTest do
       assert {:error, %Ecto.Changeset{}} = Jobs.create_role(@invalid_attrs)
     end
 
+    test "create_role/1 associates the role with a job" do
+      job = job_fixture()
+
+      assert {:ok, %Role{} = role} =
+               Jobs.create_role(%{
+                 job_id: job.id,
+                 start_date: ~D[2023-02-09],
+                 end_date: ~D[2023-02-09],
+                 title: "some title",
+                 details: "some details"
+               })
+
+      assert role.job_id == job.id
+    end
+
+    test "create_role/1 with a nonexistent job returns error changeset" do
+      assert {:error, %Ecto.Changeset{errors: errors}} =
+               Jobs.create_role(%{
+                 job_id: -1,
+                 start_date: ~D[2023-02-09],
+                 end_date: ~D[2023-02-09],
+                 title: "some title",
+                 details: "some details"
+               })
+
+      assert Keyword.has_key?(errors, :job_id)
+    end
+
+    test "create_role/1 without an end_date creates an ongoing role" do
+      assert {:ok, %Role{end_date: nil}} =
+               Jobs.create_role(%{
+                 start_date: ~D[2023-02-09],
+                 title: "some title",
+                 details: "some details"
+               })
+    end
+
     test "update_role/2 with valid data updates the role" do
       role = role_fixture()
 

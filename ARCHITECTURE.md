@@ -63,7 +63,7 @@ Blog posts with draft/published/scheduled states via `published_at`:
 `Blog.viewing_permissions_for_person/1` returns `:all` or `:published` to parameterize queries.
 
 ### `Tqm.Jobs`
-Job and role history used on the About page. Jobs have many roles (positions held). Populated via `Tqm.Seeds` with hardcoded data — no CMS backend.
+Job and role history used on the About page. Jobs have many roles (positions held), cast as a nested association so a job and its roles are edited through a single changeset. Editable by the owner via the job editor; `Tqm.Seeds` provides initial data.
 
 ## Data Models
 
@@ -83,7 +83,7 @@ Four pipeline groups in `router.ex`:
 | Public | none | `/`, `/blog`, `/blog/:id`, `/about` |
 | Guest-only | redirect if logged in | `/people/register`, `/people/log_in`, password reset |
 | Authenticated | require login | `/people/settings`, log out |
-| Owner-only | require `:owner` role | `GET /blog/new`, `GET /blog/:id/edit`, `DELETE /blog/:id` |
+| Owner-only | require `:owner` role | `GET /blog/new`, `GET /blog/:id/edit`, `DELETE /blog/:id`, `GET /about/jobs/new`, `GET /about/jobs/:id/edit` |
 
 LiveView routes use `live_session` with `on_mount` hooks (`ensure_owner`, `ensure_authenticated`, `redirect_if_authenticated`) for role enforcement.
 
@@ -91,8 +91,9 @@ LiveView routes use `live_session` with `on_mount` hooks (`ensure_owner`, `ensur
 
 | Module | Route | Purpose |
 |---|---|---|
-| `AboutLive.Index` | `/about` | Job history display with sorting |
+| `AboutLive.Index` | `/about` | Job history display with sorting; owner edit links |
 | `BlogPostLive.Form` | `/blog/new`, `/blog/:id/edit` | Blog editor (draft/publish/schedule) |
+| `JobLive.Form` | `/about/jobs/new`, `/about/jobs/:id/edit` | Job editor with nested role rows; job deletion |
 | `PersonSettingsLive` | `/people/settings` | Email and password changes |
 | Registration/login/reset flows | various | Standard auth UI |
 

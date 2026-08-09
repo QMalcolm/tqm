@@ -26,6 +26,12 @@ defmodule TqmWeb.AboutLive.Index do
     Enum.sort_by(jobs, &job_year_start/1, {:desc, Date})
   end
 
+  # Roles come back from the database in unspecified order; display them
+  # newest-first, matching the job ordering.
+  defp sort_roles(job) do
+    %{job | roles: Enum.sort_by(job.roles, & &1.start_date, {:desc, Date})}
+  end
+
   defp format_year(nil), do: "Present"
   defp format_year(date), do: Calendar.strftime(date, "%Y")
 
@@ -57,7 +63,7 @@ defmodule TqmWeb.AboutLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    jobs = Jobs.list_jobs([:roles]) |> sort_jobs()
+    jobs = Jobs.list_jobs([:roles]) |> Enum.map(&sort_roles/1) |> sort_jobs()
 
     {:ok,
      assign(socket,

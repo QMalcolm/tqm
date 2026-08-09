@@ -67,6 +67,37 @@ defmodule TqmWeb.AboutLive.IndexTest do
       refute render(lv) =~ "Did engineering things"
     end
 
+    test "lists a job's roles newest first", %{conn: conn} do
+      job = job_fixture()
+
+      # Insert the older role first so a database that returns insertion
+      # order would show it first without explicit sorting. Match on the
+      # details rather than the titles: the newest role's title also
+      # appears in the collapsed row header, above both role entries.
+      role_fixture(%{
+        job_id: job.id,
+        title: "Junior Engineer",
+        start_date: ~D[2020-01-01],
+        end_date: ~D[2022-01-01],
+        details: "Older role details"
+      })
+
+      role_fixture(%{
+        job_id: job.id,
+        title: "Staff Engineer",
+        start_date: ~D[2022-01-02],
+        end_date: nil,
+        details: "Newer role details"
+      })
+
+      {:ok, lv, _html} = live(conn, ~p"/about")
+      html = lv |> element("#job-#{job.id}") |> render_click()
+
+      {newer_pos, _} = :binary.match(html, "Newer role details")
+      {older_pos, _} = :binary.match(html, "Older role details")
+      assert newer_pos < older_pos
+    end
+
     test "job without roles renders without crashing", %{conn: conn} do
       job = job_fixture(%{company_name: "Roleless Corp"})
       {:ok, _lv, html} = live(conn, ~p"/about")

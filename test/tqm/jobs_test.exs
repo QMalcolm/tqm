@@ -72,6 +72,70 @@ defmodule Tqm.JobsTest do
       job = job_fixture()
       assert %Ecto.Changeset{} = Jobs.change_job(job)
     end
+
+    test "get_job!/2 preloads associations" do
+      job = job_fixture()
+      role = role_fixture(%{job_id: job.id})
+
+      assert [loaded_role] = Jobs.get_job!(job.id, [:roles]).roles
+      assert loaded_role.id == role.id
+    end
+
+    test "create_job/1 with nested roles creates the roles" do
+      attrs = %{
+        url: "some url",
+        company_name: "some company_name",
+        logo: "some logo",
+        description: "some description",
+        roles: %{
+          "0" => %{
+            title: "some title",
+            start_date: ~D[2023-02-09],
+            details: "some details"
+          }
+        }
+      }
+
+      assert {:ok, %Job{roles: [role]}} = Jobs.create_job(attrs)
+      assert role.title == "some title"
+      assert role.job_id
+    end
+
+    test "create_job/1 with invalid nested role returns error changeset" do
+      attrs = %{
+        url: "some url",
+        company_name: "some company_name",
+        logo: "some logo",
+        description: "some description",
+        roles: %{"0" => %{title: "some title"}}
+      }
+
+      assert {:error, %Ecto.Changeset{}} = Jobs.create_job(attrs)
+      assert Jobs.list_jobs() == []
+    end
+
+    test "update_job/2 updates nested roles" do
+      job = job_fixture()
+      role = role_fixture(%{job_id: job.id})
+      job = Jobs.get_job!(job.id, [:roles])
+
+      update_attrs = %{
+        roles: %{"0" => %{id: role.id, title: "some updated title"}}
+      }
+
+      assert {:ok, %Job{roles: [updated_role]}} = Jobs.update_job(job, update_attrs)
+      assert updated_role.id == role.id
+      assert updated_role.title == "some updated title"
+    end
+
+    test "update_job/2 deletes roles removed from the association" do
+      job = job_fixture()
+      role = role_fixture(%{job_id: job.id})
+      job = Jobs.get_job!(job.id, [:roles])
+
+      assert {:ok, %Job{roles: []}} = Jobs.update_job(job, %{roles: %{}})
+      assert_raise Ecto.NoResultsError, fn -> Jobs.get_role!(role.id) end
+    end
   end
 
   describe "roles" do

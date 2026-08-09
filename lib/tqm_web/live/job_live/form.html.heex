@@ -1,0 +1,239 @@
+<div style="max-width: 980px; margin: 0 auto; padding: 48px 64px 96px;">
+  <div style="margin-bottom: 18px;">
+    <.link
+      navigate={~p"/about"}
+      style="font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.05em;"
+    >
+      ← about
+    </.link>
+  </div>
+  <h1 class="qm-h1" style="font-size: 48px; margin: 0 0 36px;">
+    <%= if @live_action == :new do %>
+      New <em>job</em>
+    <% else %>
+      Editing <em>{@job.company_name}</em>
+    <% end %>
+  </h1>
+
+  <div
+    :if={@form.source.action && not @form.source.valid?}
+    style="margin-bottom: 24px; padding: 12px 16px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); font-family: var(--sans); font-size: 14px;"
+  >
+    Please fix the errors below before saving.
+  </div>
+
+  <form id="job_form" phx-change="validate" phx-submit="save">
+    <div style="margin-bottom: 32px;">
+      <label
+        for={@form[:company_name].id}
+        style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;"
+      >
+        Company name
+      </label>
+      <input
+        type="text"
+        id={@form[:company_name].id}
+        name={@form[:company_name].name}
+        value={@form[:company_name].value || ""}
+        style="width: 100%; padding: 14px 16px; border-radius: 10px; border: 1px solid var(--line-2); background: transparent; font-family: var(--serif); font-size: 26px; color: var(--ink); outline: none; box-sizing: border-box;"
+      />
+      <%= for msg <- field_errors(@form[:company_name]) do %>
+        <p style="margin: 6px 0 0; font-family: var(--sans); font-size: 13px; color: var(--accent);">
+          {msg}
+        </p>
+      <% end %>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+      <div>
+        <label
+          for={@form[:url].id}
+          style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;"
+        >
+          Company URL
+        </label>
+        <input
+          type="text"
+          id={@form[:url].id}
+          name={@form[:url].name}
+          value={@form[:url].value || ""}
+          placeholder="https://…"
+          style="width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line-2); background: transparent; font-family: var(--mono); font-size: 13px; color: var(--ink); outline: none; box-sizing: border-box;"
+        />
+        <%= for msg <- field_errors(@form[:url]) do %>
+          <p style="margin: 6px 0 0; font-family: var(--sans); font-size: 13px; color: var(--accent);">
+            {msg}
+          </p>
+        <% end %>
+      </div>
+      <div>
+        <label
+          for={@form[:logo].id}
+          style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;"
+        >
+          Logo path
+          <span style="font-weight: 400; text-transform: none; letter-spacing: 0; opacity: 0.6;">
+            — e.g. images/acme-logo.png
+          </span>
+        </label>
+        <input
+          type="text"
+          id={@form[:logo].id}
+          name={@form[:logo].name}
+          value={@form[:logo].value || ""}
+          style="width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line-2); background: transparent; font-family: var(--mono); font-size: 13px; color: var(--ink); outline: none; box-sizing: border-box;"
+        />
+        <%= for msg <- field_errors(@form[:logo]) do %>
+          <p style="margin: 6px 0 0; font-family: var(--sans); font-size: 13px; color: var(--accent);">
+            {msg}
+          </p>
+        <% end %>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 40px;">
+      <label
+        for={@form[:description].id}
+        style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;"
+      >
+        Description
+        <span style="font-weight: 400; text-transform: none; letter-spacing: 0; opacity: 0.6;">
+          — markdown supported
+        </span>
+      </label>
+      <textarea
+        id={@form[:description].id}
+        name={@form[:description].name}
+        rows="5"
+        style="width: 100%; padding: 14px 16px; border-radius: 10px; border: 1px solid var(--line-2); background: transparent; font-family: var(--serif); font-size: 16px; color: var(--ink); outline: none; box-sizing: border-box; resize: vertical; line-height: 1.6;"
+      >{@form[:description].value || ""}</textarea>
+      <%= for msg <- field_errors(@form[:description]) do %>
+        <p style="margin: 6px 0 0; font-family: var(--sans); font-size: 13px; color: var(--accent);">
+          {msg}
+        </p>
+      <% end %>
+    </div>
+
+    <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px;">
+      <h2 class="qm-h2" style="margin: 0;">Roles</h2>
+      <button
+        type="button"
+        name="job[roles_sort][]"
+        value="new"
+        phx-click={JS.dispatch("change")}
+        class="qm-action-btn-quiet"
+      >
+        + Add role
+      </button>
+    </div>
+
+    <.inputs_for :let={rf} field={@form[:roles]}>
+      <input type="hidden" name="job[roles_sort][]" value={rf.index} />
+      <div style="margin-bottom: 20px; padding: 20px; border-radius: 10px; border: 1px solid var(--line-2);">
+        <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 16px; align-items: end; margin-bottom: 16px;">
+          <div>
+            <label
+              for={rf[:title].id}
+              style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;"
+            >
+              Title
+            </label>
+            <input
+              type="text"
+              id={rf[:title].id}
+              name={rf[:title].name}
+              value={rf[:title].value || ""}
+              style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line-2); background: transparent; font-family: var(--sans); font-size: 15px; color: var(--ink); outline: none; box-sizing: border-box;"
+            />
+          </div>
+          <div>
+            <label
+              for={rf[:start_date].id}
+              style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;"
+            >
+              Start
+            </label>
+            <input
+              type="date"
+              id={rf[:start_date].id}
+              name={rf[:start_date].name}
+              value={rf[:start_date].value}
+              style="padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line-2); background: transparent; font-family: var(--mono); font-size: 13px; color: var(--ink); outline: none;"
+            />
+          </div>
+          <div>
+            <label
+              for={rf[:end_date].id}
+              style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;"
+            >
+              End
+              <span style="font-weight: 400; text-transform: none; letter-spacing: 0; opacity: 0.6;">
+                — blank if current
+              </span>
+            </label>
+            <input
+              type="date"
+              id={rf[:end_date].id}
+              name={rf[:end_date].name}
+              value={rf[:end_date].value}
+              style="padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line-2); background: transparent; font-family: var(--mono); font-size: 13px; color: var(--ink); outline: none;"
+            />
+          </div>
+        </div>
+        <label
+          for={rf[:details].id}
+          style="display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px;"
+        >
+          Details
+          <span style="font-weight: 400; text-transform: none; letter-spacing: 0; opacity: 0.6;">
+            — markdown supported
+          </span>
+        </label>
+        <textarea
+          id={rf[:details].id}
+          name={rf[:details].name}
+          rows="4"
+          style="width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--line-2); background: transparent; font-family: var(--serif); font-size: 15px; color: var(--ink); outline: none; box-sizing: border-box; resize: vertical; line-height: 1.6;"
+        >{rf[:details].value || ""}</textarea>
+        <%= for {field, label} <- [title: "Title", start_date: "Start date", details: "Details"],
+                msg <- field_errors(rf[field]) do %>
+          <p style="margin: 6px 0 0; font-family: var(--sans); font-size: 13px; color: var(--accent);">
+            {label} {msg}
+          </p>
+        <% end %>
+        <div style="margin-top: 12px; text-align: right;">
+          <button
+            type="button"
+            name="job[roles_drop][]"
+            value={rf.index}
+            phx-click={JS.dispatch("change")}
+            class="qm-action-btn-quiet"
+            style="color: var(--accent); border-color: var(--accent-soft);"
+          >
+            Remove role
+          </button>
+        </div>
+      </div>
+    </.inputs_for>
+    <input type="hidden" name="job[roles_drop][]" />
+
+    <hr style="border: 0; height: 1px; background: var(--line); margin: 40px 0 28px;" />
+    <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+      <button type="submit" class="qm-action-btn-dark">
+        Save
+      </button>
+      <%= if @live_action == :edit do %>
+        <span style="flex: 1;"></span>
+        <button
+          type="button"
+          phx-click="delete"
+          data-confirm="Delete this job and all of its roles?"
+          class="qm-action-btn-quiet"
+          style="color: var(--accent); border-color: var(--accent-soft);"
+        >
+          Delete job
+        </button>
+      <% end %>
+    </div>
+  </form>
+</div>

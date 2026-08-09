@@ -19,7 +19,8 @@ defmodule Tqm.Jobs.Role do
   @doc false
   def changeset(role, attrs) do
     role
-    |> cast(attrs, [:title, :start_date, :end_date, :details])
-    |> validate_required([:title, :start_date, :end_date, :details])
+    |> cast(attrs, [:title, :start_date, :end_date, :details, :job_id])
+    |> validate_required([:title, :start_date, :details])
+    |> foreign_key_constraint(:job_id)
   end
 end

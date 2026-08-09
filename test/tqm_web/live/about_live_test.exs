@@ -2,26 +2,22 @@ defmodule TqmWeb.AboutLive.IndexTest do
   use TqmWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
+  import Tqm.AccountsFixtures
   import Tqm.JobsFixtures
 
-  # The role_fixture doesn't associate roles with jobs (job_id isn't cast by
-  # Role.changeset), so we need to set it explicitly.
   defp create_job_with_role(job_attrs \\ %{}, role_attrs \\ %{}) do
     job = job_fixture(job_attrs)
 
-    role_attrs =
-      Enum.into(role_attrs, %{
+    _role =
+      role_attrs
+      |> Enum.into(%{
+        job_id: job.id,
         start_date: ~D[2023-01-01],
         end_date: ~D[2023-12-31],
         title: "Engineer",
         details: "Did engineering things"
       })
-
-    {:ok, _role} =
-      %Tqm.Jobs.Role{}
-      |> Tqm.Jobs.Role.changeset(role_attrs)
-      |> Ecto.Changeset.put_change(:job_id, job.id)
-      |> Tqm.Repo.insert()
+      |> role_fixture()
 
     job
   end
@@ -75,6 +71,30 @@ defmodule TqmWeb.AboutLive.IndexTest do
       job = job_fixture(%{company_name: "Roleless Corp"})
       {:ok, _lv, html} = live(conn, ~p"/about")
       assert html =~ job.company_name
+    end
+  end
+
+  describe "owner affordances" do
+    test "owner sees add and edit job links", %{conn: conn} do
+      job = create_job_with_role()
+      conn = log_in_person(conn, owner_person_fixture())
+
+      {:ok, lv, html} = live(conn, ~p"/about")
+      assert html =~ "add job"
+
+      html = lv |> element("#job-#{job.id}") |> render_click()
+      assert html =~ "edit job"
+      assert html =~ "/about/jobs/#{job.id}/edit"
+    end
+
+    test "visitors see no edit affordances", %{conn: conn} do
+      job = create_job_with_role()
+
+      {:ok, lv, html} = live(conn, ~p"/about")
+      refute html =~ "add job"
+
+      html = lv |> element("#job-#{job.id}") |> render_click()
+      refute html =~ "edit job"
     end
   end
 end

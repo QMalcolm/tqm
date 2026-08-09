@@ -68,9 +68,81 @@ defmodule Tqm.JobsTest do
       assert_raise Ecto.NoResultsError, fn -> Jobs.get_job!(job.id) end
     end
 
+    test "delete_job/1 deletes the job's roles" do
+      job = job_fixture()
+      role = role_fixture(%{job_id: job.id})
+
+      assert {:ok, %Job{}} = Jobs.delete_job(job)
+      assert_raise Ecto.NoResultsError, fn -> Jobs.get_role!(role.id) end
+    end
+
     test "change_job/1 returns a job changeset" do
       job = job_fixture()
       assert %Ecto.Changeset{} = Jobs.change_job(job)
+    end
+
+    test "get_job!/2 preloads associations" do
+      job = job_fixture()
+      role = role_fixture(%{job_id: job.id})
+
+      assert [loaded_role] = Jobs.get_job!(job.id, [:roles]).roles
+      assert loaded_role.id == role.id
+    end
+
+    test "create_job/1 with nested roles creates the roles" do
+      attrs = %{
+        url: "some url",
+        company_name: "some company_name",
+        logo: "some logo",
+        description: "some description",
+        roles: %{
+          "0" => %{
+            title: "some title",
+            start_date: ~D[2023-02-09],
+            details: "some details"
+          }
+        }
+      }
+
+      assert {:ok, %Job{roles: [role]}} = Jobs.create_job(attrs)
+      assert role.title == "some title"
+      assert role.job_id
+    end
+
+    test "create_job/1 with invalid nested role returns error changeset" do
+      attrs = %{
+        url: "some url",
+        company_name: "some company_name",
+        logo: "some logo",
+        description: "some description",
+        roles: %{"0" => %{title: "some title"}}
+      }
+
+      assert {:error, %Ecto.Changeset{}} = Jobs.create_job(attrs)
+      assert Jobs.list_jobs() == []
+    end
+
+    test "update_job/2 updates nested roles" do
+      job = job_fixture()
+      role = role_fixture(%{job_id: job.id})
+      job = Jobs.get_job!(job.id, [:roles])
+
+      update_attrs = %{
+        roles: %{"0" => %{id: role.id, title: "some updated title"}}
+      }
+
+      assert {:ok, %Job{roles: [updated_role]}} = Jobs.update_job(job, update_attrs)
+      assert updated_role.id == role.id
+      assert updated_role.title == "some updated title"
+    end
+
+    test "update_job/2 deletes roles removed from the association" do
+      job = job_fixture()
+      role = role_fixture(%{job_id: job.id})
+      job = Jobs.get_job!(job.id, [:roles])
+
+      assert {:ok, %Job{roles: []}} = Jobs.update_job(job, %{roles: %{}})
+      assert_raise Ecto.NoResultsError, fn -> Jobs.get_role!(role.id) end
     end
   end
 
@@ -108,6 +180,43 @@ defmodule Tqm.JobsTest do
 
     test "create_role/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Jobs.create_role(@invalid_attrs)
+    end
+
+    test "create_role/1 associates the role with a job" do
+      job = job_fixture()
+
+      assert {:ok, %Role{} = role} =
+               Jobs.create_role(%{
+                 job_id: job.id,
+                 start_date: ~D[2023-02-09],
+                 end_date: ~D[2023-02-09],
+                 title: "some title",
+                 details: "some details"
+               })
+
+      assert role.job_id == job.id
+    end
+
+    test "create_role/1 with a nonexistent job returns error changeset" do
+      assert {:error, %Ecto.Changeset{errors: errors}} =
+               Jobs.create_role(%{
+                 job_id: -1,
+                 start_date: ~D[2023-02-09],
+                 end_date: ~D[2023-02-09],
+                 title: "some title",
+                 details: "some details"
+               })
+
+      assert Keyword.has_key?(errors, :job_id)
+    end
+
+    test "create_role/1 without an end_date creates an ongoing role" do
+      assert {:ok, %Role{end_date: nil}} =
+               Jobs.create_role(%{
+                 start_date: ~D[2023-02-09],
+                 title: "some title",
+                 details: "some details"
+               })
     end
 
     test "update_role/2 with valid data updates the role" do

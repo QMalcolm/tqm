@@ -68,6 +68,14 @@ defmodule Tqm.JobsTest do
       assert_raise Ecto.NoResultsError, fn -> Jobs.get_job!(job.id) end
     end
 
+    test "delete_job/1 deletes the job's roles" do
+      job = job_fixture()
+      role = role_fixture(%{job_id: job.id})
+
+      assert {:ok, %Job{}} = Jobs.delete_job(job)
+      assert_raise Ecto.NoResultsError, fn -> Jobs.get_role!(role.id) end
+    end
+
     test "change_job/1 returns a job changeset" do
       job = job_fixture()
       assert %Ecto.Changeset{} = Jobs.change_job(job)

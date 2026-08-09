@@ -26,6 +26,8 @@ defmodule TqmWeb.Router do
       on_mount: [{TqmWeb.PersonAuth, :ensure_owner}] do
       live "/blog/new", BlogPostLive.Form, :new
       live "/blog/:slug/edit", BlogPostLive.Form, :edit
+      live "/about/jobs/new", JobLive.Form, :new
+      live "/about/jobs/:id/edit", JobLive.Form, :edit
     end
   end
 

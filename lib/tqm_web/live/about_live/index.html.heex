@@ -49,6 +49,15 @@
     <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 32px;">
       <h2 class="qm-h2">Work, in order</h2>
       <span style="font-family: var(--mono); font-size: 12px; color: var(--muted);">
+        <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
+          <.link
+            navigate={~p"/about/jobs/new"}
+            style="color: var(--accent); text-decoration: none;"
+          >
+            + add job
+          </.link>
+          ·
+        <% end %>
         {length(@jobs)} positions
       </span>
     </div>
@@ -80,6 +89,16 @@
         <%= if MapSet.member?(@expanded_jobs, job.id) do %>
           <li style="padding: 0 0 20px; border-top: none;">
             <div style="padding-left: 196px;">
+              <%= if Tqm.Accounts.Person.owner?(assigns[:current_person]) do %>
+                <div style="margin-bottom: 12px;">
+                  <.link
+                    navigate={~p"/about/jobs/#{job.id}/edit"}
+                    style="font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: none; letter-spacing: 0.05em;"
+                  >
+                    edit job →
+                  </.link>
+                </div>
+              <% end %>
               <%= if job.description do %>
                 <div
                   class="qm-job-description"

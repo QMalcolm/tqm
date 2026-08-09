@@ -2,6 +2,7 @@ defmodule TqmWeb.AboutLive.IndexTest do
   use TqmWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
+  import Tqm.AccountsFixtures
   import Tqm.JobsFixtures
 
   defp create_job_with_role(job_attrs \\ %{}, role_attrs \\ %{}) do
@@ -70,6 +71,30 @@ defmodule TqmWeb.AboutLive.IndexTest do
       job = job_fixture(%{company_name: "Roleless Corp"})
       {:ok, _lv, html} = live(conn, ~p"/about")
       assert html =~ job.company_name
+    end
+  end
+
+  describe "owner affordances" do
+    test "owner sees add and edit job links", %{conn: conn} do
+      job = create_job_with_role()
+      conn = log_in_person(conn, owner_person_fixture())
+
+      {:ok, lv, html} = live(conn, ~p"/about")
+      assert html =~ "add job"
+
+      html = lv |> element("#job-#{job.id}") |> render_click()
+      assert html =~ "edit job"
+      assert html =~ "/about/jobs/#{job.id}/edit"
+    end
+
+    test "visitors see no edit affordances", %{conn: conn} do
+      job = create_job_with_role()
+
+      {:ok, lv, html} = live(conn, ~p"/about")
+      refute html =~ "add job"
+
+      html = lv |> element("#job-#{job.id}") |> render_click()
+      refute html =~ "edit job"
     end
   end
 end

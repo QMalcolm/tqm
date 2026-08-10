@@ -17,11 +17,15 @@ defmodule TqmWeb.Endpoint do
   #
   # You should set gzip to true if you are running phx.digest
   # when deploying your static files in production.
+  # The favicons are matched by prefix rather than exact name because in
+  # production `phx.digest` rewrites their URLs to digested filenames
+  # (e.g. /favicon-<hash>.png), which an exact `:only` match would reject.
   plug Plug.Static,
     at: "/",
     from: :tqm,
     gzip: false,
-    only: TqmWeb.static_paths()
+    only: TqmWeb.static_paths() -- ~w(favicon.ico favicon.png),
+    only_matching: ~w(favicon)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
